@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-public class Application {
+public class ApplicationModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

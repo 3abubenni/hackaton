@@ -1,6 +1,6 @@
 package com.hackaton.hackatonv100.facade;
 
-import com.hackaton.hackatonv100.model.Application;
+import com.hackaton.hackatonv100.model.ApplicationModel;
 import com.hackaton.hackatonv100.model.response.ApplicationResponse;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Component
 public class ApplicationFacade {
 
-    public ApplicationResponse applicationToApplicationResponse(Application request) {
+    public ApplicationResponse applicationToApplicationResponse(ApplicationModel request) {
         return ApplicationResponse.builder()
                 .clanId(request.getClan().getId())
                 .id(request.getId())
@@ -20,7 +20,7 @@ public class ApplicationFacade {
                 .build();
     }
 
-    public List<ApplicationResponse> applicationsToApplicationsResponse(Collection<Application> requests) {
+    public List<ApplicationResponse> applicationsToApplicationsResponse(Collection<ApplicationModel> requests) {
         return requests.stream()
                 .map(this::applicationToApplicationResponse)
                 .collect(Collectors.toList());

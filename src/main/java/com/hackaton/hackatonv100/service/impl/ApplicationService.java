@@ -1,6 +1,6 @@
 package com.hackaton.hackatonv100.service.impl;
 
-import com.hackaton.hackatonv100.model.Application;
+import com.hackaton.hackatonv100.model.ApplicationModel;
 import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.enums.States;
@@ -23,9 +23,9 @@ public class ApplicationService implements IApplicationService {
     private IClanService clanService;
 
     @Override
-    public Application createRequestInClan(User user, Clan clan) {
+    public ApplicationModel createRequestInClan(User user, Clan clan) {
         applicationRepository.deleteAllByClan(clan);
-        var application = Application.builder()
+        var application = ApplicationModel.builder()
                 .user(user)
                 .clan(clan)
                 .state(States.CREATED.code)
@@ -35,13 +35,13 @@ public class ApplicationService implements IApplicationService {
     }
 
     @Override
-    public Application cancel(Application application) {
+    public ApplicationModel cancel(ApplicationModel application) {
         application.setState(States.CANCELED);
         return applicationRepository.save(application);
     }
 
     @Override
-    public Application accept(Application application) {
+    public ApplicationModel accept(ApplicationModel application) {
         application.setState(States.ACCEPTED);
         return applicationRepository.save(application);
     }
@@ -52,7 +52,7 @@ public class ApplicationService implements IApplicationService {
     }
 
     @Override
-    public Application getApplication(Long requestId) {
+    public ApplicationModel getApplication(Long requestId) {
         return applicationRepository.findById(requestId).orElseThrow();
     }
 
@@ -62,12 +62,12 @@ public class ApplicationService implements IApplicationService {
     }
 
     @Override
-    public List<Application> getAllRequestsOfUser(Principal principal) {
+    public List<ApplicationModel> getAllRequestsOfUser(Principal principal) {
         return applicationRepository.findAllByUser(userService.getUser(principal));
     }
 
     @Override
-    public List<Application> getAllRequestsOfClan(Long clanId) {
+    public List<ApplicationModel> getAllRequestsOfClan(Long clanId) {
         return applicationRepository.findAllByClan(clanService.getClan(clanId));
     }
 }
