@@ -38,4 +38,5 @@ public interface IMemberService {
     void deleteMembersByClan(Clan clan);
 
     boolean kickOutMember(Principal principal, Long memberId);
+    List<Member> membersOfClan(Long clanId);
 }

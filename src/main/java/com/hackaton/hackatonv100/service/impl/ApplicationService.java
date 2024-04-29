@@ -2,11 +2,13 @@ package com.hackaton.hackatonv100.service.impl;
 
 import com.hackaton.hackatonv100.model.ApplicationModel;
 import com.hackaton.hackatonv100.model.Clan;
+import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.enums.States;
 import com.hackaton.hackatonv100.repository.ApplicationRepository;
 import com.hackaton.hackatonv100.service.IApplicationService;
 import com.hackaton.hackatonv100.service.IClanService;
+import com.hackaton.hackatonv100.service.IMemberService;
 import com.hackaton.hackatonv100.service.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class ApplicationService implements IApplicationService {
     private ApplicationRepository applicationRepository;
     private IUserService userService;
     private IClanService clanService;
+    private IMemberService memberService;
 
     @Override
     public ApplicationModel createRequestInClan(User user, Clan clan) {
@@ -42,6 +45,12 @@ public class ApplicationService implements IApplicationService {
 
     @Override
     public ApplicationModel accept(ApplicationModel application) {
+        memberService.createMember(
+                application.getClan(),
+                application.getUser(),
+                Member.MemberStatus.MEMBER
+        );
+
         application.setState(States.ACCEPTED);
         return applicationRepository.save(application);
     }

@@ -2,6 +2,7 @@ package com.hackaton.hackatonv100.controller;
 
 
 import com.hackaton.hackatonv100.facade.ApplicationFacade;
+import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.enums.States;
 import com.hackaton.hackatonv100.model.response.ApplicationResponse;
 import com.hackaton.hackatonv100.service.IClanService;
@@ -71,13 +72,19 @@ public class ApplicationController {
             Principal principal,
             @PathVariable("id") Long applicationId
     ) {
-        if(applicationService.applicationExists(applicationId)) {
+        if(!applicationService.applicationExists(applicationId)) {
             return ResponseEntity.notFound().build();
         }
 
         var application = applicationService.getApplication(applicationId);
         if(application.getState() != States.CREATED.code
                 || !memberService.userInClan(userService.getUser(principal), application.getClan())) {
+            return ResponseEntity.status(406).build();
+        }
+
+        var member = memberService.getMember(userService.getUser(principal), application.getClan());
+
+        if(!member.checkStatus(Member.MemberStatus.CAN_INVITE_MEMBER)) {
             return ResponseEntity.status(406).build();
         }
 

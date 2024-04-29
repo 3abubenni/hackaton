@@ -3,6 +3,8 @@ package com.hackaton.hackatonv100.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @AllArgsConstructor
 @Builder
@@ -68,6 +70,8 @@ public class Member {
     private int money;
     @ManyToOne(fetch = FetchType.LAZY)
     private Clan clan;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Task> tasks;
 
     /*
     *

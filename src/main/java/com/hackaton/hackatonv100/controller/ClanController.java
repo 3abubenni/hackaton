@@ -4,6 +4,7 @@ import com.hackaton.hackatonv100.facade.ClanFacade;
 import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.requests.ClanRequest;
 import com.hackaton.hackatonv100.model.response.ClanResponse;
+import com.hackaton.hackatonv100.model.response.MemberResponse;
 import com.hackaton.hackatonv100.service.IClanService;
 import com.hackaton.hackatonv100.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -205,5 +206,6 @@ public class ClanController {
         return ResponseEntity.ok(response);
 
     }
+
 
 }

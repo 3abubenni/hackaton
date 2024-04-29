@@ -4,6 +4,7 @@ import com.hackaton.hackatonv100.facade.MemberFacade;
 import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.requests.MemberRequest;
 import com.hackaton.hackatonv100.model.response.MemberResponse;
+import com.hackaton.hackatonv100.service.IClanService;
 import com.hackaton.hackatonv100.service.IMemberService;
 import com.hackaton.hackatonv100.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +32,7 @@ public class MemberController {
     private IMemberService memberService;
     private IUserService userService;
     private MemberFacade memberFacade;
+    private IClanService clanService;
 
     @GetMapping("/user")
     @Operation(description = "Получить все записи о пользователе, как о участнике в кланах")
@@ -195,5 +197,52 @@ public class MemberController {
             response.setStatus(406);
         }
     }
+
+
+
+    @GetMapping("/user/clan/{id}")
+    @Operation(description = "Даёт информацию о пользователе как о участнике в конкретном клане")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Клан не найден"),
+            @ApiResponse(responseCode = "406", description = "Пользователь не состоит в клане")
+        }
+    )
+    public ResponseEntity<MemberResponse> userInClan(
+            @PathVariable("id") Long id,
+            Principal principal
+    ) {
+        if(!clanService.clanExists(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if(!memberService.userInClan(principal, id)) {
+            return ResponseEntity.status(406).build();
+        }
+
+        var member = memberService.getMember(principal, id);
+        var response = memberFacade.memberToMemberResponse(member);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/clan/{id}")
+    @Operation(description = "Получить всех участников клана")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Клан не найден")
+    }
+    )
+    public ResponseEntity<List<MemberResponse>> membersOfClan(@PathVariable("id") Long clanId) {
+        if(clanService.clanExists(clanId)) {
+            var members = memberService.membersOfClan(clanId);
+            var response = memberFacade.membersToMembersResponse(members);
+            return ResponseEntity.ok(response);
+
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

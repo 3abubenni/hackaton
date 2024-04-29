@@ -184,6 +184,11 @@ public class MemberService implements IMemberService {
         }
     }
 
+    @Override
+    public List<Member> membersOfClan(Long clanId) {
+        return memberRepository.findByIdClan(clanId);
+    }
+
     private void changeAdminIfStatusAdmin(int status, Member member) {
         if(status == Member.MemberStatus.ADMIN.code) {
             Member exAdmin = memberRepository.findByStatusAndClan(status, member.getClan()).orElseThrow();
