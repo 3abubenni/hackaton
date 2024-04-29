@@ -24,6 +24,8 @@ import java.util.List;
 @Tag(name = "Member Controller", description = "Позволяет управлять участниками клана")
 @AllArgsConstructor
 @RequestMapping("/api/member")
+@CrossOrigin(origins = "*", maxAge = 3600)
+
 public class MemberController {
 
     private IMemberService memberService;

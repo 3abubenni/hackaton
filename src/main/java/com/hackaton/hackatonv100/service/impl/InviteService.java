@@ -4,7 +4,8 @@ import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.Invite;
 import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.User;
-import com.hackaton.hackatonv100.security.repository.InviteRepository;
+import com.hackaton.hackatonv100.model.enums.States;
+import com.hackaton.hackatonv100.repository.InviteRepository;
 import com.hackaton.hackatonv100.service.IClanService;
 import com.hackaton.hackatonv100.service.IInviteService;
 import com.hackaton.hackatonv100.service.IMemberService;
@@ -33,10 +34,11 @@ public class InviteService implements IInviteService {
 
     @Override
     public Invite inviteUser(User invented, Clan clan) {
+        inviteRepository.deleteAllByUser(invented);
         var invite = Invite.builder()
                 .clan(clan)
                 .user(invented)
-                .state(Invite.StateInvite.CREATED.code)
+                .state(States.CREATED.code)
                 .build();
 
         return inviteRepository.save(invite);
@@ -50,13 +52,13 @@ public class InviteService implements IInviteService {
                 Member.MemberStatus.MEMBER
         );
 
-        invite.setState(Invite.StateInvite.ACCEPTED);
+        invite.setState(States.ACCEPTED);
         return inviteRepository.save(invite);
     }
 
     @Override
     public Invite cancelInvite(Invite invite) {
-        invite.setState(Invite.StateInvite.CANCELED);
+        invite.setState(States.CANCELED);
         return inviteRepository.save(invite);
     }
 

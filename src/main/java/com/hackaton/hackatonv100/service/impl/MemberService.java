@@ -4,7 +4,7 @@ import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.requests.MemberRequest;
-import com.hackaton.hackatonv100.security.repository.MemberRepository;
+import com.hackaton.hackatonv100.repository.MemberRepository;
 import com.hackaton.hackatonv100.service.IMemberService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class MemberService implements IMemberService {

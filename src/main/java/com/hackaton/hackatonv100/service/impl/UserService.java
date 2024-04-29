@@ -2,7 +2,7 @@ package com.hackaton.hackatonv100.service.impl;
 
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.requests.UserUpdateRequest;
-import com.hackaton.hackatonv100.security.repository.UserRepository;
+import com.hackaton.hackatonv100.repository.UserRepository;
 import com.hackaton.hackatonv100.service.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

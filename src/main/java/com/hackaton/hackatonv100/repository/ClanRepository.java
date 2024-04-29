@@ -1,4 +1,4 @@
-package com.hackaton.hackatonv100.security.repository;
+package com.hackaton.hackatonv100.repository;
 
 import com.hackaton.hackatonv100.model.Clan;
 import org.springframework.data.jpa.repository.JpaRepository;

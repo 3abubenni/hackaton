@@ -49,22 +49,19 @@ public class UserController {
             @ApiResponse(responseCode = "406", description = "Пользователь с таким email уже существует"),
             @ApiResponse(responseCode = "400", description = "Данные не прошли валидацию")
     })
-    public void register(
+    public ResponseEntity<String> register(
             @RequestBody @Valid RegisterRequest request,
-            BindingResult bindingResult,
-            HttpServletResponse response
+            BindingResult bindingResult
     ) {
         if(bindingResult.hasErrors()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return ResponseEntity.badRequest().build();
 
         } else if(userService.getUser(request.getEmail()) != null) {
-            response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+            return ResponseEntity.status(406).build();
 
         } else {
-
             String token = authorizationService.register(request);
-            response.addHeader(Constant.AUTHORIZATION, token);
-            response.setStatus(200);
+            return ResponseEntity.ok(token);
         }
     }
 
@@ -77,14 +74,9 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Пользователь успешно авторизовался"),
             @ApiResponse(responseCode = "401", description = "Неверный email или пароль")
     })
-    public void login(
-            @RequestBody LoginRequest request,
-            HttpServletResponse response
-    ) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         String token = authorizationService.login(request);
-        response.addHeader(Constant.AUTHORIZATION, token);
-        response.setStatus(200);
-
+        return ResponseEntity.ok(token);
     }
 
 

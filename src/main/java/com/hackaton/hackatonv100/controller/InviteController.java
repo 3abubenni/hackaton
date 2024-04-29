@@ -2,8 +2,8 @@ package com.hackaton.hackatonv100.controller;
 
 
 import com.hackaton.hackatonv100.facade.InviteFacade;
-import com.hackaton.hackatonv100.model.Invite;
 import com.hackaton.hackatonv100.model.Member;
+import com.hackaton.hackatonv100.model.enums.States;
 import com.hackaton.hackatonv100.model.response.InviteResponse;
 import com.hackaton.hackatonv100.service.IClanService;
 import com.hackaton.hackatonv100.service.IInviteService;
@@ -16,10 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -28,6 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/api/invite")
 @Tag(name = "Invite Controller", description = "Контроллер для управления приглашениями")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class InviteController {
 
     private IInviteService inviteService;
@@ -76,7 +74,7 @@ public class InviteController {
 
 
 
-    @PostMapping("/accept_invite/{id}")
+    @PostMapping("/accept/{id}")
     @Operation(description = "Принять приглашение в клан")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -84,22 +82,19 @@ public class InviteController {
             @ApiResponse(responseCode = "406", description = "Приглашение неактивно или не относится к пользователю")
     })
     public ResponseEntity<InviteResponse> acceptInvite(
-            @PathVariable("id") Long inviteId,
+            @PathVariable("id") Long id,
             Principal principal
     ) {
-        if(inviteService.inviteExists(inviteId)) {
-            var invite = inviteService.getInvite(inviteId);
+        if(inviteService.inviteExists(id)) {
+            var invite = inviteService.getInvite(id);
             var user = userService.getUser(principal);
-            if(invite.getState() == Invite.StateInvite.CREATED.code && user.equals(invite.getUser())) {
-
+            if(invite.getState() == States.CREATED.code && invite.getUser().equals(user)) {
                 invite = inviteService.acceptInvite(invite);
-                InviteResponse response = inviteFacade.inviteToInviteResponse(invite);
+                var response = inviteFacade.inviteToInviteResponse(invite);
                 return ResponseEntity.ok(response);
-
-            } else {
-                return ResponseEntity.status(406).build();
-
             }
+
+            return ResponseEntity.status(406).build();
 
         } else {
             return ResponseEntity.notFound().build();
@@ -122,7 +117,7 @@ public class InviteController {
         if(inviteService.inviteExists(id)) {
             var invite = inviteService.getInvite(id);
             var user = userService.getUser(principal);
-            if(invite.getState() == Invite.StateInvite.CREATED.code && invite.getUser().equals(user)) {
+            if(invite.getState() == States.CREATED.code && invite.getUser().equals(user)) {
                 invite = inviteService.cancelInvite(invite);
                 var response = inviteFacade.inviteToInviteResponse(invite);
                 return ResponseEntity.ok(response);

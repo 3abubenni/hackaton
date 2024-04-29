@@ -4,7 +4,7 @@ import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.requests.ClanRequest;
-import com.hackaton.hackatonv100.security.repository.ClanRepository;
+import com.hackaton.hackatonv100.repository.ClanRepository;
 import com.hackaton.hackatonv100.service.IClanService;
 import com.hackaton.hackatonv100.service.IMemberService;
 import com.hackaton.hackatonv100.service.IUserService;
