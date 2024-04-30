@@ -11,19 +11,34 @@ import com.hackaton.hackatonv100.service.IInviteService;
 import com.hackaton.hackatonv100.service.IMemberService;
 import com.hackaton.hackatonv100.service.IUserService;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class InviteService implements IInviteService {
 
-    private IUserService userService;
-    private InviteRepository inviteRepository;
-    private IMemberService memberService;
+    private final IUserService userService;
+    private final InviteRepository inviteRepository;
+    private final IMemberService memberService;
+    @Setter
     private IClanService clanService;
+
+
+    @Autowired
+    public InviteService(
+            IUserService userService,
+            InviteRepository inviteRepository,
+            IMemberService memberService
+    ) {
+        this.userService = userService;
+        this.inviteRepository = inviteRepository;
+        this.memberService = memberService;
+    }
 
     @Override
     public Invite inviteUser(Long inventedId, Long clanId) {
@@ -65,6 +80,11 @@ public class InviteService implements IInviteService {
     @Override
     public void deleteInvite(Long inviteId) {
         inviteRepository.deleteById(inviteId);
+    }
+
+    @Override
+    public void deleteAllByClan(Clan clan) {
+        inviteRepository.deleteAllByClan(clan);
     }
 
     @Override

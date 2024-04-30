@@ -26,4 +26,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query(value = "SELECT * FROM member WHERE clan_id=?1", nativeQuery = true)
     List<Member> findByIdClan(Long clanId);
 
+
+
 }

@@ -11,6 +11,7 @@ import java.util.List;
 @Service
 public interface IApplicationService {
 
+    void setClanService(IClanService clanService);
     ApplicationModel createRequestInClan(User user, Clan clan);
     ApplicationModel cancel(ApplicationModel request);
     ApplicationModel accept(ApplicationModel request);
@@ -19,5 +20,6 @@ public interface IApplicationService {
     boolean applicationExists(Long requestId);
     List<ApplicationModel> getAllRequestsOfUser(Principal principal);
     List<ApplicationModel> getAllRequestsOfClan(Long clanId);
+    void deleteAllByClan(Clan clan);
 
 }

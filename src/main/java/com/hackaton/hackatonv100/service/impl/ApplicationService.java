@@ -11,19 +11,32 @@ import com.hackaton.hackatonv100.service.IClanService;
 import com.hackaton.hackatonv100.service.IMemberService;
 import com.hackaton.hackatonv100.service.IUserService;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class ApplicationService implements IApplicationService {
 
-    private ApplicationRepository applicationRepository;
-    private IUserService userService;
+    private final ApplicationRepository applicationRepository;
+    private final IUserService userService;
+    @Setter
     private IClanService clanService;
-    private IMemberService memberService;
+    private final IMemberService memberService;
+
+    @Autowired
+    public ApplicationService(
+            ApplicationRepository applicationRepository,
+            IUserService userService,
+            IMemberService memberService
+    ) {
+        this.applicationRepository = applicationRepository;
+        this.userService = userService;
+        this.memberService = memberService;
+    }
 
     @Override
     public ApplicationModel createRequestInClan(User user, Clan clan) {
@@ -78,5 +91,10 @@ public class ApplicationService implements IApplicationService {
     @Override
     public List<ApplicationModel> getAllRequestsOfClan(Long clanId) {
         return applicationRepository.findAllByClan(clanService.getClan(clanId));
+    }
+
+    @Override
+    public void deleteAllByClan(Clan clan) {
+        applicationRepository.deleteAllByClan(clan);
     }
 }

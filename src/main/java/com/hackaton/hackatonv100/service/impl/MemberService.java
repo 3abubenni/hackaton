@@ -2,10 +2,14 @@ package com.hackaton.hackatonv100.service.impl;
 
 import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.Member;
+import com.hackaton.hackatonv100.model.Task;
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.requests.MemberRequest;
 import com.hackaton.hackatonv100.repository.MemberRepository;
+import com.hackaton.hackatonv100.service.IClanService;
 import com.hackaton.hackatonv100.service.IMemberService;
+import com.hackaton.hackatonv100.service.ITaskService;
+import com.hackaton.hackatonv100.service.IUserService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,14 +21,16 @@ import java.util.List;
 public class MemberService implements IMemberService {
 
     private final MemberRepository memberRepository;
-    private final UserService userService;
+    private final IUserService userService;
     @Setter
-    private ClanService clanService;
+    private IClanService clanService;
+    @Setter
+    private ITaskService taskService;
 
     @Autowired
     public MemberService(
             MemberRepository memberRepository,
-            UserService userService
+            IUserService userService
     ) {
         this.memberRepository = memberRepository;
         this.userService = userService;
@@ -94,11 +100,19 @@ public class MemberService implements IMemberService {
 
     @Override
     public void excludeMember(Long idMember) {
-        memberRepository.deleteById(idMember);
+        var member = getMember(idMember);
+        var tasks = member.getTasks().stream()
+                .filter(t -> t.getStatus() != Task.SolutionStatus.CHECKED.num)
+                .peek(t -> t.setStatus(Task.SolutionStatus.CREATED))
+                .toList();
+
+
+        memberRepository.delete(member);
     }
 
     @Override
     public void excludeMember(Member member) {
+
         memberRepository.delete(member);
     }
 
@@ -161,20 +175,26 @@ public class MemberService implements IMemberService {
     }
 
     @Override
+    public void addTaskToMember(Member member, Task task) {
+        member.getTasks().add(task);
+        memberRepository.save(member);
+    }
+
+    @Override
     public boolean kickOutMember(Principal principal, Long memberId) {
         var member = memberRepository.findById(memberId).orElseThrow();
         var user = userService.getUser(principal);
 
-        if(member.getUser().equals(user)) {
+        if (member.getUser().equals(user)) {
             return false;
         }
 
-        if(!userInClan(user, member.getClan())) {
+        if (!userInClan(user, member.getClan())) {
             return false;
         }
 
         var kicking = getMember(user, member.getClan());
-        if(!kicking.checkStatus(Member.MemberStatus.CAN_KICK_OUT) || member.checkStatus(Member.MemberStatus.ADMIN)) {
+        if (!kicking.checkStatus(Member.MemberStatus.CAN_KICK_OUT) || member.checkStatus(Member.MemberStatus.ADMIN)) {
             return false;
 
         } else {
@@ -190,7 +210,7 @@ public class MemberService implements IMemberService {
     }
 
     private void changeAdminIfStatusAdmin(int status, Member member) {
-        if(status == Member.MemberStatus.ADMIN.code) {
+        if (status == Member.MemberStatus.ADMIN.code) {
             Member exAdmin = memberRepository.findByStatusAndClan(status, member.getClan()).orElseThrow();
             exAdmin.setStatus(Member.MemberStatus.MODERATOR.code);
             memberRepository.save(exAdmin);

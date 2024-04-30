@@ -25,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/api/application/")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "Request In Clan Controller", description = "Контроллер для управлениями подачи заявок для поступления в клан")
+@Tag(name = "Application Controller", description = "Контроллер для управлениями подачи заявок для поступления в клан")
 public class ApplicationController {
 
     private IApplicationService applicationService;
@@ -105,13 +105,19 @@ public class ApplicationController {
             Principal principal,
             @PathVariable("id") Long applicationId
     ) {
-        if(applicationService.applicationExists(applicationId)) {
+        if(!applicationService.applicationExists(applicationId)) {
             return ResponseEntity.notFound().build();
         }
 
         var application = applicationService.getApplication(applicationId);
         if(application.getState() != States.CREATED.code
                 || !memberService.userInClan(userService.getUser(principal), application.getClan())) {
+            return ResponseEntity.status(406).build();
+        }
+
+        var member = memberService.getMember(userService.getUser(principal), application.getClan());
+
+        if(!member.checkStatus(Member.MemberStatus.CAN_INVITE_MEMBER)) {
             return ResponseEntity.status(406).build();
         }
 

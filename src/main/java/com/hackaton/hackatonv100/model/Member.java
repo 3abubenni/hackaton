@@ -70,7 +70,7 @@ public class Member {
     private int money;
     @ManyToOne(fetch = FetchType.LAZY)
     private Clan clan;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     private List<Task> tasks;
 
     /*

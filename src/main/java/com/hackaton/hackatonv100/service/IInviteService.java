@@ -11,11 +11,13 @@ import java.util.List;
 @Service
 public interface IInviteService {
 
+    void setClanService(IClanService clanService);
     Invite inviteUser(Long inventedId, Long clanId);
     Invite inviteUser(User invented, Clan clan);
     Invite acceptInvite(Invite invite);
     Invite cancelInvite(Invite invite);
     void deleteInvite(Long inviteId);
+    void deleteAllByClan(Clan clan);
     boolean inviteExists(Long inviteId);
     Invite getInvite(Long inviteId);
     List<Invite> invitesOfUser(Principal principal);

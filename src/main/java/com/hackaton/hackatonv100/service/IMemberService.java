@@ -2,10 +2,9 @@ package com.hackaton.hackatonv100.service;
 
 import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.Member;
+import com.hackaton.hackatonv100.model.Task;
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.requests.MemberRequest;
-import com.hackaton.hackatonv100.service.impl.ClanService;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -32,11 +31,12 @@ public interface IMemberService {
     boolean userInClan(Principal principal, Long clanId);
     boolean userHaveStatusInClan(Principal principal, Long clanId, Member.MemberStatus status);
     boolean userHaveStatusInClan(Principal principal, Clan clan, Member.MemberStatus status);
-    void setClanService(ClanService clanService);
+    void setClanService(IClanService clanService);
     Member getMember(User user, Clan clan);
     Member getMember(Principal principal, Clan clan);
     void deleteMembersByClan(Clan clan);
-
+    void addTaskToMember(Member member, Task task);
     boolean kickOutMember(Principal principal, Long memberId);
     List<Member> membersOfClan(Long clanId);
+    void setTaskService(ITaskService taskService);
 }

@@ -2,12 +2,14 @@ package com.hackaton.hackatonv100.service.impl;
 
 import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.Member;
+import com.hackaton.hackatonv100.model.Task;
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.requests.ClanRequest;
 import com.hackaton.hackatonv100.repository.ClanRepository;
-import com.hackaton.hackatonv100.service.IClanService;
-import com.hackaton.hackatonv100.service.IMemberService;
-import com.hackaton.hackatonv100.service.IUserService;
+import com.hackaton.hackatonv100.service.*;
+import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +18,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class ClanService implements IClanService {
 
-    private final ClanRepository clanRepository;
-    private final IMemberService memberService;
-    private final IUserService userService;
+    private ClanRepository clanRepository;
+    private IMemberService memberService;
+    private IUserService userService;
+    private IApplicationService applicationService;
+    private IInviteService inviteService;
+    private ITaskService taskService;
 
-    @Autowired
-    public ClanService(ClanRepository clanRepository, IMemberService memberService, IUserService userService) {
-        this.clanRepository = clanRepository;
-        this.memberService = memberService;
-        this.userService = userService;
+    @PostConstruct
+    public void init() {
         memberService.setClanService(this);
+        applicationService.setClanService(this);
+        inviteService.setClanService(this);
+        taskService.setClan(this);
     }
+
 
     @Override
     public Clan createClan(Principal principal, ClanRequest request) {
@@ -78,6 +85,17 @@ public class ClanService implements IClanService {
                 deleteClan(clan);
 
             } else {
+                var tasks = taskService.getTasksOfClan(clan).stream()
+                        .peek(t -> {
+                            t.setSolver(null);
+                            if(t.getStatus() == Task.SolutionStatus.TOOK.num
+                                    || t.getStatus() == Task.SolutionStatus.SOLVED.num) {
+                                t.setStatus(Task.SolutionStatus.CREATED);
+                            }
+                        })
+                        .collect(Collectors.toList());
+
+                taskService.saveAllTasks(tasks);
                 memberService.excludeMember(member);
 
             }
@@ -129,6 +147,8 @@ public class ClanService implements IClanService {
     }
 
     private void deleteClan(Clan clan) {
+        inviteService.deleteAllByClan(clan);
+        applicationService.deleteAllByClan(clan);
         memberService.deleteMembersByClan(clan);
         clanRepository.delete(clan);
     }
