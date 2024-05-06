@@ -20,7 +20,6 @@ public class TaskFacade {
                 .status(task.getStatus())
                 .description(task.getDescription())
                 .createdAt(task.getCreatedAt())
-                .required(task.isRequired())
                 .clanId(task.getClan().getId())
                 .memberId(task.getSolver() == null ? null : task.getSolver().getId())
                 .build();

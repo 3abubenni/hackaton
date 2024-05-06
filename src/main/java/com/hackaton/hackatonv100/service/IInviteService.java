@@ -17,11 +17,11 @@ public interface IInviteService {
     Invite acceptInvite(Invite invite);
     Invite cancelInvite(Invite invite);
     void deleteInvite(Long inviteId);
-    void deleteAllByClan(Clan clan);
     boolean inviteExists(Long inviteId);
     Invite getInvite(Long inviteId);
     List<Invite> invitesOfUser(Principal principal);
     List<Invite> invitesOfClan(Long clanId);
 
 
+    void deleteAllByIdClan(long id);
 }

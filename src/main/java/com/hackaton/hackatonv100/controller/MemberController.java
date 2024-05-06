@@ -234,15 +234,13 @@ public class MemberController {
     }
     )
     public ResponseEntity<List<MemberResponse>> membersOfClan(@PathVariable("id") Long clanId) {
-        if(clanService.clanExists(clanId)) {
+        if (!clanService.clanExists(clanId)) {
+            return ResponseEntity.notFound().build();
+        } else {
             var members = memberService.membersOfClan(clanId);
             var response = memberFacade.membersToMembersResponse(members);
             return ResponseEntity.ok(response);
-
-        } else {
-            return ResponseEntity.notFound().build();
         }
     }
-
 
 }

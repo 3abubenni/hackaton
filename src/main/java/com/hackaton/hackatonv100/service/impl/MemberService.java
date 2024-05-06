@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MemberService implements IMemberService {
@@ -44,6 +45,7 @@ public class MemberService implements IMemberService {
                 .status(status.code)
                 .build();
 
+        clan.getMembers().add(member);
         return memberRepository.save(member);
     }
 
@@ -95,24 +97,28 @@ public class MemberService implements IMemberService {
     @Override
     public List<Member> getMembersOfClan(Long idClan) {
         Clan clan = clanService.getClan(idClan);
-        return memberRepository.findAllByClan(clan);
+        return clan.getMembers();
     }
 
     @Override
     public void excludeMember(Long idMember) {
         var member = getMember(idMember);
-        var tasks = member.getTasks().stream()
-                .filter(t -> t.getStatus() != Task.SolutionStatus.CHECKED.num)
-                .peek(t -> t.setStatus(Task.SolutionStatus.CREATED))
-                .toList();
+        var tasks = taskService.getTasksOfMember(member)
+                .stream().peek(t -> {
+                    if(t.getStatus() != Task.SolutionStatus.CHECKED.num) {
+                        t.setStatus(Task.SolutionStatus.CREATED);
+                    }
+                    t.setSolver(null);
+                }).collect(Collectors.toList());
 
-
+        taskService.saveAllTasks(tasks);
+        member.getClan().getMembers().remove(member);
         memberRepository.delete(member);
     }
 
     @Override
     public void excludeMember(Member member) {
-
+        member.getClan().getMembers().remove(member);
         memberRepository.delete(member);
     }
 
@@ -147,14 +153,21 @@ public class MemberService implements IMemberService {
 
     @Override
     public boolean userHaveStatusInClan(Principal principal, Long clanId, Member.MemberStatus status) {
-        Member member = getMember(principal, clanId);
-        return member.checkStatus(status);
+        if(userInClan(principal, clanId)) {
+            var member = getMember(principal, clanId);
+            return member.checkStatus(status);
+        }
+        return false;
     }
 
     @Override
     public boolean userHaveStatusInClan(Principal principal, Clan clan, Member.MemberStatus status) {
-        Member member = getMember(principal, clan);
-        return member.checkStatus(status);
+        var user = userService.getUser(principal);
+        if(userInClan(user, clan)) {
+            var member = getMember(user, clan);
+            return member.checkStatus(status);
+        }
+        return false;
     }
 
     @Override
@@ -168,17 +181,6 @@ public class MemberService implements IMemberService {
         return getMember(user, clan);
     }
 
-    @Override
-    public void deleteMembersByClan(Clan clan) {
-        List<Member> members = memberRepository.findAllByClan(clan);
-        memberRepository.deleteAll(members);
-    }
-
-    @Override
-    public void addTaskToMember(Member member, Task task) {
-        member.getTasks().add(task);
-        memberRepository.save(member);
-    }
 
     @Override
     public boolean kickOutMember(Principal principal, Long memberId) {

@@ -6,21 +6,17 @@ import com.hackaton.hackatonv100.model.Task;
 import com.hackaton.hackatonv100.model.requests.MemberRequest;
 import com.hackaton.hackatonv100.model.requests.TaskRequest;
 import com.hackaton.hackatonv100.repository.TaskRepository;
-import com.hackaton.hackatonv100.service.IClanService;
-import com.hackaton.hackatonv100.service.IMemberService;
-import com.hackaton.hackatonv100.service.ITaskService;
-import com.hackaton.hackatonv100.service.IUserService;
+import com.hackaton.hackatonv100.service.*;
 import jakarta.annotation.PostConstruct;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class TaskService implements ITaskService {
@@ -30,6 +26,7 @@ public class TaskService implements ITaskService {
     private final IMemberService memberService;
     private final IUserService userService;
     private final TaskRepository taskRepository;
+    private final IOperationService operationService;
 
     @PostConstruct
     public void init() {
@@ -40,17 +37,20 @@ public class TaskService implements ITaskService {
     public TaskService(
             IMemberService memberService,
             IUserService userService,
-            TaskRepository repository
+            TaskRepository repository,
+            IOperationService operationService
     ) {
         this.memberService = memberService;
         this.userService = userService;
         this.taskRepository = repository;
+        this.operationService = operationService;
     }
 
     @Override
     public Task createTask(Clan clan, TaskRequest request) {
         var task = buildTask(request);
         task.setClan(clan);
+        clan.getTasks().add(task);
         return taskRepository.save(task);
     }
 
@@ -74,18 +74,6 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public Task giveTaskToMemberAsRequired(Member member, TaskRequest taskRequest) {
-        var task = buildTask(taskRequest);
-        task.setRequired(true);
-        task.setClan(member.getClan());
-        task.setSolver(member);
-        task = taskRepository.save(task);
-        member.getTasks().add(task);
-        memberService.addTaskToMember(member, task);
-        return task;
-    }
-
-    @Override
     public Task tookTask(Principal principal, Task task) {
         var member = memberService.getMember(principal, task.getClan());
         return tookTask(member, task);
@@ -93,7 +81,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public Task tookTask(Member member, Task task) {
-        if(!member.getClan().equals(task.getClan())) {
+        if (!member.getClan().equals(task.getClan())) {
             throw new RuntimeException("Member and Task are from different clan: " +
                     " id clan of member: " + member.getClan().getId() +
                     " id clan of task: " + task.getClan().getId());
@@ -101,7 +89,6 @@ public class TaskService implements ITaskService {
 
         task.setStatus(Task.SolutionStatus.TOOK);
         task.setSolver(member);
-        memberService.addTaskToMember(member, task);
         return taskRepository.save(task);
     }
 
@@ -112,7 +99,8 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> getTasksOfMember(Long memberId) {
-        return memberService.getMember(memberId).getTasks();
+        var member = memberService.getMember(memberId);
+        return taskRepository.findAllBySolver(member);
     }
 
     @Override
@@ -123,7 +111,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> getTasksOfClan(Clan clan) {
-        return taskRepository.findAllByClan(clan);
+        return clan.getTasks();
     }
 
     @Override
@@ -133,12 +121,9 @@ public class TaskService implements ITaskService {
 
     @Override
     public void deleteTask(Long taskId) {
-        taskRepository.deleteById(taskId);
-    }
-
-    @Override
-    public void deleteAllTaskByClan(Clan clan) {
-        taskRepository.deleteAllByClan(clan);
+        var task = taskRepository.findById(taskId).orElseThrow();
+        task.getClan().getTasks().remove(task);
+        taskRepository.delete(task);
     }
 
     @Override
@@ -154,23 +139,20 @@ public class TaskService implements ITaskService {
 
     @Override
     public Task checkTask(Task task, boolean solvedCorrectly) {
-        if(task.getStatus() == Task.SolutionStatus.CHECKED.num
+        if (task.getStatus() == Task.SolutionStatus.CHECKED.num
                 || task.getStatus() == Task.SolutionStatus.CREATED.num) {
             throw new RuntimeException("Task cannot be checked");
         }
 
-        if(solvedCorrectly) {
-            //TODO: create operation with money!
+        if (solvedCorrectly) {
             task.setStatus(Task.SolutionStatus.CHECKED);
             var solver = task.getSolver();
-            var request = new MemberRequest(task.getMoney()+solver.getMoney(), task.getExp()+solver.getExp());
-            memberService.updateMember(solver, request);
-            return taskRepository.save(task);
-
+            solver.setExp(solver.getExp() + task.getExp());
+            operationService.addMoney(solver, task.getMoney());
         } else {
             task.setStatus(Task.SolutionStatus.TOOK);
-            return taskRepository.save(task);
         }
+        return taskRepository.save(task);
     }
 
     @Override
@@ -180,12 +162,24 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> getAllTaskOfUser(Principal principal) {
-        List<Member> members = memberService.getMembersOfUser(principal);
-        List<Task> tasks = new ArrayList<>();
-        for(var m: members) {
-            tasks.addAll(m.getTasks());
+        var user = userService.getUser(principal);
+        return taskRepository.findAllByUser(user);
+    }
+
+    @Override
+    public Task cancelTask(Task task) {
+        if (task.getStatus() == Task.SolutionStatus.CHECKED.num) {
+            throw new RuntimeException("Task cannot be canceled");
+        } else {
+            task.setStatus(Task.SolutionStatus.CREATED);
+            task.setSolver(null);
+            return taskRepository.save(task);
         }
-        return tasks;
+    }
+
+    @Override
+    public List<Task> getTasksOfMember(Member member) {
+        return taskRepository.findAllBySolver(member);
     }
 
     private Task buildTask(TaskRequest request) {
@@ -196,10 +190,8 @@ public class TaskService implements ITaskService {
                 .name(request.getName())
                 .status(Task.SolutionStatus.CREATED.num)
                 .description(request.getDescription())
-                .required(false)
                 .build();
     }
-
 
 
 }

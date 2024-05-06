@@ -68,10 +68,10 @@ public class Member {
     private int status;
     private int exp;
     private int money;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     private Clan clan;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    private List<Task> tasks;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Operation> operations;
 
     /*
     *

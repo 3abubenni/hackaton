@@ -18,12 +18,12 @@ public interface InviteRepository extends JpaRepository<Invite, Long> {
     List<Invite> findByClan(Clan clan);
 
     @Modifying
-    @Query("DELETE Invite i WHERE i.user=?1")
+    @Query("DELETE Invite i WHERE i.clan.id=?1")
     @Transactional
-    void deleteAllByUser(User user);
+    void deleteAllByIdClan(long id);
     @Modifying
-    @Query("DELETE Invite i WHERE i.clan=?1")
+    @Query("DELETE Invite i WHERE i.clan=?2 AND i.user=?1")
     @Transactional
-    void deleteAllByClan(Clan clan);
+    void deleteAllByUserAndClan(User user, Clan clan);
 
 }

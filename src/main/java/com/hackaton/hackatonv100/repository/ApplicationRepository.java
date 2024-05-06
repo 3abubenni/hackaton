@@ -17,10 +17,10 @@ public interface ApplicationRepository extends JpaRepository<ApplicationModel, L
     List<ApplicationModel> findAllByUser(User user);
     List<ApplicationModel> findAllByClan(Clan clan);
 
-    @Query("DELETE ApplicationModel a WHERE a.clan=?1")
+    @Query("DELETE ApplicationModel a WHERE a.clan.id=?1")
     @Modifying
     @Transactional
-    void deleteAllByClan(Clan clan);
+    void deleteAllByIdClan(long clan);
     @Query("DELETE ApplicationModel a WHERE a.user=?1")
     @Modifying
     @Transactional

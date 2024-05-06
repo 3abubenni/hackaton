@@ -10,7 +10,6 @@ import com.hackaton.hackatonv100.service.IApplicationService;
 import com.hackaton.hackatonv100.service.IClanService;
 import com.hackaton.hackatonv100.service.IMemberService;
 import com.hackaton.hackatonv100.service.IUserService;
-import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,12 +39,14 @@ public class ApplicationService implements IApplicationService {
 
     @Override
     public ApplicationModel createRequestInClan(User user, Clan clan) {
-        applicationRepository.deleteAllByClan(clan);
+        applicationRepository.deleteAllByIdClan(clan.getId());
         var application = ApplicationModel.builder()
                 .user(user)
                 .clan(clan)
                 .state(States.CREATED.code)
                 .build();
+
+
 
         return applicationRepository.save(application);
     }
@@ -94,7 +95,7 @@ public class ApplicationService implements IApplicationService {
     }
 
     @Override
-    public void deleteAllByClan(Clan clan) {
-        applicationRepository.deleteAllByClan(clan);
+    public void deleteAllByIdClan(long clan) {
+        applicationRepository.deleteAllByIdClan(clan);
     }
 }

@@ -16,7 +16,6 @@ public interface ITaskService {
     Task createTask(Clan clan, TaskRequest request);
     Task updateTask(Long taskId, TaskRequest request);
     Task getTask(Long taskId);
-    Task giveTaskToMemberAsRequired(Member member, TaskRequest taskRequest);
     Task tookTask(Principal principal, Task task);
     Task tookTask(Member member, Task task);
     Task tookTask(Principal principal, Long taskId);
@@ -25,10 +24,11 @@ public interface ITaskService {
     List<Task> getTasksOfClan(Clan clan);
     boolean taskExists(Long taskId);
     void  deleteTask(Long taskId);
-    void deleteAllTaskByClan(Clan clan);
     void setClan(IClanService clanService);
     Task markTaskAsSolved(Task task);
     Task checkTask(Task task, boolean decidedCorrectly);
     void saveAllTasks(Collection<Task> tasks);
     List<Task> getAllTaskOfUser(Principal principal);
+    Task cancelTask(Task task);
+    List<Task> getTasksOfMember(Member member);
 }

@@ -9,11 +9,10 @@ import com.hackaton.hackatonv100.repository.ClanRepository;
 import com.hackaton.hackatonv100.service.*;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,16 +40,19 @@ public class ClanService implements IClanService {
     public Clan createClan(Principal principal, ClanRequest request) {
         Clan clan = Clan.builder()
                 .name(request.getName())
+                .members(new ArrayList<>())
+                .tasks(new ArrayList<>())
                 .build();
 
         clan = clanRepository.save(clan);
         User admin = userService.getUser(principal);
-        memberService.createMember(
-                clan, admin,
-                Member.MemberStatus.ADMIN
-        );
+        clan.getMembers().add(Member.builder()
+                .user(admin)
+                .clan(clan)
+                .status(Member.MemberStatus.ADMIN.code)
+                .build());
 
-        return clan;
+        return clanRepository.save(clan);
     }
 
     @Override
@@ -62,12 +64,10 @@ public class ClanService implements IClanService {
 
     @Override
     public boolean deleteClan(Principal principal, Long clanId) {
-        if(memberService.userInClan(principal, clanId)) {
-            User user = userService.getUser(principal);
-            Clan clan = clanRepository.findById(clanId).orElseThrow();
-            Member member = memberService.getMember(user, clan);
-            if(member.checkStatus(Member.MemberStatus.CAN_DELETE_CLAN)) {
-                deleteClan(clan);
+        if (memberService.userInClan(principal, clanId)) {
+            Member member = memberService.getMember(principal, clanId);
+            if (member.checkStatus(Member.MemberStatus.CAN_DELETE_CLAN)) {
+                deleteClan(clanId);
                 return true;
             }
         }
@@ -77,18 +77,18 @@ public class ClanService implements IClanService {
 
     @Override
     public boolean quitClan(Principal principal, Long clanId) {
-        if(memberService.userInClan(principal, clanId)) {
+        if (memberService.userInClan(principal, clanId)) {
             Clan clan = clanRepository.findById(clanId).orElseThrow();
             User user = userService.getUser(principal);
             Member member = memberService.getMember(user, clan);
-            if(member.checkStatus(Member.MemberStatus.ADMIN)) {
-                deleteClan(clan);
+            if (member.checkStatus(Member.MemberStatus.ADMIN)) {
+                deleteClan(clanId);
 
             } else {
                 var tasks = taskService.getTasksOfClan(clan).stream()
                         .peek(t -> {
                             t.setSolver(null);
-                            if(t.getStatus() == Task.SolutionStatus.TOOK.num
+                            if (t.getStatus() == Task.SolutionStatus.TOOK.num
                                     || t.getStatus() == Task.SolutionStatus.SOLVED.num) {
                                 t.setStatus(Task.SolutionStatus.CREATED);
                             }
@@ -146,11 +146,10 @@ public class ClanService implements IClanService {
         return member.checkStatus(Member.MemberStatus.CAN_REDACT_CLAN);
     }
 
-    private void deleteClan(Clan clan) {
-        inviteService.deleteAllByClan(clan);
-        applicationService.deleteAllByClan(clan);
-        memberService.deleteMembersByClan(clan);
-        clanRepository.delete(clan);
+    private void deleteClan(long id) {
+        applicationService.deleteAllByIdClan(id);
+        inviteService.deleteAllByIdClan(id);
+        clanRepository.deleteById(id);
     }
 
 }

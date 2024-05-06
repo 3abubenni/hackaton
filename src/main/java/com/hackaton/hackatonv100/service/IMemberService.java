@@ -34,8 +34,6 @@ public interface IMemberService {
     void setClanService(IClanService clanService);
     Member getMember(User user, Clan clan);
     Member getMember(Principal principal, Clan clan);
-    void deleteMembersByClan(Clan clan);
-    void addTaskToMember(Member member, Task task);
     boolean kickOutMember(Principal principal, Long memberId);
     List<Member> membersOfClan(Long clanId);
     void setTaskService(ITaskService taskService);

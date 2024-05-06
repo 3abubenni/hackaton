@@ -19,7 +19,6 @@ public class TaskResponse {
     private int money;
     private int exp;
     private Date createdAt;
-    private boolean required;
     private int status;
 
 }

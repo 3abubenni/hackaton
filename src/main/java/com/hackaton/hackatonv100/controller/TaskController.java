@@ -62,17 +62,8 @@ public class TaskController {
 
         }
 
-        var user = userService.getUser(principal);
         var clan = clanService.getClan(clanId);
-        if (!memberService.userInClan(user, clan)) {
-            return ResponseEntity.status(406).build();
-
-        } else if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        var member = memberService.getMember(user, clan);
-        if (member.checkStatus(Member.MemberStatus.CAN_CREATE_TASK)) {
+        if (memberService.userHaveStatusInClan(principal, clan, Member.MemberStatus.CAN_CREATE_TASK)) {
             var task = taskService.createTask(clan, request);
             var response = taskFacade.taskToTaskResponse(task);
             return ResponseEntity.ok(response);
@@ -170,19 +161,18 @@ public class TaskController {
             return ResponseEntity.notFound().build();
         }
 
-        var user = userService.getUser(principal);
         var task = taskService.getTask(id);
-        //If user isn't member of clan or task isn't took and isn't solved
-        if(!memberService.userInClan(user, task.getClan())
+
+        /*
+         *
+         * If user cannot check
+         * task isn't took and isn't solved
+         *
+         */
+        if (!memberService.userHaveStatusInClan(principal, task.getClan(), Member.MemberStatus.CAN_CHECK_TASK)
                 || (task.getStatus() != Task.SolutionStatus.TOOK.num
                 && task.getStatus() != Task.SolutionStatus.SOLVED.num)
         ) {
-            return ResponseEntity.status(406).build();
-        }
-
-        var member = memberService.getMember(user, task.getClan());
-
-        if(!member.checkStatus(Member.MemberStatus.CAN_CHECK_TASK)) {
             return ResponseEntity.status(406).build();
 
         } else {
@@ -191,4 +181,99 @@ public class TaskController {
             return ResponseEntity.ok(response);
         }
     }
+
+
+    @GetMapping("/user")
+    @Operation(description = "Получить все задания пользователя")
+    @ApiResponse(responseCode = "200", description = "OK")
+    public ResponseEntity<List<TaskResponse>> allTasksOfUser(Principal principal) {
+        var tasks = taskService.getAllTaskOfUser(principal);
+        var response = taskFacade.tasksToTasksResponse(tasks);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/member/{id}")
+    @Operation(description = "Получить все задания участника клана")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Участник клана не найден")
+    })
+    public ResponseEntity<List<TaskResponse>> tasksOfMember(@PathVariable("id") Long memberId) {
+        if (memberService.memberExists(memberId)) {
+            var tasks = taskService.getTasksOfMember(memberId);
+            var response = taskFacade.tasksToTasksResponse(tasks);
+            return ResponseEntity.ok(response);
+
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    @PostMapping("/cancel/{id}")
+    @Operation(description = "Отменить задачу. Данное действие может сделать только участник с правом проверять задачи " +
+            "или участник клана, который взял задачу, при том она не помечена как обязательная")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Задача не найдена"),
+            @ApiResponse(responseCode = "406", description = "Пользователь не может отменить задачу")
+    })
+    public ResponseEntity<TaskResponse> cancelTask(
+            @PathVariable("id") Long taskId,
+            Principal principal
+    ) {
+        if (!taskService.taskExists(taskId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var task = taskService.getTask(taskId);
+        var user = userService.getUser(principal);
+        if (!memberService.userInClan(user, task.getClan())
+                || task.getStatus() == Task.SolutionStatus.CREATED.num
+                || task.getStatus() == Task.SolutionStatus.CHECKED.num) {
+            return ResponseEntity.status(406).build();
+        }
+
+        var member = memberService.getMember(user, task.getClan());
+        if (member.checkStatus(Member.MemberStatus.CAN_CHECK_TASK) || member.equals(task.getSolver())) {
+            task = taskService.cancelTask(task);
+            var response = taskFacade.taskToTaskResponse(task);
+            return ResponseEntity.ok(response);
+
+        } else {
+            return ResponseEntity.status(406).build();
+        }
+    }
+
+
+    @PostMapping("/mark_solved/{id}")
+    @Operation(description = "Пометить задачу как решённую (отправить на проверку модераторам)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Задача не найдена"),
+            @ApiResponse(responseCode = "406", description = "Пользователь не может управлять данной задачей")
+    })
+    public ResponseEntity<TaskResponse> markTaskAsSolved(
+            @PathVariable("id") Long id,
+            Principal principal
+    ) {
+        if (!taskService.taskExists(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var task = taskService.getTask(id);
+        var user = userService.getUser(principal);
+
+        if (task.getStatus() == Task.SolutionStatus.TOOK.num && memberService.userInClan(user, task.getClan())) {
+            var member = memberService.getMember(user, task.getClan());
+            if (member.equals(task.getSolver())) {
+                task = taskService.markTaskAsSolved(task);
+                var response = taskFacade.taskToTaskResponse(task);
+                return ResponseEntity.ok(response);
+            }
+        }
+        return ResponseEntity.status(406).build();
+    }
+
 }

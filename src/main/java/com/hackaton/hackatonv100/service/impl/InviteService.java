@@ -10,8 +10,6 @@ import com.hackaton.hackatonv100.service.IClanService;
 import com.hackaton.hackatonv100.service.IInviteService;
 import com.hackaton.hackatonv100.service.IMemberService;
 import com.hackaton.hackatonv100.service.IUserService;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +47,7 @@ public class InviteService implements IInviteService {
 
     @Override
     public Invite inviteUser(User invented, Clan clan) {
-        inviteRepository.deleteAllByUser(invented);
+        inviteRepository.deleteAllByUserAndClan(invented, clan);
         var invite = Invite.builder()
                 .clan(clan)
                 .user(invented)
@@ -83,11 +81,6 @@ public class InviteService implements IInviteService {
     }
 
     @Override
-    public void deleteAllByClan(Clan clan) {
-        inviteRepository.deleteAllByClan(clan);
-    }
-
-    @Override
     public boolean inviteExists(Long inviteId) {
         return inviteRepository.existsById(inviteId);
     }
@@ -107,5 +100,10 @@ public class InviteService implements IInviteService {
     public List<Invite> invitesOfClan(Long clanId) {
         var clan = clanService.getClan(clanId);
         return inviteRepository.findByClan(clan);
+    }
+
+    @Override
+    public void deleteAllByIdClan(long id) {
+        inviteRepository.deleteAllByIdClan(id);
     }
 }

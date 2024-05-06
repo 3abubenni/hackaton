@@ -20,6 +20,6 @@ public interface IApplicationService {
     boolean applicationExists(Long requestId);
     List<ApplicationModel> getAllRequestsOfUser(Principal principal);
     List<ApplicationModel> getAllRequestsOfClan(Long clanId);
-    void deleteAllByClan(Clan clan);
+    void deleteAllByIdClan(long clan);
 
 }

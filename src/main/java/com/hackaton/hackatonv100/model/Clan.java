@@ -19,6 +19,9 @@ public class Clan {
     private Long id;
     @NotNull
     private String name;
-
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Task> tasks;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Member> members;
 
 }

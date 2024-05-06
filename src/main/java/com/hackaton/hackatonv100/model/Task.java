@@ -35,12 +35,11 @@ public class Task {
     private int money;
     private int exp;
     private Date createdAt;
-    private boolean required;
     @NotNull
     private String description;
     @NotNull
     private String name;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     private Clan clan;
     @ManyToOne(fetch = FetchType.LAZY)
     private Member solver;

@@ -143,17 +143,29 @@ public class InviteController {
     @Operation(description = "Получить приглашения от клана")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "404", description = "Клан не найден")
+            @ApiResponse(responseCode = "404", description = "Клан не найден"),
+            @ApiResponse(responseCode = "406", description = "Пользователь не может приглашать пользователей в клан")
     })
-    public ResponseEntity<List<InviteResponse>> invitesOfClan(@PathVariable("id") Long clanId) {
-        if(clanService.clanExists(clanId)) {
+    public ResponseEntity<List<InviteResponse>> invitesOfClan(
+            @PathVariable("id") Long clanId,
+            Principal principal
+
+    ) {
+        if (!clanService.clanExists(clanId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if(memberService.userHaveStatusInClan(principal, clanId, Member.MemberStatus.CAN_INVITE_MEMBER)) {
             var invites = inviteService.invitesOfClan(clanId);
             var response = inviteFacade.invitesToInvitesResponse(invites);
             return ResponseEntity.ok(response);
 
         } else {
-            return ResponseEntity.notFound().build();
-
+            return ResponseEntity.status(406).build();
         }
     }
+
+
+
+
 }
