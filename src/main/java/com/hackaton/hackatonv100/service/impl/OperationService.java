@@ -17,17 +17,18 @@ public class OperationService implements IOperationService {
     private OperationRepository operationRepository;
 
     @Override
-    public Operation addMoney(Member member, int money) {
+    public Operation addMoney(Member member, int money, Operation.OperationType type) {
         if(money <= 0) {
             throw new RuntimeException("Value of money is less or equals 0");
         }
-        var operation = addOperation(member, money);
-        member.setMoney(member.getMoney() + money);
+        var operation = addOperation(member, money, type);
+
+        member.addMoney(money);
         return operationRepository.save(operation);
     }
 
     @Override
-    public Operation withdrawMoney(Member member, int money) {
+    public Operation withdrawMoney(Member member, int money, Operation.OperationType type) {
         if(money <= 0) {
             throw new RuntimeException("Value of money is less or equals 0");
         }
@@ -36,14 +37,14 @@ public class OperationService implements IOperationService {
             throw new RuntimeException("Member don't have enough money");
         }
 
-        var operation = addOperation(member, money);
-        member.setMoney(member.getMoney() - money);
+        var operation = addOperation(member, money, type);
+        member.withdrawMoney(money);
         return operationRepository.save(operation);
     }
 
     @Override
-    public List<Operation> getOperationOfMember(Long idMember) {
-        return operationRepository.findAllByIdMember(idMember);
+    public List<Operation> getOperationsOfMember(Member member) {
+        return operationRepository.findAllByIdMember(member);
     }
 
     @Override
@@ -56,13 +57,14 @@ public class OperationService implements IOperationService {
         return operationRepository.existsById(id);
     }
 
-    private Operation addOperation(Member member, int money) {
+    private Operation addOperation(Member member, int money, Operation.OperationType type) {
         var operation = Operation.builder()
                 .date(new Date(System.currentTimeMillis()))
                 .member(member)
                 .money(money)
                 .build();
-        member.getOperations().add(operation);
+
+        operation.setType(type);
         return operation;
     }
 

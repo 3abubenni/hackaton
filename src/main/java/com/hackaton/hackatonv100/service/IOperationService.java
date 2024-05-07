@@ -9,9 +9,9 @@ import java.util.List;
 @Service
 public interface IOperationService {
 
-    Operation addMoney(Member member, int money);
-    Operation withdrawMoney(Member member, int money);
-    List<Operation> getOperationOfMember(Long idMember);
+    Operation addMoney(Member member, int money, Operation.OperationType type);
+    Operation withdrawMoney(Member member, int money, Operation.OperationType type);
+    List<Operation> getOperationsOfMember(Member member);
     Operation getOperation(Long idOperation);
     boolean operationExists(Long idOperation);
 

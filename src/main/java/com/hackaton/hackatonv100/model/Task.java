@@ -3,6 +3,8 @@ package com.hackaton.hackatonv100.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 
@@ -39,7 +41,8 @@ public class Task {
     private String description;
     @NotNull
     private String name;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Clan clan;
     @ManyToOne(fetch = FetchType.LAZY)
     private Member solver;

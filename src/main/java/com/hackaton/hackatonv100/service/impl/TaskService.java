@@ -2,6 +2,7 @@ package com.hackaton.hackatonv100.service.impl;
 
 import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.Member;
+import com.hackaton.hackatonv100.model.Operation;
 import com.hackaton.hackatonv100.model.Task;
 import com.hackaton.hackatonv100.model.requests.MemberRequest;
 import com.hackaton.hackatonv100.model.requests.TaskRequest;
@@ -50,7 +51,6 @@ public class TaskService implements ITaskService {
     public Task createTask(Clan clan, TaskRequest request) {
         var task = buildTask(request);
         task.setClan(clan);
-        clan.getTasks().add(task);
         return taskRepository.save(task);
     }
 
@@ -111,7 +111,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> getTasksOfClan(Clan clan) {
-        return clan.getTasks();
+        return taskRepository.findAllByClan(clan);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class TaskService implements ITaskService {
     @Override
     public void deleteTask(Long taskId) {
         var task = taskRepository.findById(taskId).orElseThrow();
-        task.getClan().getTasks().remove(task);
+
         taskRepository.delete(task);
     }
 
@@ -148,7 +148,7 @@ public class TaskService implements ITaskService {
             task.setStatus(Task.SolutionStatus.CHECKED);
             var solver = task.getSolver();
             solver.setExp(solver.getExp() + task.getExp());
-            operationService.addMoney(solver, task.getMoney());
+            operationService.addMoney(solver, task.getMoney(), Operation.OperationType.TASK_REWARD);
         } else {
             task.setStatus(Task.SolutionStatus.TOOK);
         }

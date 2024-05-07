@@ -45,7 +45,6 @@ public class MemberService implements IMemberService {
                 .status(status.code)
                 .build();
 
-        clan.getMembers().add(member);
         return memberRepository.save(member);
     }
 
@@ -96,13 +95,17 @@ public class MemberService implements IMemberService {
 
     @Override
     public List<Member> getMembersOfClan(Long idClan) {
-        Clan clan = clanService.getClan(idClan);
-        return clan.getMembers();
+        return memberRepository.findAllByIdClan(idClan);
     }
 
     @Override
     public void excludeMember(Long idMember) {
         var member = getMember(idMember);
+        excludeMember(member);
+    }
+
+    @Override
+    public void excludeMember(Member member) {
         var tasks = taskService.getTasksOfMember(member)
                 .stream().peek(t -> {
                     if(t.getStatus() != Task.SolutionStatus.CHECKED.num) {
@@ -111,14 +114,8 @@ public class MemberService implements IMemberService {
                     t.setSolver(null);
                 }).collect(Collectors.toList());
 
-        taskService.saveAllTasks(tasks);
-        member.getClan().getMembers().remove(member);
-        memberRepository.delete(member);
-    }
 
-    @Override
-    public void excludeMember(Member member) {
-        member.getClan().getMembers().remove(member);
+        taskService.saveAllTasks(tasks);
         memberRepository.delete(member);
     }
 
@@ -208,7 +205,7 @@ public class MemberService implements IMemberService {
 
     @Override
     public List<Member> membersOfClan(Long clanId) {
-        return memberRepository.findByIdClan(clanId);
+        return memberRepository.findAllByIdClan(clanId);
     }
 
     private void changeAdminIfStatusAdmin(int status, Member member) {

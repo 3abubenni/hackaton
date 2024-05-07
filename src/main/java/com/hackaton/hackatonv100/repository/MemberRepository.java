@@ -19,12 +19,15 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findAllByUser(User user);
     boolean existsByUserAndClan(User user, Clan clan);
     Optional<Member> findByUserAndClan(User user, Clan clan);
-    List<Member> findAllByClan(Clan clan);
     Optional<Member> findByStatusAndClan(int status, Clan clan);
 
     @Modifying
     @Query(value = "SELECT * FROM member WHERE clan_id=?1", nativeQuery = true)
-    List<Member> findByIdClan(Long clanId);
+    List<Member> findAllByIdClan(Long clanId);
+
+    @Modifying
+    @Query(value = "SELECT m FROM Member m WHERE m.clan=?1")
+    List<Member> findAllByClan(Clan clan);
 
 
 
