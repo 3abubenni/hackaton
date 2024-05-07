@@ -23,7 +23,7 @@ public class OperationService implements IOperationService {
         }
         var operation = addOperation(member, money, type);
 
-        member.addMoney(money);
+        member.setMoney(member.getMoney() + money);
         return operationRepository.save(operation);
     }
 
@@ -38,13 +38,13 @@ public class OperationService implements IOperationService {
         }
 
         var operation = addOperation(member, money, type);
-        member.withdrawMoney(money);
+        member.setMoney(member.getMoney() - money);
         return operationRepository.save(operation);
     }
 
     @Override
-    public List<Operation> getOperationsOfMember(Member member) {
-        return operationRepository.findAllByIdMember(member);
+    public List<Operation> getOperationOfMember(Long idMember) {
+        return operationRepository.findAllByIdMember(idMember);
     }
 
     @Override

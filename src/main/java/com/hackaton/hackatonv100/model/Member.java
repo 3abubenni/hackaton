@@ -122,19 +122,4 @@ public class Member {
         }
     }
 
-
-    public void addMoney(int money) {
-        if(money < 0) {
-            throw new RuntimeException("Money can't be less 0");
-        }
-        this.money += money;
-    }
-
-    public void withdrawMoney(int money) {
-        if(money < 0) {
-            throw new RuntimeException("Money can't be less 0");
-        }
-        this.money -= money;
-    }
-
 }
