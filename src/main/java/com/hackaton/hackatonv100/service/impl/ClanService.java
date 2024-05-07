@@ -40,18 +40,11 @@ public class ClanService implements IClanService {
     public Clan createClan(Principal principal, ClanRequest request) {
         Clan clan = Clan.builder()
                 .name(request.getName())
-                .members(new ArrayList<>())
-                .tasks(new ArrayList<>())
                 .build();
 
-        clan = clanRepository.save(clan);
         User admin = userService.getUser(principal);
-        clan.getMembers().add(Member.builder()
-                .user(admin)
-                .clan(clan)
-                .status(Member.MemberStatus.ADMIN.code)
-                .build());
-
+        clan = clanRepository.save(clan);
+        memberService.createMember(clan, admin, Member.MemberStatus.ADMIN);
         return clanRepository.save(clan);
     }
 

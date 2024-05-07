@@ -16,11 +16,15 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
 
-    List<Task> findAllByClan(Clan clan);
     List<Task> findAllBySolver(Member member);
 
     @Transactional
     @Query("SELECT t FROM Task t WHERE t.solver.user=?1")
     List<Task> findAllByUser(User user);
+
+    @Transactional
+    @Modifying
+    @Query("SELECT t FROM Task t WHERE t.clan=?1")
+    List<Task> findAllByClan(Clan clan);
 
 }

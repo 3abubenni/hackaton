@@ -50,7 +50,6 @@ public class TaskService implements ITaskService {
     public Task createTask(Clan clan, TaskRequest request) {
         var task = buildTask(request);
         task.setClan(clan);
-        clan.getTasks().add(task);
         return taskRepository.save(task);
     }
 
@@ -111,7 +110,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> getTasksOfClan(Clan clan) {
-        return clan.getTasks();
+        return taskRepository.findAllByClan(clan);
     }
 
     @Override
@@ -122,7 +121,7 @@ public class TaskService implements ITaskService {
     @Override
     public void deleteTask(Long taskId) {
         var task = taskRepository.findById(taskId).orElseThrow();
-        task.getClan().getTasks().remove(task);
+
         taskRepository.delete(task);
     }
 

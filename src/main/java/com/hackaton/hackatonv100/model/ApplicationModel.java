@@ -3,6 +3,8 @@ package com.hackaton.hackatonv100.model;
 import com.hackaton.hackatonv100.model.enums.States;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @AllArgsConstructor
@@ -19,6 +21,7 @@ public class ApplicationModel {
     @JoinColumn(name = "_user")
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Clan clan;
     private int state;
 

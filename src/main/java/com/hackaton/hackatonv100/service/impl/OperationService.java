@@ -62,7 +62,7 @@ public class OperationService implements IOperationService {
                 .member(member)
                 .money(money)
                 .build();
-        member.getOperations().add(operation);
+        //member.getOperations().add(operation);
         return operation;
     }
 
