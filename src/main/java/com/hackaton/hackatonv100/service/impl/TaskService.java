@@ -2,6 +2,7 @@ package com.hackaton.hackatonv100.service.impl;
 
 import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.Member;
+import com.hackaton.hackatonv100.model.Operation;
 import com.hackaton.hackatonv100.model.Task;
 import com.hackaton.hackatonv100.model.requests.MemberRequest;
 import com.hackaton.hackatonv100.model.requests.TaskRequest;
@@ -147,7 +148,7 @@ public class TaskService implements ITaskService {
             task.setStatus(Task.SolutionStatus.CHECKED);
             var solver = task.getSolver();
             solver.setExp(solver.getExp() + task.getExp());
-            operationService.addMoney(solver, task.getMoney());
+            operationService.addMoney(solver, task.getMoney(), Operation.OperationType.TASK_REWARD);
         } else {
             task.setStatus(Task.SolutionStatus.TOOK);
         }
