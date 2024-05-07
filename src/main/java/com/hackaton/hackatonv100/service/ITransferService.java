@@ -13,7 +13,7 @@ public interface ITransferService {
     List<Transfer> getAllTransfersOfMember(Member member);
     List<Transfer> getTransfersFromMember(Member member);
     List<Transfer> getTransfersToMember(Member member);
-
-
+    Transfer getTransfer(Long id);
+    boolean transferExists(Long id);
 
 }

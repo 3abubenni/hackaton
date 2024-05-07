@@ -1,4 +1,4 @@
-package com.hackaton.hackatonv100.service.impl;
+package com.hackaton.hackatonv100.model.enums.impl;
 
 import com.hackaton.hackatonv100.model.ApplicationModel;
 import com.hackaton.hackatonv100.model.Clan;

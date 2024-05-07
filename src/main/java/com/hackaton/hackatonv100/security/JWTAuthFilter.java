@@ -1,7 +1,7 @@
 package com.hackaton.hackatonv100.security;
 
 import com.hackaton.hackatonv100.service.JWTService;
-import com.hackaton.hackatonv100.service.impl.UserService;
+import com.hackaton.hackatonv100.model.enums.impl.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

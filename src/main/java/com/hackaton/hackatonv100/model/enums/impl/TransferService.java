@@ -1,4 +1,4 @@
-package com.hackaton.hackatonv100.service.impl;
+package com.hackaton.hackatonv100.model.enums.impl;
 
 import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.Operation;
@@ -44,17 +44,17 @@ public class TransferService implements ITransferService {
 
     @Override
     public List<Transfer> getAllTransfersOfMember(Member member) {
-        return transferRepository.findAllTransferByMember(member);
+        return transferRepository.findAllByMember(member);
     }
 
     @Override
     public List<Transfer> getTransfersFromMember(Member member) {
-        return transferRepository.findAllTransferByFromMember(member);
+        return transferRepository.findAllByMemberFrom(member);
     }
 
     @Override
     public List<Transfer> getTransfersToMember(Member member) {
-        return transferRepository.findAllTransferByToMember(member);
+        return transferRepository.findAllByMemberTo(member);
     }
 
     @Override

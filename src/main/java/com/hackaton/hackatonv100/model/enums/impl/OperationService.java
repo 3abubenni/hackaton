@@ -1,4 +1,4 @@
-package com.hackaton.hackatonv100.service.impl;
+package com.hackaton.hackatonv100.model.enums.impl;
 
 import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.Operation;
@@ -43,8 +43,8 @@ public class OperationService implements IOperationService {
     }
 
     @Override
-    public List<Operation> getOperationOfMember(Long idMember) {
-        return operationRepository.findAllByIdMember(idMember);
+    public List<Operation> getOperationsOfMember(Member member) {
+        return operationRepository.findAllByMember(member);
     }
 
     @Override

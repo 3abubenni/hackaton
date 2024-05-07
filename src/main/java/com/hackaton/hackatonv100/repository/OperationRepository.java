@@ -14,6 +14,6 @@ public interface OperationRepository extends JpaRepository<Operation, Long> {
 
     @Modifying
     @Query("SELECT o FROM Operation o WHERE o.member=?1")
-    List<Operation> findAllByIdMember(Long idMember);
+    List<Operation> findAllByMember(Member member);
 
 }

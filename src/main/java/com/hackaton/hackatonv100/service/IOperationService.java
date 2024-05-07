@@ -11,7 +11,7 @@ public interface IOperationService {
 
     Operation addMoney(Member member, int money, Operation.OperationType type);
     Operation withdrawMoney(Member member, int money, Operation.OperationType type);
-    List<Operation> getOperationOfMember(Long idMember);
+    List<Operation> getOperationsOfMember(Member member);
     Operation getOperation(Long idOperation);
     boolean operationExists(Long idOperation);
 
