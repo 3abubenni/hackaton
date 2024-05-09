@@ -1,18 +1,19 @@
-package com.hackaton.hackatonv100.model.enums.impl;
+package com.hackaton.hackatonv100.service.user.impl;
 
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.requests.UserUpdateRequest;
 import com.hackaton.hackatonv100.repository.UserRepository;
-import com.hackaton.hackatonv100.service.IUserService;
+import com.hackaton.hackatonv100.service.user.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.Locale;
 
 @Service
 @AllArgsConstructor
-public class UserService implements IUserService
-{
+public class UserService implements IUserService {
 
     private UserRepository userRepository;
 
@@ -34,11 +35,9 @@ public class UserService implements IUserService
     @Override
     public User updateUser(Principal principal, UserUpdateRequest request) {
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
-
         user.setBday(request.getBday());
-        user.setFname(request.getFname());
-        user.setLname(request.getLname());
-
+        user.setFname(request.getFname().strip());
+        user.setLname(request.getLname().strip());
         return userRepository.save(user);
     }
 
@@ -50,5 +49,11 @@ public class UserService implements IUserService
     @Override
     public boolean userExist(Long id) {
         return userRepository.existsById(id);
+    }
+
+    @Override
+    public List<User> searchUsers(String query) {
+        query = query.toLowerCase(Locale.ROOT) + '%';
+        return userRepository.searchUser(query, 15L);
     }
 }

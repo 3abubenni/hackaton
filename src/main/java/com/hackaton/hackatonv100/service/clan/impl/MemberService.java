@@ -1,4 +1,4 @@
-package com.hackaton.hackatonv100.model.enums.impl;
+package com.hackaton.hackatonv100.service.clan.impl;
 
 import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.Member;
@@ -6,10 +6,10 @@ import com.hackaton.hackatonv100.model.Task;
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.requests.MemberRequest;
 import com.hackaton.hackatonv100.repository.MemberRepository;
-import com.hackaton.hackatonv100.service.IClanService;
-import com.hackaton.hackatonv100.service.IMemberService;
-import com.hackaton.hackatonv100.service.ITaskService;
-import com.hackaton.hackatonv100.service.IUserService;
+import com.hackaton.hackatonv100.service.clan.IClanService;
+import com.hackaton.hackatonv100.service.clan.IMemberService;
+import com.hackaton.hackatonv100.service.clan.ITaskService;
+import com.hackaton.hackatonv100.service.user.IUserService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -160,6 +160,11 @@ public class MemberService implements IMemberService {
     @Override
     public boolean userHaveStatusInClan(Principal principal, Clan clan, Member.MemberStatus status) {
         var user = userService.getUser(principal);
+        return userHaveStatusInClan(user, clan, status);
+    }
+
+    @Override
+    public boolean userHaveStatusInClan(User user, Clan clan, Member.MemberStatus status) {
         if(userInClan(user, clan)) {
             var member = getMember(user, clan);
             return member.checkStatus(status);

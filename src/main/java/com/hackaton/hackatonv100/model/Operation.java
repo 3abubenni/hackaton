@@ -35,7 +35,7 @@ public class Operation {
     private Long id;
     private int money;
     private Date date;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
     private int type;

@@ -1,11 +1,10 @@
-package com.hackaton.hackatonv100.model.enums.impl;
+package com.hackaton.hackatonv100.service.operation.impl;
 
 import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.Operation;
 import com.hackaton.hackatonv100.model.Transfer;
 import com.hackaton.hackatonv100.repository.TransferRepository;
-import com.hackaton.hackatonv100.service.IOperationService;
-import com.hackaton.hackatonv100.service.ITransferService;
+import com.hackaton.hackatonv100.service.operation.ITransferService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

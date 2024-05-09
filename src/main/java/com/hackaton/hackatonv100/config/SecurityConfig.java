@@ -1,7 +1,7 @@
 package com.hackaton.hackatonv100.config;
 
 import com.hackaton.hackatonv100.security.JWTAuthFilter;
-import com.hackaton.hackatonv100.service.IUserService;
+import com.hackaton.hackatonv100.service.user.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

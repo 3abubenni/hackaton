@@ -10,7 +10,11 @@ import java.util.Collection;
 import java.util.Date;
 
 @Entity
-@Table(name = "_user")
+@Table(name = "_user", indexes = {
+        @Index(columnList = "fname"),
+        @Index(columnList = "lname"),
+        @Index(columnList = "email")
+})
 @Builder
 @Getter
 @Setter

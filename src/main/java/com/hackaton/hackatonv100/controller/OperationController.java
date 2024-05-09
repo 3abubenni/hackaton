@@ -1,14 +1,17 @@
 package com.hackaton.hackatonv100.controller;
 
 import com.hackaton.hackatonv100.facade.OperationFacade;
+import com.hackaton.hackatonv100.facade.PurchaseFacade;
 import com.hackaton.hackatonv100.facade.TransferFacade;
 import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.response.OperationResponse;
+import com.hackaton.hackatonv100.model.response.PurchaseResponse;
 import com.hackaton.hackatonv100.model.response.TransferResponse;
-import com.hackaton.hackatonv100.service.IMemberService;
-import com.hackaton.hackatonv100.service.IOperationService;
-import com.hackaton.hackatonv100.service.ITransferService;
-import com.hackaton.hackatonv100.service.IUserService;
+import com.hackaton.hackatonv100.service.clan.IMemberService;
+import com.hackaton.hackatonv100.service.operation.IOperationService;
+import com.hackaton.hackatonv100.service.operation.IPurchaseService;
+import com.hackaton.hackatonv100.service.operation.ITransferService;
+import com.hackaton.hackatonv100.service.user.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,10 +20,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -29,14 +29,18 @@ import java.util.List;
 @AllArgsConstructor
 @Tag(description = "Контроллер для проведения операций над записью участника в клане", name = "Operation Controller")
 @RequestMapping("/api/operation")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class OperationController {
 
     private IOperationService operationService;
     private ITransferService transferService;
     private IMemberService memberService;
     private IUserService userService;
+    private IPurchaseService purchaseService;
+    private PurchaseFacade purchaseFacade;
     private TransferFacade transferFacade;
     private OperationFacade operationFacade;
+
 
     @PostMapping("/send_money/member/{id}")
     @Operation(description = "Отправить деньги на счёт другому участнику клана")
@@ -77,7 +81,7 @@ public class OperationController {
     }
 
 
-    @GetMapping("/operation/member/{id}")
+    @GetMapping("/member/{id}")
     @Operation(description = "Получить всю информацию об операциях участника клана. " +
             "Данную информацию может получить только сам участник или админ клана")
     @ApiResponses(value = {
@@ -95,18 +99,11 @@ public class OperationController {
 
         var member = memberService.getMember(id);
         var user = userService.getUser(principal);
-        if (member.getUser().equals(user)) {
+        if (member.getUser().equals(user)
+                || memberService.userHaveStatusInClan(user, member.getClan(), Member.MemberStatus.ADMIN)) {
             var response = getOperationsResponseByMember(member);
             return ResponseEntity.ok(response);
 
-        } else if (!memberService.userInClan(user, member.getClan())) {
-            return ResponseEntity.status(406).build();
-        }
-
-        var checker = memberService.getMember(user, member.getClan());
-        if (checker.checkStatus(Member.MemberStatus.ADMIN)) {
-            var response = getOperationsResponseByMember(member);
-            return ResponseEntity.ok(response);
         }
         return ResponseEntity.status(406).build();
     }
@@ -130,20 +127,41 @@ public class OperationController {
 
         var member = memberService.getMember(id);
         var user = userService.getUser(principal);
-        if (member.getUser().equals(user)) {
-            var response = getTransfersResponseByMember(member);
-            return ResponseEntity.ok(response);
-
-        } else if (!memberService.userInClan(user, member.getClan())) {
-            return ResponseEntity.status(406).build();
-        }
-
-        var checker = memberService.getMember(user, member.getClan());
-        if (checker.checkStatus(Member.MemberStatus.ADMIN)) {
+        if (member.getUser().equals(user)
+                || memberService.userHaveStatusInClan(user, member.getClan(), Member.MemberStatus.ADMIN)) {
             var response = getTransfersResponseByMember(member);
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.status(406).build();
+    }
+
+
+    @GetMapping("/purchase/member/{id}")
+    @Operation(description = "Получить все покупки участника")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Участник не найден"),
+            @ApiResponse(responseCode = "403", description = "Пользователь не может получить данные")
+    })
+    public ResponseEntity<List<PurchaseResponse>> purchasesOfMember(
+            @PathVariable("id") Long id,
+            Principal principal
+    ) {
+        if (!memberService.memberExists(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var member = memberService.getMember(id);
+        var user = userService.getUser(principal);
+        if (member.getUser().equals(user)
+                || memberService.userHaveStatusInClan(user, member.getClan(), Member.MemberStatus.ADMIN)) {
+            var purchases = purchaseService.purchasesOfMember(member);
+            var response = purchaseFacade.purchasesToResponse(purchases);
+            return ResponseEntity.ok(response);
+
+        } else {
+            return ResponseEntity.status(403).build();
+        }
     }
 
 
@@ -166,16 +184,8 @@ public class OperationController {
 
         var operation = operationService.getOperation(id);
         var user = userService.getUser(principal);
-        if (operation.getMember().getUser().equals(user)) {
-            return ResponseEntity.ok(operationFacade.operationToOperationResponse(operation));
-
-        } else if (!memberService.userInClan(user, operation.getMember().getClan())) {
-            return ResponseEntity.status(406).build();
-
-        }
-
-        var checker = memberService.getMember(user, operation.getMember().getClan());
-        if (checker.checkStatus(Member.MemberStatus.ADMIN)) {
+        if (operation.getMember().getUser().equals(user)
+                || memberService.userHaveStatusInClan(user, operation.getMember().getClan(), Member.MemberStatus.ADMIN)) {
             return ResponseEntity.ok(operationFacade.operationToOperationResponse(operation));
         }
         return ResponseEntity.status(406).build();
@@ -196,17 +206,15 @@ public class OperationController {
     ) {
         if (!transferService.transferExists(id)) {
             return ResponseEntity.notFound().build();
-
         }
 
         var transfer = transferService.getTransfer(id);
         var user = userService.getUser(principal);
         if (transfer.getTo().getMember().getUser().equals(user)
-                || transfer.getFrom().getMember().getUser().equals(user)) {
+                || transfer.getFrom().getMember().getUser().equals(user)
+                || memberService.userHaveStatusInClan(user, transfer.getTo().getMember().getClan(), Member.MemberStatus.ADMIN)
+        ) {
             return ResponseEntity.ok(transferFacade.transferToTransferResponse(transfer));
-
-        } else if (!memberService.userInClan(user, transfer.getTo().getMember().getClan())) {
-            return ResponseEntity.status(406).build();
         }
 
         var checker = memberService.getMember(user, transfer.getTo().getMember().getClan());
@@ -215,7 +223,6 @@ public class OperationController {
         }
         return ResponseEntity.status(406).build();
     }
-
 
 
     /*

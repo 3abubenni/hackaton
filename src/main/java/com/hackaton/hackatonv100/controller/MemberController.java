@@ -4,9 +4,9 @@ import com.hackaton.hackatonv100.facade.MemberFacade;
 import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.requests.MemberRequest;
 import com.hackaton.hackatonv100.model.response.MemberResponse;
-import com.hackaton.hackatonv100.service.IClanService;
-import com.hackaton.hackatonv100.service.IMemberService;
-import com.hackaton.hackatonv100.service.IUserService;
+import com.hackaton.hackatonv100.service.clan.IClanService;
+import com.hackaton.hackatonv100.service.clan.IMemberService;
+import com.hackaton.hackatonv100.service.user.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -26,7 +26,6 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/api/member")
 @CrossOrigin(origins = "*", maxAge = 3600)
-
 public class MemberController {
 
     private IMemberService memberService;

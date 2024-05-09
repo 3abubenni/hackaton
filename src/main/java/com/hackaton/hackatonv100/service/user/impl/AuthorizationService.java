@@ -1,10 +1,10 @@
-package com.hackaton.hackatonv100.model.enums.impl;
+package com.hackaton.hackatonv100.service.user.impl;
 
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.requests.LoginRequest;
 import com.hackaton.hackatonv100.model.requests.RegisterRequest;
 import com.hackaton.hackatonv100.repository.UserRepository;
-import com.hackaton.hackatonv100.service.IAuthorizationService;
+import com.hackaton.hackatonv100.service.user.IAuthorizationService;
 import com.hackaton.hackatonv100.service.JWTService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;

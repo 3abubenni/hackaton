@@ -1,4 +1,4 @@
-package com.hackaton.hackatonv100.service;
+package com.hackaton.hackatonv100.service.operation;
 
 import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.Operation;

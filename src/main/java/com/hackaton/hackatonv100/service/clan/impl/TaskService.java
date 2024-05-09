@@ -1,13 +1,16 @@
-package com.hackaton.hackatonv100.model.enums.impl;
+package com.hackaton.hackatonv100.service.clan.impl;
 
 import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.Operation;
 import com.hackaton.hackatonv100.model.Task;
-import com.hackaton.hackatonv100.model.requests.MemberRequest;
 import com.hackaton.hackatonv100.model.requests.TaskRequest;
 import com.hackaton.hackatonv100.repository.TaskRepository;
-import com.hackaton.hackatonv100.service.*;
+import com.hackaton.hackatonv100.service.clan.IClanService;
+import com.hackaton.hackatonv100.service.clan.IMemberService;
+import com.hackaton.hackatonv100.service.clan.ITaskService;
+import com.hackaton.hackatonv100.service.operation.IOperationService;
+import com.hackaton.hackatonv100.service.user.IUserService;
 import jakarta.annotation.PostConstruct;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;

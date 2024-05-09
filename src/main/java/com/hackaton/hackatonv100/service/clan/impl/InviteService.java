@@ -1,4 +1,4 @@
-package com.hackaton.hackatonv100.model.enums.impl;
+package com.hackaton.hackatonv100.service.clan.impl;
 
 import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.Invite;
@@ -6,10 +6,10 @@ import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.enums.States;
 import com.hackaton.hackatonv100.repository.InviteRepository;
-import com.hackaton.hackatonv100.service.IClanService;
-import com.hackaton.hackatonv100.service.IInviteService;
-import com.hackaton.hackatonv100.service.IMemberService;
-import com.hackaton.hackatonv100.service.IUserService;
+import com.hackaton.hackatonv100.service.clan.IClanService;
+import com.hackaton.hackatonv100.service.clan.IInviteService;
+import com.hackaton.hackatonv100.service.clan.IMemberService;
+import com.hackaton.hackatonv100.service.user.IUserService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,11 +59,13 @@ public class InviteService implements IInviteService {
 
     @Override
     public Invite acceptInvite(Invite invite) {
-        memberService.createMember(
-                invite.getClan(),
-                invite.getUser(),
-                Member.MemberStatus.MEMBER
-        );
+        if (!memberService.userInClan(invite.getUser(), invite.getClan())) {
+            memberService.createMember(
+                    invite.getClan(),
+                    invite.getUser(),
+                    Member.MemberStatus.MEMBER
+            );
+        }
 
         invite.setState(States.ACCEPTED);
         return inviteRepository.save(invite);

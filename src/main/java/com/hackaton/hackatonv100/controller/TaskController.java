@@ -6,14 +6,15 @@ import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.Task;
 import com.hackaton.hackatonv100.model.requests.TaskRequest;
 import com.hackaton.hackatonv100.model.response.TaskResponse;
-import com.hackaton.hackatonv100.service.IClanService;
-import com.hackaton.hackatonv100.service.IMemberService;
-import com.hackaton.hackatonv100.service.ITaskService;
-import com.hackaton.hackatonv100.service.IUserService;
+import com.hackaton.hackatonv100.service.clan.IClanService;
+import com.hackaton.hackatonv100.service.clan.IMemberService;
+import com.hackaton.hackatonv100.service.clan.ITaskService;
+import com.hackaton.hackatonv100.service.user.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.repository.query.Param;
@@ -115,7 +116,7 @@ public class TaskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "404", description = "Задача не найдена"),
-            @ApiResponse(responseCode = "406", description = "Задачу нельзя взять")
+            @ApiResponse(responseCode = "403", description = "Задачу нельзя взять")
     })
     public ResponseEntity<TaskResponse> takeTask(
             @PathVariable("id") Long id,
@@ -137,7 +138,7 @@ public class TaskController {
             return ResponseEntity.ok(response);
 
         } else {
-            return ResponseEntity.status(406).build();
+            return ResponseEntity.status(403).build();
         }
     }
 
@@ -149,7 +150,7 @@ public class TaskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "404", description = "Задача не найдена"),
-            @ApiResponse(responseCode = "406", description = "Пользователь не может проверять задачи, " +
+            @ApiResponse(responseCode = "403", description = "Пользователь не может проверять задачи, " +
                     "или задача не может быть проверена")
     })
     public ResponseEntity<TaskResponse> checkTask(
@@ -173,7 +174,7 @@ public class TaskController {
                 || (task.getStatus() != Task.SolutionStatus.TOOK.num
                 && task.getStatus() != Task.SolutionStatus.SOLVED.num)
         ) {
-            return ResponseEntity.status(406).build();
+            return ResponseEntity.status(403).build();
 
         } else {
             task = taskService.checkTask(task, solvedCorrectly);
@@ -217,7 +218,7 @@ public class TaskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "404", description = "Задача не найдена"),
-            @ApiResponse(responseCode = "406", description = "Пользователь не может отменить задачу")
+            @ApiResponse(responseCode = "403", description = "Пользователь не может отменить задачу")
     })
     public ResponseEntity<TaskResponse> cancelTask(
             @PathVariable("id") Long taskId,
@@ -232,7 +233,7 @@ public class TaskController {
         if (!memberService.userInClan(user, task.getClan())
                 || task.getStatus() == Task.SolutionStatus.CREATED.num
                 || task.getStatus() == Task.SolutionStatus.CHECKED.num) {
-            return ResponseEntity.status(406).build();
+            return ResponseEntity.status(403).build();
         }
 
         var member = memberService.getMember(user, task.getClan());
@@ -242,7 +243,7 @@ public class TaskController {
             return ResponseEntity.ok(response);
 
         } else {
-            return ResponseEntity.status(406).build();
+            return ResponseEntity.status(403).build();
         }
     }
 
@@ -252,7 +253,7 @@ public class TaskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "404", description = "Задача не найдена"),
-            @ApiResponse(responseCode = "406", description = "Пользователь не может управлять данной задачей")
+            @ApiResponse(responseCode = "403", description = "Пользователь не может управлять данной задачей")
     })
     public ResponseEntity<TaskResponse> markTaskAsSolved(
             @PathVariable("id") Long id,
@@ -273,7 +274,40 @@ public class TaskController {
                 return ResponseEntity.ok(response);
             }
         }
-        return ResponseEntity.status(406).build();
+        return ResponseEntity.status(403).build();
+    }
+
+
+
+    @DeleteMapping("/{id}")
+    @Operation(description = "Удалить задачу")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Задача не найдена"),
+            @ApiResponse(responseCode = "403", description = "Пользователь не может удалить задачу")
+    })
+    public void deleteTask(
+            Principal principal,
+            @PathVariable("id") Long id,
+            HttpServletResponse response
+    ) {
+        if(!taskService.taskExists(id)) {
+            response.setStatus(404);
+            return;
+        }
+
+        var task = taskService.getTask(id);
+        var user = userService.getUser(principal);
+
+        if(memberService.userInClan(user, task.getClan())) {
+            var member = memberService.getMember(user, task.getClan());
+            if(member.checkStatus(Member.MemberStatus.CAN_CREATE_TASK)) {
+                taskService.deleteTask(id);
+                response.setStatus(200);
+                return;
+            }
+        }
+        response.setStatus(403);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.hackaton.hackatonv100.model.enums.impl;
+package com.hackaton.hackatonv100.service.clan.impl;
 
 import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.Member;
@@ -6,14 +6,15 @@ import com.hackaton.hackatonv100.model.Task;
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.requests.ClanRequest;
 import com.hackaton.hackatonv100.repository.ClanRepository;
-import com.hackaton.hackatonv100.service.*;
+import com.hackaton.hackatonv100.service.clan.*;
+import com.hackaton.hackatonv100.service.user.IUserService;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,7 +40,7 @@ public class ClanService implements IClanService {
     @Override
     public Clan createClan(Principal principal, ClanRequest request) {
         Clan clan = Clan.builder()
-                .name(request.getName())
+                .name(request.getName().trim().strip())
                 .build();
 
         User admin = userService.getUser(principal);
@@ -125,7 +126,8 @@ public class ClanService implements IClanService {
 
     @Override
     public List<Clan> searchClan(String query) {
-        return null;
+        query = query.toLowerCase(Locale.ROOT) + '%';
+        return clanRepository.searchByName(query, 15L);
     }
 
     @Override

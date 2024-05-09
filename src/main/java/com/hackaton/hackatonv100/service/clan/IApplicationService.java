@@ -1,4 +1,4 @@
-package com.hackaton.hackatonv100.service;
+package com.hackaton.hackatonv100.service.clan;
 
 import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.ApplicationModel;

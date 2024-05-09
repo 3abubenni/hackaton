@@ -6,20 +6,22 @@ import com.hackaton.hackatonv100.model.requests.LoginRequest;
 import com.hackaton.hackatonv100.model.requests.RegisterRequest;
 import com.hackaton.hackatonv100.model.requests.UserUpdateRequest;
 import com.hackaton.hackatonv100.model.response.UserResponse;
-import com.hackaton.hackatonv100.service.IAuthorizationService;
-import com.hackaton.hackatonv100.service.IUserService;
+import com.hackaton.hackatonv100.service.user.IAuthorizationService;
+import com.hackaton.hackatonv100.service.user.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -133,4 +135,15 @@ public class UserController {
 
         }
     }
+
+
+    @GetMapping("/search")
+    @Operation(description = "Искать пользователей по имени или email")
+    @ApiResponse(responseCode = "200", description = "OK")
+    public ResponseEntity<List<UserResponse>> searchUsers(@Param("query") String query) {
+        var users = userService.searchUsers(query);
+        var response = userFacade.usersToUsersResponse(users);
+        return ResponseEntity.ok(response);
+    }
+
 }
