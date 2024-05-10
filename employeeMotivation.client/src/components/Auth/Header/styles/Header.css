@@ -1,0 +1,27 @@
+#headerContainer {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+#headerContainer a {
+  color: blue;
+  font-size: 25px;
+  margin-right: 20px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+#headerContainer #iconCloud {
+  font-size: 40px;
+  margin-right: 20px;
+  margin-top: 20px;
+  color: blue;
+  cursor: pointer;
+}

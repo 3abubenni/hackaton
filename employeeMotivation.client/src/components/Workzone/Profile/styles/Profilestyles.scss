@@ -1,0 +1,90 @@
+@import "../../../../helpers/variables/colors.scss";
+@import "../../../../helpers/mixins/mixins.scss";
+
+
+.profileContent{
+    width: 100%;
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    color: $mainTextColor;
+
+    .image{
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
+    
+    .hiddenInput{
+        display: none;
+    }
+
+    h1{
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    #iconUser{
+        font-size: 100px;
+        margin-bottom: 30px;
+    }
+
+    img{
+        border-radius: 150px;
+        width: 250px;
+        height: 250px;
+        margin-bottom: 50px;
+    }
+    ul{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+        list-style: none;
+
+        div{
+            margin-left: 100px;
+        }
+
+        input{
+            background-color: $bgWorkZoneColor;
+            border: none;
+            color: $mainTextColor;
+        }
+        input:focus{
+            outline: none;
+        }
+    }
+    .buttons{
+        margin-top: 20px;
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        button{
+            @include myButton
+        }
+        button:disabled{
+            text-decoration: line-through;
+
+            &:hover{
+                background-color: rgba(4,69,109)
+            }
+        }
+    }
+
+    #clansContainer{
+        display: flex;
+        margin-left: 80px;
+        flex-direction: row;
+        overflow-y: auto;
+        font-size: 20px;
+        width: 100%;
+        height: 400px;
+        flex-wrap: wrap;
+        gap: 20px;
+        align-content: flex-start;
+    }
+}

@@ -1,0 +1,67 @@
+@import "../../../../helpers/variables/colors.scss";
+
+*{
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+}
+
+#container{
+    width: 500px;
+    height: 500px;
+    background-color: $bgFormColor;
+    border-radius: 25px;
+    box-shadow: 10px 10px 8px 0px rgba(34, 60, 80, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h1{
+        color: $mainTextColor;
+        padding: 40px;
+        font-size: 50px;
+    }
+
+    input{
+        border-radius: 8px;
+        border: 1px solid;
+        padding: 3px;
+        width: 70%;
+        height: 10%;
+        margin-top: 20px;
+        background-color: $mainTextColor;
+        font-size: 25px;
+    }
+
+    .remindPass{
+        display: flex;
+        flex-direction: row;
+        width: 70%;
+        justify-content: flex-end;
+        a{
+            color: whitesmoke;
+            text-decoration: none;
+        }
+
+    }
+
+    #buttons{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 50px;
+
+        button {
+            @include myButton
+        }
+
+        button:hover {
+            background-color: rgb(41, 75, 230);
+            transition: 0.5s;
+        }
+        button:focus,
+        button:focus-visible {
+            outline: 4px auto -webkit-focus-ring-color;
+        }
+    }
+}

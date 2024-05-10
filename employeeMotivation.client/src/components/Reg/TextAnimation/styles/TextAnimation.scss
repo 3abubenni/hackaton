@@ -1,0 +1,10 @@
+@import "../../../../helpers/variables/colors.scss";
+
+#texts{
+    color: $mainTextColor;
+
+    input{
+        color: $mainTextColor;
+        font-size: 20px;
+    }
+}

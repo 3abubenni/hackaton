@@ -1,0 +1,21 @@
+@import "../../../../helpers/variables/colors.scss";
+
+#dropDownSelection {
+    list-style: none;
+    display: flex;
+    color: $mainTextColor;
+    width: 150px;
+    position: absolute;
+    height: 170px;
+    right: 0;
+    flex-direction: column;
+    text-align: center;
+    background-image: url(../../../../images/DDWBg.png);
+    li {
+        padding: 8px 12px;
+    } 
+    li:hover {
+        background-color: rgb(0,130,156);
+        cursor: pointer;
+    }
+}

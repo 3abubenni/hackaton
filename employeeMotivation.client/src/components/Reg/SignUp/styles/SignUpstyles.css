@@ -1,0 +1,95 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+#containerReg {
+  width: 600px;
+  height: 320px;
+  background-color: rgb(32, 63, 89);
+  border-radius: 25px;
+  -webkit-box-shadow: 10px 10px 8px 0px rgba(34, 60, 80, 0.2);
+          box-shadow: 10px 10px 8px 0px rgba(34, 60, 80, 0.2);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+#containerReg h1 {
+  color: rgb(43, 194, 164);
+  padding: 40px;
+  font-size: 50px;
+}
+#containerReg input {
+  border: none;
+  width: 70%;
+  height: 8%;
+  margin-top: 20px;
+  background-color: rgb(32, 63, 89);
+  font-size: 25px;
+}
+#containerReg input:focus {
+  outline: none;
+}
+#containerReg .remindPass {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  width: 70%;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+#containerReg .remindPass a {
+  color: black;
+  text-decoration: none;
+}
+#containerReg #buttons {
+  width: 95%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 10px;
+  margin-top: 60px;
+}
+#containerReg #buttons button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: rgb(4, 69, 109);
+  color: rgb(43, 194, 164);
+  cursor: pointer;
+  -webkit-transition: border-color 0.25s;
+  transition: border-color 0.25s;
+}
+#containerReg #buttons button:hover {
+  background-color: rgb(0, 130, 156);
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+#containerReg #buttons button:focus,
+#containerReg #buttons button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}

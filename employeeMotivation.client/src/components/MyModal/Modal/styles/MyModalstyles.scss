@@ -1,0 +1,59 @@
+@import "../../../../helpers/mixins/mixins.scss";
+@import "../../../../helpers/variables/colors.scss";
+
+.myModalView{
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    width: 500px;
+    height: 220px;
+    color: $mainTextColor;
+    font-size: 25px;
+
+    input{
+        margin-top: 20px;
+    }
+
+    .inputClanName{
+        display: flex;
+        flex-direction: column;
+        width: 60%;
+        gap: 10px;
+
+        .inputValue{
+            display: flex;
+            flex-direction: row;
+
+            #cursor{
+                margin-top: 22px;
+            }
+            input{
+                margin-left: 5px;
+                color: $mainTextColor;
+                width: 200px;
+                height: 30px;
+                font-size: 25px;
+                background: none;
+                border: none;
+
+                margin-bottom: -200px;
+
+                &:focus{
+                    outline: none;
+                }
+            }
+        }
+    }
+
+    .inputImage{
+        display: flex;
+        flex-direction: column;
+    }
+
+    button{
+        @include myButton;
+        width: 200px;
+        margin-left: auto;
+        margin-top: auto;
+    }
+}

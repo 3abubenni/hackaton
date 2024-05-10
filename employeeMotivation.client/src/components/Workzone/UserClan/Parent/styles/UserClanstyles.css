@@ -1,0 +1,92 @@
+.membersListMainView {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  width: 100%;
+  height: 100%;
+  margin-left: 20px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: rgb(43, 194, 164);
+  font-size: 25px;
+}
+.membersListMainView .searchConatiner {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  gap: 20px;
+  margin-top: 20px;
+  height: 200px;
+  margin-bottom: -100px;
+}
+.membersListMainView .searchConatiner input {
+  margin-top: -3px;
+  width: 100vw;
+  margin-left: -15px;
+  width: 200px;
+  height: 30px;
+  font-size: 25px;
+  background: none;
+  border: none;
+  color: rgb(43, 194, 164);
+}
+.membersListMainView .searchConatiner input:focus {
+  outline: none;
+}
+.membersListMainView button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: rgb(4, 69, 109);
+  color: rgb(43, 194, 164);
+  cursor: pointer;
+  -webkit-transition: border-color 0.25s;
+  transition: border-color 0.25s;
+  margin-bottom: 100px;
+}
+.membersListMainView #membersContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  overflow: auto;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-top: -70px;
+  font-size: 20px;
+  width: 100%;
+  height: 100%;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 20px;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  padding-right: 35px;
+}

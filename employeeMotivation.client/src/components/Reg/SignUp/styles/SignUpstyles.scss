@@ -1,0 +1,71 @@
+@import "../../../../helpers/variables/colors.scss";
+@import "../../../../helpers/mixins/mixins.scss";
+
+*{
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+}
+
+#containerReg{
+    width: 600px;
+    height: 320px;
+    background-color: $bgFormColor;
+    border-radius: 25px;
+    box-shadow: 10px 10px 8px 0px rgba(34, 60, 80, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h1{
+        color: $mainTextColor;
+        padding: 40px;
+        font-size: 50px;
+    }
+
+    input{
+        border: none;
+        width: 70%;
+        height: 8%;
+        margin-top: 20px;
+        background-color: $bgFormColor;
+        font-size: 25px;
+    }
+    input:focus {
+        outline: none;
+    }
+
+    .remindPass{
+        display: flex;
+        flex-direction: row;
+        width: 70%;
+        justify-content: flex-end;
+        a{
+            color: black;
+            text-decoration: none;
+        }
+
+    }
+
+    #buttons{
+        width: 95%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 60px;
+
+        button {
+            @include myButton
+        }
+
+        button:hover {
+            background-color: rgb(0,130,156);
+            transition: 0.5s;
+        }
+        button:focus,
+        button:focus-visible {
+            outline: 4px auto -webkit-focus-ring-color;
+        }
+    }
+}

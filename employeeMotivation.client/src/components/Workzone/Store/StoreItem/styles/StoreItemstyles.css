@@ -1,0 +1,31 @@
+.storeItem {
+  width: 150px;
+  height: 200px;
+  padding: 3px;
+  background: rgb(50, 173, 118);
+}
+.storeItem #storeItemContent {
+  width: 150px;
+  height: 200px;
+  background-color: rgb(22, 62, 73);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.storeItem #storeItemContent img {
+  width: 75px;
+  height: 125px;
+}
+.storeItem #storeItemContent p {
+  color: rgb(43, 194, 164);
+}

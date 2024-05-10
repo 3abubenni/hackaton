@@ -1,0 +1,52 @@
+@import "../../../../helpers/variables/colors.scss";
+@import "../../../../helpers/mixins/mixins.scss";
+
+.myModalItemsView{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 400px;
+    height: 100px;
+    font-size: 25px;
+    justify-content: center;
+    align-items: flex-start;
+
+    .elements{
+        display: flex;
+        flex-direction: row;
+        gap: 30px;
+        color: $mainTextColor;
+
+        textarea{
+            background: none;
+            border: none;
+            color: $mainTextColor;
+            resize: none;
+            font-size: 22px;
+        }
+        #answer_description{
+            width: 550px;
+            height: 200px;
+        }
+
+        .answer_description{
+            display: flex;
+            flex-direction: row;
+            gap: 7px;
+        }
+
+        textarea:focus{
+            outline: none;
+        }
+    }
+
+    button{
+        @include myButton;
+        margin-left: auto;
+        margin-top: auto;
+
+        &:hover{
+            background-color: rgba(0, 255, 0, 0.2);
+        }
+    }
+}
