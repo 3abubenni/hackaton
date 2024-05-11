@@ -14,6 +14,7 @@ public interface IClanService {
 
     Clan createClan(Principal principal, ClanRequest request);
     Clan updateClan(ClanRequest request, Long clanId);
+    Clan createClan(User user, ClanRequest request);
 
     /*
     *

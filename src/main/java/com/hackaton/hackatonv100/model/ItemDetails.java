@@ -23,7 +23,7 @@ public class ItemDetails {
     private int amount;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Item item;
 
 

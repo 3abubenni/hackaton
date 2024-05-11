@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 @Service
@@ -34,6 +35,10 @@ public class ItemService implements IItemService {
                 .item(item)
                 .amount(request.getAmount())
                 .build();
+
+        if(clan.getShop() == null) {
+            clan.setShop(new ArrayList<>());
+        }
 
         clan.getShop().add(itemDetails);
         return itemRepository.save(item);

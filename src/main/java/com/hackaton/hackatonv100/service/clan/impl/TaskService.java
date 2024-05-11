@@ -185,7 +185,7 @@ public class TaskService implements ITaskService {
 
 
     private void checkMemberAndTask(Member member, Task task) {
-        if (!member.getClan().equals(task.getClan())) {
+        if (!member.getClan().getId().equals(task.getClan().getId())) {
             throw new RuntimeException("Member and Task are from different clan: " +
                     " id clan of member: " + member.getClan().getId() +
                     " id clan of task: " + task.getClan().getId());

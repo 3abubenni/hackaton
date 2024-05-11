@@ -44,15 +44,7 @@ public class ClanService implements IClanService {
 
     @Override
     public Clan createClan(Principal principal, ClanRequest request) {
-        var clan = Clan.builder()
-                .name(request.getName().strip())
-                .description(request.getDescription().strip())
-                .build();
-
-        var admin = userService.getUser(principal);
-        clan = clanRepository.save(clan);
-        memberService.createMember(clan, admin, Member.MemberStatus.ADMIN);
-        return clanRepository.save(clan);
+        return createClan(userService.getUser(principal), request);
     }
 
     @Override
@@ -60,6 +52,17 @@ public class ClanService implements IClanService {
         var clan = clanRepository.findById(clanId).orElseThrow();
         clan.setName(request.getName());
         clan.setDescription(request.getDescription());
+        return clanRepository.save(clan);
+    }
+
+    @Override
+    public Clan createClan(User user, ClanRequest request) {
+        var clan = Clan.builder()
+                .name(request.getName().strip())
+                .description(request.getDescription().strip())
+                .build();
+        clan = clanRepository.save(clan);
+        memberService.createMember(clan, user, Member.MemberStatus.ADMIN);
         return clanRepository.save(clan);
     }
 
