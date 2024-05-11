@@ -16,5 +16,6 @@ public class UserResponse {
     private String lname;
     private String email;
     private Date bday;
+    private String img;
 
 }

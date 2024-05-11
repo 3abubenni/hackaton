@@ -9,13 +9,12 @@ import java.util.Date;
 @Builder
 @Getter
 @Setter
-public class PurchaseResponse {
+public class ItemTransferResponse {
 
     private Long id;
-    private int money;
-    private ItemDetailsResponse item;
+    private Long memberFrom;
+    private Long memberTo;
     private Date date;
-    private Long member;
+    private ItemDetailsResponse item;
 
 }
-

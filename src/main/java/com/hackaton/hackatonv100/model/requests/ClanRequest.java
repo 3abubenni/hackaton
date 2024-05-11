@@ -15,5 +15,6 @@ public class ClanRequest {
 
     @Size(min = 3, max = 40)
     private String name;
+    private String description;
 
 }

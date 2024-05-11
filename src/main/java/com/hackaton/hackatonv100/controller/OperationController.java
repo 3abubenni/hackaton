@@ -1,13 +1,16 @@
 package com.hackaton.hackatonv100.controller;
 
+import com.hackaton.hackatonv100.facade.ItemTransferFacade;
 import com.hackaton.hackatonv100.facade.OperationFacade;
 import com.hackaton.hackatonv100.facade.PurchaseFacade;
 import com.hackaton.hackatonv100.facade.TransferFacade;
 import com.hackaton.hackatonv100.model.Member;
+import com.hackaton.hackatonv100.model.response.ItemTransferResponse;
 import com.hackaton.hackatonv100.model.response.OperationResponse;
 import com.hackaton.hackatonv100.model.response.PurchaseResponse;
 import com.hackaton.hackatonv100.model.response.TransferResponse;
 import com.hackaton.hackatonv100.service.clan.IMemberService;
+import com.hackaton.hackatonv100.service.operation.IItemTransferService;
 import com.hackaton.hackatonv100.service.operation.IOperationService;
 import com.hackaton.hackatonv100.service.operation.IPurchaseService;
 import com.hackaton.hackatonv100.service.operation.ITransferService;
@@ -36,10 +39,12 @@ public class OperationController {
     private ITransferService transferService;
     private IMemberService memberService;
     private IUserService userService;
+    private IItemTransferService itemTransferService;
     private IPurchaseService purchaseService;
     private PurchaseFacade purchaseFacade;
     private TransferFacade transferFacade;
     private OperationFacade operationFacade;
+    private ItemTransferFacade itemTransferFacade;
 
 
     @PostMapping("/send_money/member/{id}")
@@ -222,6 +227,35 @@ public class OperationController {
             return ResponseEntity.ok(transferFacade.transferToTransferResponse(transfer));
         }
         return ResponseEntity.status(406).build();
+    }
+
+
+    @GetMapping("/item/transfer/member/{id}")
+    @Operation(description = "Получить информацию о передаче предметов участника. " +
+            "Данное действие может совершить только сам участник или админ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Участник клана не найден"),
+            @ApiResponse(responseCode = "403", description = "Пользователь не может просматривать данную информацию")
+    })
+    public ResponseEntity<List<ItemTransferResponse>> itemTransfersOfUser(
+            @PathVariable("id") Long id,
+            Principal principal
+    ) {
+        if(!memberService.memberExists(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var member = memberService.getMember(id);
+        var user = userService.getUser(principal);
+        if(member.getUser().equals(user)
+                || memberService.userHaveStatusInClan(user, member.getClan(), Member.MemberStatus.ADMIN)) {
+
+            var transfers = itemTransferService.transferOfMember(member);
+            var response = itemTransferFacade.itemTransfersToResponse(transfers);
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.status(403).build();
     }
 
 

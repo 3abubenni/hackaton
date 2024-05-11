@@ -8,11 +8,15 @@ import com.hackaton.hackatonv100.model.requests.ClanRequest;
 import com.hackaton.hackatonv100.repository.ClanRepository;
 import com.hackaton.hackatonv100.service.clan.*;
 import com.hackaton.hackatonv100.service.user.IUserService;
+import com.hackaton.hackatonv100.service.utilservice.IImageService;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -27,6 +31,7 @@ public class ClanService implements IClanService {
     private IApplicationService applicationService;
     private IInviteService inviteService;
     private ITaskService taskService;
+    private IImageService imageService;
 
     @PostConstruct
     public void init() {
@@ -39,11 +44,12 @@ public class ClanService implements IClanService {
 
     @Override
     public Clan createClan(Principal principal, ClanRequest request) {
-        Clan clan = Clan.builder()
-                .name(request.getName().trim().strip())
+        var clan = Clan.builder()
+                .name(request.getName().strip())
+                .description(request.getDescription().strip())
                 .build();
 
-        User admin = userService.getUser(principal);
+        var admin = userService.getUser(principal);
         clan = clanRepository.save(clan);
         memberService.createMember(clan, admin, Member.MemberStatus.ADMIN);
         return clanRepository.save(clan);
@@ -51,8 +57,9 @@ public class ClanService implements IClanService {
 
     @Override
     public Clan updateClan(ClanRequest request, Long clanId) {
-        Clan clan = clanRepository.findById(clanId).orElseThrow();
+        var clan = clanRepository.findById(clanId).orElseThrow();
         clan.setName(request.getName());
+        clan.setDescription(request.getDescription());
         return clanRepository.save(clan);
     }
 
@@ -72,9 +79,9 @@ public class ClanService implements IClanService {
     @Override
     public boolean quitClan(Principal principal, Long clanId) {
         if (memberService.userInClan(principal, clanId)) {
-            Clan clan = clanRepository.findById(clanId).orElseThrow();
-            User user = userService.getUser(principal);
-            Member member = memberService.getMember(user, clan);
+            var clan = clanRepository.findById(clanId).orElseThrow();
+            var user = userService.getUser(principal);
+            var member = memberService.getMember(user, clan);
             if (member.checkStatus(Member.MemberStatus.ADMIN)) {
                 deleteClan(clanId);
 
@@ -106,13 +113,13 @@ public class ClanService implements IClanService {
 
     @Override
     public List<Clan> getClansOfUser(Long userId) {
-        User user = userService.getUser(userId);
+        var user = userService.getUser(userId);
         return getClansOfUser(user);
     }
 
     @Override
     public List<Clan> getClansOfUser(Principal principal) {
-        User user = userService.getUser(principal);
+        var user = userService.getUser(principal);
         return getClansOfUser(user);
     }
 
@@ -137,13 +144,44 @@ public class ClanService implements IClanService {
 
     @Override
     public boolean userCanUpdateClan(Principal principal, Long clanId) {
-        Member member = memberService.getMember(principal, clanId);
+        var member = memberService.getMember(principal, clanId);
         return member.checkStatus(Member.MemberStatus.CAN_REDACT_CLAN);
     }
 
+    @Override
+    public boolean clanWithThisNameExists(String name) {
+        return clanRepository.existsByName(name);
+    }
+
+    @Override
+    public Clan uploadImage(MultipartFile multipartFile, Clan clan) {
+        try {
+            var image = imageService.uploadImage(multipartFile);
+            deleteImage(clan);
+            clan.setImg(image.getName());
+            return clanRepository.save(clan);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Clan deleteImage(Clan clan) {
+        if(clan.getImg() != null) {
+            imageService.deleteImg(clan.getImg());
+            clan.setImg(null);
+        }
+        return clanRepository.save(clan);
+    }
+
     private void deleteClan(long id) {
-        applicationService.deleteAllByIdClan(id);
-        inviteService.deleteAllByIdClan(id);
+        var clan = clanRepository.findById(id).orElseThrow();
+        List<String> names = clan.getShop().stream()
+                .map(i -> i.getItem().getImg())
+                .toList();
+
+        imageService.deleteImgs(names);
+        deleteImage(clan);
         clanRepository.deleteById(id);
     }
 

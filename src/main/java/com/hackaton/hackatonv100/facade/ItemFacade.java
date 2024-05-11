@@ -18,6 +18,7 @@ public class ItemFacade {
                 .id(item.getId())
                 .cost(item.getCost())
                 .name(item.getName())
+                .img(item.getImg())
                 .description(item.getDescription())
                 .build();
     }
@@ -34,6 +35,7 @@ public class ItemFacade {
                 .description(itemDetails.getItem().getDescription())
                 .name(itemDetails.getItem().getName())
                 .cost(itemDetails.getItem().getCost())
+                .img(itemDetails.getItem().getImg())
                 .id(itemDetails.getItem().getId())
                 .build();
     }

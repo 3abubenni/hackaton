@@ -16,5 +16,7 @@ public class MemberResponse {
     private int money;
     private int exp;
     private int status;
+    private int solvedTasks;
+    private int items;
 
 }

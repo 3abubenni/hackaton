@@ -2,12 +2,16 @@ package com.hackaton.hackatonv100.controller;
 
 
 import com.hackaton.hackatonv100.facade.ItemFacade;
+import com.hackaton.hackatonv100.facade.ItemTransferFacade;
 import com.hackaton.hackatonv100.model.Member;
 import com.hackaton.hackatonv100.model.requests.ItemRequest;
+import com.hackaton.hackatonv100.model.response.ItemDetailsResponse;
 import com.hackaton.hackatonv100.model.response.ItemResponse;
+import com.hackaton.hackatonv100.model.response.ItemTransferResponse;
 import com.hackaton.hackatonv100.service.clan.IClanService;
 import com.hackaton.hackatonv100.service.clan.IItemService;
 import com.hackaton.hackatonv100.service.clan.IMemberService;
+import com.hackaton.hackatonv100.service.operation.IItemTransferService;
 import com.hackaton.hackatonv100.service.user.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -16,12 +20,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.repository.query.Param;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.Objects;
 
 @Controller
 @AllArgsConstructor
@@ -35,7 +44,10 @@ public class ItemController {
     private IUserService userService;
     private IClanService clanService;
     private IMemberService memberService;
+    private IItemTransferService iItemTransferService;
     private ItemFacade itemFacade;
+    private ItemTransferFacade itemTransferFacade;
+
 
     @PostMapping("/clan/{id}")
     @Operation(description = "Создать предмет для клана. Длина имени предмета должна быть не меньше 3 символов" +
@@ -151,5 +163,139 @@ public class ItemController {
         }
         response.setStatus(403);
     }
+
+
+    @GetMapping("/member/{id}")
+    @Operation(description = "Получить предметы участника")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Участник не найден"),
+            @ApiResponse(responseCode = "403", description = "Пользователь не состоит в одном клане с участником")
+    })
+    public ResponseEntity<List<ItemDetailsResponse>> itemsOfMember(
+            @PathVariable("id") Long id,
+            Principal principal
+    ) {
+        if(!memberService.memberExists(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var member = memberService.getMember(id);
+        var user = userService.getUser(principal);
+        if(memberService.userInClan(user, member.getClan())) {
+            var items = member.getInventory();
+            var response = itemFacade.itemDetailsToResponse(items);
+            return ResponseEntity.ok(response);
+
+        } else {
+            return ResponseEntity.status(403).build();
+        }
+    }
+
+
+
+    @PostMapping("/{item_id}/share/member/{member_id}")
+    @Operation(description = "Подарить предмет соклановцу")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Неверно указано число предметов (<= 0)"),
+            @ApiResponse(responseCode = "403", description = "Пользователь не может подарить данный предмет данному участнику"),
+            @ApiResponse(responseCode = "404", description = "Не найден предмет или участник"),
+            @ApiResponse(responseCode = "406", description = "Не хватает предметов для передачи")
+    })
+    public ResponseEntity<ItemTransferResponse> shareItem(
+            @PathVariable("item_id") Long itemId,
+            @PathVariable("member_id") Long memberId,
+            @Param("amount") int amount,
+            Principal principal
+    ) {
+        if(!(itemService.itemExist(itemId) && memberService.memberExists(memberId))) {
+            return ResponseEntity.notFound().build();
+
+        } else if(amount <= 0) {
+            return ResponseEntity.badRequest().build();
+
+        }
+
+        var item = itemService.getItem(itemId);
+        var to = memberService.getMember(memberId);
+        var user = userService.getUser(principal);
+        if(!item.getClan().equals(to.getClan())
+                || !memberService.userInClan(user, to.getClan())) {
+            return ResponseEntity.status(403).build();
+        }
+
+        var from = memberService.getMember(principal, to.getClan());
+        if(!from.equals(to) && from.memberHasEnoughItems(item, amount)) {
+            var itemTransfer = iItemTransferService.transferItem(from, to, item, amount);
+            var response = itemTransferFacade.itemTransferToResponse(itemTransfer);
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.status(406).build();
+    }
+
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, value = "/{id}/image")
+    @Operation(description = "Загрузить фото для предмета")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Неверный формат файла"),
+            @ApiResponse(responseCode = "404", description = "Предмет не найден"),
+            @ApiResponse(responseCode = "403", description = "Пользователь не может изменить предмет")
+    })
+    public ResponseEntity<ItemResponse> uploadImage(
+            @PathVariable("id") Long id,
+            @RequestParam("file") MultipartFile file,
+            Principal principal
+
+    ) {
+        if(!itemService.itemExist(id)) {
+            return ResponseEntity.notFound().build();
+
+        } else if(!Objects.requireNonNull(file.getContentType()).startsWith("image")) {
+            return ResponseEntity.badRequest().build();
+
+        }
+
+        var user = userService.getUser(principal);
+        var item = itemService.getItem(id);
+
+        if(memberService.userHaveStatusInClan(user, item.getClan(), Member.MemberStatus.CAN_MANAGE_ITEMS)) {
+            item = itemService.uploadImg(item, file);
+            var response = itemFacade.itemToItemResponse(item);
+            return ResponseEntity.ok(response);
+        }
+
+        return ResponseEntity.status(403).build();
+    }
+
+    @DeleteMapping("/{id}/image")
+    @Operation(description = "Удалить фото предмета")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Предмет не найден"),
+            @ApiResponse(responseCode = "403", description = "Пользователь не может изменить предмет")
+    })
+    public ResponseEntity<ItemResponse> deleteImage(
+            @PathVariable("id") Long id,
+            Principal principal
+
+    ) {
+        if(!itemService.itemExist(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var user = userService.getUser(principal);
+        var item = itemService.getItem(id);
+
+        if(memberService.userHaveStatusInClan(user, item.getClan(), Member.MemberStatus.CAN_MANAGE_ITEMS)) {
+            item = itemService.deleteImg(item);
+            var response = itemFacade.itemToItemResponse(item);
+            return ResponseEntity.ok(response);
+        }
+
+        return ResponseEntity.status(403).build();
+    }
+
 
 }

@@ -8,6 +8,7 @@ import com.hackaton.hackatonv100.model.requests.UserUpdateRequest;
 import com.hackaton.hackatonv100.model.response.UserResponse;
 import com.hackaton.hackatonv100.service.user.IAuthorizationService;
 import com.hackaton.hackatonv100.service.user.IUserService;
+import com.hackaton.hackatonv100.service.utilservice.IImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,13 +16,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @AllArgsConstructor
@@ -33,8 +38,6 @@ public class UserController {
     private IUserService userService;
     private IAuthorizationService authorizationService;
     private UserFacade userFacade;
-
-
 
     @PostMapping("/register")
     @Operation(description = "Регистрация нового пользователя. \n" +
@@ -53,10 +56,11 @@ public class UserController {
             @RequestBody @Valid RegisterRequest request,
             BindingResult bindingResult
     ) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()
+                || (request.getBday() != null && request.getBday().after(new Date(System.currentTimeMillis())))) {
             return ResponseEntity.badRequest().build();
 
-        } else if(userService.getUser(request.getEmail()) != null) {
+        } else if (userService.getUser(request.getEmail()) != null) {
             return ResponseEntity.status(406).build();
 
         } else {
@@ -64,7 +68,6 @@ public class UserController {
             return ResponseEntity.ok(token);
         }
     }
-
 
 
     @PostMapping("/login")
@@ -78,7 +81,6 @@ public class UserController {
         String token = authorizationService.login(request);
         return ResponseEntity.ok(token);
     }
-
 
 
     @GetMapping
@@ -99,7 +101,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
     public ResponseEntity<UserResponse> user(@PathVariable("id") Long id) {
-        if(userService.userExist(id)) {
+        if (userService.userExist(id)) {
             User user = userService.getUser(id);
             UserResponse response = userFacade.userToUserResponse(user);
             return ResponseEntity.ok(response);
@@ -109,7 +111,6 @@ public class UserController {
 
         }
     }
-
 
 
     @PutMapping
@@ -125,7 +126,7 @@ public class UserController {
             @RequestBody @Valid UserUpdateRequest request,
             BindingResult bindingResult
     ) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
 
         } else {
@@ -143,6 +144,44 @@ public class UserController {
     public ResponseEntity<List<UserResponse>> searchUsers(@Param("query") String query) {
         var users = userService.searchUsers(query);
         var response = userFacade.usersToUsersResponse(users);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, value = "image")
+    @Operation(description = "Загрузить изображение для аккаунта")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Image is uploaded"),
+                    @ApiResponse(responseCode = "400", description = "Неверный формат файла")
+            }
+    )
+    public ResponseEntity<UserResponse> uploadImage(
+            @RequestParam("file") MultipartFile file,
+            Principal principal
+    ) {
+        if(Objects.requireNonNull(file.getContentType()).startsWith("image")) {
+            var user = userService.uploadImgToUser(principal, file);
+
+            if(user == null) {
+                return ResponseEntity.internalServerError().build();
+            }
+
+            var response = userFacade.userToUserResponse(user);
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+    @DeleteMapping("/image")
+    @Operation(description = "Удалить изображение пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(description = "OK", responseCode = "200")
+    })
+    public ResponseEntity<UserResponse> deleteImage(Principal principal) {
+        var user = userService.deleteImgOfUser(principal);
+        var response = userFacade.userToUserResponse(user);
         return ResponseEntity.ok(response);
     }
 
