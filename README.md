@@ -1,9 +1,8 @@
-<ul>
-<li><a name="backend">Backend</a> </li>
-<li><a name="backend">Frontend</a> </li>
-</ul>
+-[Backend](#запуск-backend-части)
 
-# [Запуск Backend части](#backend)
+-[Frontend](#запуск-frontend-части)
+
+# Запуск Backend части
 
 ## Основные команды
 
@@ -48,3 +47,5 @@
 
 #### Замечание
 jar file находится в zip файле hackaton1.0.1SNAPSHOT.zip
+
+# Запуск Frontend части
