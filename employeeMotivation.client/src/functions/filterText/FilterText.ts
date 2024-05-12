@@ -9,6 +9,7 @@ export const FilterTextForClan = (filteredData : IClan[]) =>{
         }
     });
 }
+
 export function FilterTextForTasks(filteredData : ITaskItem[]) {
     
     return filteredData.map((item) => {
