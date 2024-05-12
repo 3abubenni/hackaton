@@ -72,11 +72,12 @@ public class Member {
     private User user;
     private int status;
     private int exp;
+    private int solvedTasks;
     private int money;
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Clan clan;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemDetails> inventory;
 
     /*
@@ -143,44 +144,68 @@ public class Member {
         this.money -= money;
     }
 
-    public ItemDetails buyItem(Item item, int count) {
-        if (count <= 0) {
-            throw new RuntimeException("Count mustn't be less 0");
-        } else if (money - item.getCost() * count < 0) {
+    public ItemDetails buyItem(Item item, int amount) {
+        if (money - item.getCost() * amount < 0) {
             throw new RuntimeException("Member don't have enough money");
         }
-        money -= item.getCost() * count;
+        money -= item.getCost() * amount;
+        return addItem(item, amount);
+    }
+
+    public void dropItem(Item item, int amount) {
+        if (amount <= 0) {
+            throw new RuntimeException("Count mustn't be less 0");
+        }
+
+        if (!memberHasEnoughItems(item, amount)) {
+            throw new RuntimeException("Member doesn't have enough items");
+        }
+
+        var itemDetail = inventory.stream().filter(i -> i.getItem().equals(item)).findFirst().orElseThrow();
+        itemDetail.setAmount(itemDetail.getAmount() - amount);
+        if (itemDetail.getAmount() == 0) {
+            inventory.remove(itemDetail);
+        }
+    }
+
+    public ItemDetails addItem(Item item, int amount) {
+        if (amount <= 0) {
+            throw new RuntimeException("Count mustn't be less 0");
+        } else if(!item.getClan().equals(clan)) {
+            throw new RuntimeException("Member and item from different clans");
+        }
+
         if (inventory != null) {
             var optional = inventory.stream().filter(i -> i.getItem().equals(item)).findFirst();
             if (optional.isPresent()) {
                 var itemDetail = optional.get();
-                itemDetail.setAmount(itemDetail.getAmount() + count);
+                itemDetail.setAmount(itemDetail.getAmount() + amount);
             } else {
-                inventory.add(ItemDetails.builder().item(item).amount(count).build());
+                inventory.add(ItemDetails.builder().item(item).amount(amount).build());
             }
         } else {
-            inventory = List.of(ItemDetails.builder().item(item).amount(count).build());
+            inventory = List.of(ItemDetails.builder().item(item).amount(amount).build());
         }
         return ItemDetails.builder()
-                .amount(count)
+                .amount(amount)
                 .item(item)
                 .build();
     }
 
-    public void dropItem(Item item, int count) {
-        if (count <= 0) {
-            throw new RuntimeException("Count mustn't be less 0");
+    public int getCountItems() {
+        if(inventory == null) {
+            return 0;
         }
+        int countItems = 0;
+        for(var item: inventory) {
+            countItems += item.getAmount();
+        }
+        return countItems;
+    }
 
-        if (inventory == null || inventory.stream().noneMatch(i -> i.getItem().equals(item) && i.getAmount() >= count)) {
-            throw new RuntimeException("Member don't have enough items");
-        }
-
-        var itemDetail = inventory.stream().filter(i -> i.getItem().equals(item)).findFirst().get();
-        itemDetail.setAmount(itemDetail.getAmount() - count);
-        if(itemDetail.getAmount() == 0) {
-            inventory.remove(itemDetail);
-        }
+    public boolean memberHasEnoughItems(Item item, int amount) {
+        return inventory != null
+                && inventory.stream().anyMatch(i -> i.getItem().equals(item) && i.getAmount() >= amount);
     }
 
 }

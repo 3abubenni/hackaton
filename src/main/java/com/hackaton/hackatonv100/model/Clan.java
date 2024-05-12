@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Builder
@@ -20,16 +19,18 @@ public class Clan {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
+    @Column(unique = true)
     private String name;
     private String description;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ItemDetails> shop;
+    private String img;
 
     public ItemDetails getItemDetailsFromShop(Item item) {
         return shop.stream()
                 .filter(itemDetails -> itemDetails.getItem().equals(item))
                 .findFirst()
-                .get();
+                .orElseThrow();
     }
 
     public ItemDetails sellItem(Item item, int amount) {

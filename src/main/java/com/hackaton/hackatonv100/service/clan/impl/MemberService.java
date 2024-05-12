@@ -39,7 +39,7 @@ public class MemberService implements IMemberService {
 
     @Override
     public Member createMember(Clan clan, User user, Member.MemberStatus status) {
-        Member member = Member.builder()
+        var member = Member.builder()
                 .user(user)
                 .clan(clan)
                 .status(status.code)
@@ -74,15 +74,15 @@ public class MemberService implements IMemberService {
 
     @Override
     public Member getMember(Principal principal, Long clanId) {
-        User user = userService.getUser(principal);
-        Clan clan = clanService.getClan(clanId);
+        var user = userService.getUser(principal);
+        var clan = clanService.getClan(clanId);
         return memberRepository.findByUserAndClan(user, clan)
                 .orElseThrow();
     }
 
     @Override
     public Member updateMember(Long memberId, MemberRequest request) {
-        Member member = memberRepository.findById(memberId).orElseThrow();
+        var member = memberRepository.findById(memberId).orElseThrow();
         return updateMember(member, request);
     }
 
@@ -126,13 +126,13 @@ public class MemberService implements IMemberService {
 
     @Override
     public List<Member> getMembersOfUser(Principal principal) {
-        User user = userService.getUser(principal);
+        var user = userService.getUser(principal);
         return getMembersOfUser(user);
     }
 
     @Override
     public List<Member> getMembersOfUser(Long userId) {
-        User user = userService.getUser(userId);
+        var user = userService.getUser(userId);
         return getMembersOfUser(user);
     }
 
@@ -143,8 +143,8 @@ public class MemberService implements IMemberService {
 
     @Override
     public boolean userInClan(Principal principal, Long clanId) {
-        User user = userService.getUser(principal);
-        Clan clan = clanService.getClan(clanId);
+        var user = userService.getUser(principal);
+        var clan = clanService.getClan(clanId);
         return userInClan(user, clan);
     }
 
@@ -179,7 +179,7 @@ public class MemberService implements IMemberService {
 
     @Override
     public Member getMember(Principal principal, Clan clan) {
-        User user = userService.getUser(principal);
+        var user = userService.getUser(principal);
         return getMember(user, clan);
     }
 
@@ -211,6 +211,12 @@ public class MemberService implements IMemberService {
     @Override
     public List<Member> membersOfClan(Long clanId) {
         return memberRepository.findAllByIdClan(clanId);
+    }
+
+    @Override
+    public boolean userHasClanAsAdmin(Principal principal) {
+        var user = userService.getUser(principal);
+        return memberRepository.userHasClanWithStatus(user, Member.MemberStatus.ADMIN.code);
     }
 
     private void changeAdminIfStatusAdmin(int status, Member member) {

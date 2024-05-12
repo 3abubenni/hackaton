@@ -14,4 +14,7 @@ public interface ClanRepository extends JpaRepository<Clan, Long> {
             "ORDER BY c.name LIMIT ?2")
     List<Clan> searchByName(String name, Long limit);
 
+    @Query("SELECT COUNT(c) > 0 FROM Clan c WHERE c.name=?1")
+    boolean existsByName(String name);
+
 }

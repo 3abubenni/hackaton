@@ -26,7 +26,7 @@ public class AuthorizationService implements IAuthorizationService {
     @Override
     public String register(RegisterRequest request) {
         log.info("Created user by email: " + request.getEmail() + ", password: "  + request.getPassword());
-        User user = User.builder()
+        var user = User.builder()
                 .bday(request.getBday())
                 .fname(request.getFname())
                 .lname(request.getLname())

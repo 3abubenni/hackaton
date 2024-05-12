@@ -30,6 +30,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/api/task")
 @Tag(name = "Task Controller", description = "Контроллер для управления задачами")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class TaskController {
 
 
@@ -43,10 +44,11 @@ public class TaskController {
     @Operation(description = "Создать задачу для клана")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "400", description = "Данные не валидны: " +
-                    "\n1) Название задачи меньше 3 символов" +
-                    "\n2) Описание задачи меньше 20 символов" +
-                    "\n3) Опыт или деньги, выдаваемые за решение задачи, меньше 0"),
+            @ApiResponse(responseCode = "400", description = """
+                    Данные не валидны:\s
+                    1) Название задачи меньше 3 символов
+                    2) Описание задачи меньше 20 символов
+                    3) Опыт или деньги, выдаваемые за решение задачи, меньше 0"""),
             @ApiResponse(responseCode = "406", description = "Пользлователь не может создать задачу для данного клана"),
             @ApiResponse(responseCode = "404", description = "Клан не найден")
     })

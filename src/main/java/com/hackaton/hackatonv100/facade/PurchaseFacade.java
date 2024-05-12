@@ -21,7 +21,7 @@ public class PurchaseFacade {
                 .id(purchase.getId())
                 .member(purchase.getOperation().getMember().getId())
                 .money(purchase.getOperation().getMoney())
-                .itemResponse(itemDetailsResponse)
+                .item(itemDetailsResponse)
                 .date(purchase.getOperation().getDate())
                 .build();
     }

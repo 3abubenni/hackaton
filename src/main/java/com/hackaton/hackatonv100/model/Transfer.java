@@ -18,10 +18,10 @@ public class Transfer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Operation to;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Operation from;
     private Date date;

@@ -59,14 +59,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public Task updateTask(Long taskId, TaskRequest request) {
-        var task = Task.builder()
-                .createdAt(new Date(System.currentTimeMillis()))
-                .exp(request.getExp())
-                .money(request.getMoney())
-                .name(request.getName())
-                .description(request.getDescription())
-                .build();
-
+        var task = buildTask(request);
         task.setId(taskId);
         return taskRepository.save(task);
     }
@@ -84,12 +77,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public Task tookTask(Member member, Task task) {
-        if (!member.getClan().equals(task.getClan())) {
-            throw new RuntimeException("Member and Task are from different clan: " +
-                    " id clan of member: " + member.getClan().getId() +
-                    " id clan of task: " + task.getClan().getId());
-        }
-
+        checkMemberAndTask(member, task);
         task.setStatus(Task.SolutionStatus.TOOK);
         task.setSolver(member);
         return taskRepository.save(task);
@@ -124,9 +112,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public void deleteTask(Long taskId) {
-        var task = taskRepository.findById(taskId).orElseThrow();
-
-        taskRepository.delete(task);
+        taskRepository.deleteById(taskId);
     }
 
     @Override
@@ -151,6 +137,7 @@ public class TaskService implements ITaskService {
             task.setStatus(Task.SolutionStatus.CHECKED);
             var solver = task.getSolver();
             solver.setExp(solver.getExp() + task.getExp());
+            solver.setSolvedTasks(solver.getSolvedTasks() + 1);
             operationService.addMoney(solver, task.getMoney(), Operation.OperationType.TASK_REWARD);
         } else {
             task.setStatus(Task.SolutionStatus.TOOK);
@@ -196,5 +183,13 @@ public class TaskService implements ITaskService {
                 .build();
     }
 
+
+    private void checkMemberAndTask(Member member, Task task) {
+        if (!member.getClan().getId().equals(task.getClan().getId())) {
+            throw new RuntimeException("Member and Task are from different clan: " +
+                    " id clan of member: " + member.getClan().getId() +
+                    " id clan of task: " + task.getClan().getId());
+        }
+    }
 
 }

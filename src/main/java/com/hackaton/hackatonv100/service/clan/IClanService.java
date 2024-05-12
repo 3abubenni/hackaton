@@ -4,6 +4,7 @@ import com.hackaton.hackatonv100.model.Clan;
 import com.hackaton.hackatonv100.model.User;
 import com.hackaton.hackatonv100.model.requests.ClanRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -13,6 +14,7 @@ public interface IClanService {
 
     Clan createClan(Principal principal, ClanRequest request);
     Clan updateClan(ClanRequest request, Long clanId);
+    Clan createClan(User user, ClanRequest request);
 
     /*
     *
@@ -27,5 +29,8 @@ public interface IClanService {
     List<Clan> searchClan(String query);
     boolean clanExists(Long clanId);
     boolean userCanUpdateClan(Principal principal, Long idClan);
+    boolean clanWithThisNameExists(String name);
+    Clan uploadImage(MultipartFile multipartFile, Clan clan);
+    Clan deleteImage(Clan clan);
 
 }

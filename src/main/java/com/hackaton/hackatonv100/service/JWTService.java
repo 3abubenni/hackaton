@@ -21,7 +21,7 @@ public class JWTService {
     private static final long TIME_EXPIRATION = 3_600_000 * 24;
 
     public String generateToken(String subject) {
-        String jwt = Jwts.builder()
+        var jwt = Jwts.builder()
                 .signWith(signedKey())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + TIME_EXPIRATION))

@@ -14,7 +14,9 @@ public class MemberFacade {
     public MemberResponse memberToMemberResponse(Member member) {
         return MemberResponse.builder()
                 .id(member.getId())
+                .solvedTasks(member.getSolvedTasks())
                 .exp(member.getExp())
+                .items(member.getCountItems())
                 .clanId(member.getClan().getId())
                 .userId(member.getUser().getId())
                 .money(member.getMoney())

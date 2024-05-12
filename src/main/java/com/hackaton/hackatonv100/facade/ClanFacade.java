@@ -15,6 +15,8 @@ public class ClanFacade {
         return ClanResponse.builder()
                 .id(clan.getId())
                 .name(clan.getName())
+                .img(clan.getImg())
+                .description(clan.getDescription())
                 .build();
     }
 

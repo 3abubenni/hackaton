@@ -14,5 +14,6 @@ public class ItemDetailsResponse {
     private int cost;
     private String name;
     private String description;
+    private String img;
 
 }

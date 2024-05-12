@@ -26,9 +26,10 @@ public class Item {
     private String name;
     private String description;
     private int cost;
+    private String img;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Clan clan;
 
 

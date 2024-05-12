@@ -16,6 +16,7 @@ public class UserFacade {
                 .id(user.getId())
                 .bday(user.getBday())
                 .email(user.getEmail())
+                .img(user.getImg())
                 .fname(user.getFname())
                 .lname(user.getLname())
                 .build();

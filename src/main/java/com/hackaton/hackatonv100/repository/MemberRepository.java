@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
+
     List<Member> findAllByUser(User user);
     boolean existsByUserAndClan(User user, Clan clan);
     Optional<Member> findByUserAndClan(User user, Clan clan);
@@ -27,6 +28,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query(value = "SELECT m FROM Member m WHERE m.clan=?1")
     List<Member> findAllByClan(Clan clan);
 
-
+    //Check that user has clan with same status
+    @Query("SELECT COUNT(m) > 0 FROM Member m WHERE m.user=?1 " +
+            "AND status=?2")
+    boolean userHasClanWithStatus(User user, int status);
 
 }

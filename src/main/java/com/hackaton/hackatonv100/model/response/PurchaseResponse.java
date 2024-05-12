@@ -13,7 +13,7 @@ public class PurchaseResponse {
 
     private Long id;
     private int money;
-    private ItemDetailsResponse itemResponse;
+    private ItemDetailsResponse item;
     private Date date;
     private Long member;
 

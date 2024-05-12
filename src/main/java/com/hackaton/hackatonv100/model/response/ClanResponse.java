@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 
 @AllArgsConstructor
 @Valid
@@ -17,5 +16,7 @@ public class ClanResponse {
 
     private Long id;
     private String name;
+    private String description;
+    private String img;
 
 }
