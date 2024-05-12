@@ -22,7 +22,7 @@ public class Clan {
     @Column(unique = true)
     private String name;
     private String description;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ItemDetails> shop;
     private String img;
 

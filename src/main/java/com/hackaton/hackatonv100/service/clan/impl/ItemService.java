@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 
 @Service
@@ -28,7 +30,6 @@ public class ItemService implements IItemService {
                 .cost(request.getCost())
                 .description(request.getDescription())
                 .name(request.getName())
-                .clan(clan)
                 .build();
 
         var itemDetails = ItemDetails.builder()
@@ -37,10 +38,11 @@ public class ItemService implements IItemService {
                 .build();
 
         if(clan.getShop() == null) {
-            clan.setShop(new ArrayList<>());
+            clan.setShop(new LinkedList<>());
         }
-
+        item = itemRepository.save(item);
         clan.getShop().add(itemDetails);
+        item.setClan(clan);
         return itemRepository.save(item);
     }
 
