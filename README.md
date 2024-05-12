@@ -1,26 +1,50 @@
-Для запуска файла необходимо исполнить команду в cmd:
+<ul>
+<li><a name="backend">Backend</a> </li>
+<li><a name="backend">Frontend</a> </li>
+</ul>
 
-    java -jar {путь до файла}/hackaton1.0.0SNAPSHOT --spring.datasource.password={пароль} --spring.datasource.username={user} --spring.datasource.url=jdbc:postgresql://{ссылка на базу}
+# Запуск Backend части(#backend)
 
-Версия java должна быть не меньше 21.
-Используемая БД должна быть postgres
+## Основные команды
 
+### Шаг 1
+Для запуска jar файла и создания базовых настроек БД необходимо ввести следующую команду:
+>```java -jar {путь до файла}/hackaton1.0.0SNAPSHOT --spring.datasource.password={пароль} --spring.datasource.username={user} --spring.datasource.url=jdbc:postgresql://{ссылка на базу}```
+
+#### Замечания
+<ul>
+<li>Версия java должна быть не меньше 21.</li>
+<li>Используемая БД должна быть postgres</li>
+</ul>
+
+### Шаг 2
 Для включения preview режима с пред заполнеными пользователями и уже созданным кланом с задачами и предметами исполнить необходимо следующкую команду:
 
-    java -jar {путь до файла}/hackaton1.0.0SNAPSHOT --spring.datasource.password={пароль} --spring.datasource.username={user} --spring.datasource.url=jdbc:postgresql://{ссылка на базу} -preview
+>```java -jar {путь до файла}/hackaton1.0.0SNAPSHOT --spring.datasource.password={пароль} --spring.datasource.username={user} --spring.datasource.url=jdbc:postgresql://{ссылка на базу} -preview```
 
-Предсозданные аккаунты в режиме preview: 
 
-alexandr@zadorozniy.ru
-vadim@smirnov.ru
-arseniy@korolev.ru
-ivan@kuznetsov.ru
+#### Пояснение
+После ввода команды <i>preview</i>, в базе данных появятся несколько задач, пользователей, а также предметов в магазине.
 
-Пароль от всех аккаунтов один: 12345678
+#### Далее описаны <i>email</i> адреса пользователей, которые также являются <i>login'ом</i>:
 
+<ul>
+<li>alexandr@zadorozniy.ru</li>
+<li>vadim@smirnov.ru</li>
+<li>arseniy@korolev.ru</li>
+<li>ivan@kuznetsov.ru</li>
+</ul>
+
+#### Замечание
+Пароль от всех аккаунтов один: ```12345678```
+
+
+#### Дополнительная информация
 При запуске приложения имеется автоматически сгенерированный swagger по адрессу: http://localhost:8080/swagger-ui/index.html
 
 Для авторизации пользователя в user controller есть метод api/user/login. 
-В теле ответа придёт токен, который необходимо внести в authorize (Он находится сверху сайта, с правой стороны)
+В теле ответа придёт токен, который необходимо внести в authorize (Он находится сверху сайта, с правой стороны, знак замочек)
 
+
+#### Замечание
 jar file находится в zip файле hackaton1.0.1SNAPSHOT.zip
