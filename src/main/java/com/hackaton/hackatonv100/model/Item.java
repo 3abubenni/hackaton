@@ -29,7 +29,7 @@ public class Item {
     private String img;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST})
     private Clan clan;
 
 
