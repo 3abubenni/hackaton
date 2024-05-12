@@ -11,18 +11,18 @@ export const MyModalClanMember : FC<IMyModalClanMember & { remove: (member : IMe
         lname: lname,
     })
 
-    const RemoveMember = () =>{
+    const handleClickRemoveMember = () =>{
         remove(member);
         closeModal();
     }
 
     return (
-        <div className="myModalItemsView">
+        <div className="myModalItemsView_clan">
             <div className="elements">
                 <p>{fname}</p>
                 <p>{lname}</p>
             </div>
-            <button onClick={RemoveMember}>Kick</button>
+            <button onClick={handleClickRemoveMember}>Kick</button>
         </div>
     );
 };

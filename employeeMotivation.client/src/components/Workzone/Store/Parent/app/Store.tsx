@@ -1,51 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { StoreItem } from "../../StoreItem/app/StoreItem";
 import "../styles/Storestyles.css";
 import Modal from 'react-modal';
 import { MyModal } from "../../../../MyModal/Modal/app/MyModal";
 import { IStoreList } from "../../../../../entities/Items.interface";
+import { customStyles } from "../../../../../helpers/styles/customStyleModal";
+import axios from "axios";
 
 export const Store = () => {
 
-    const customStyles = {
-        content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'rgb(22, 62, 73)',
-            borderRadius: '20px',
-        },
-        overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            transition: 'background-color 0.5s ease'  // добавляем анимацию изменения цвета фона
-        }
-    };
-
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
-    const openModal = () => {
-        setModalIsOpen(true);
-    };
-    const closeModal = () => {
-        setModalIsOpen(false);
-    };
+    useEffect(() => {
+        const getShopItems = async() =>{
+            const accessToken = localStorage.getItem('accessToken')
+            const userClanId = sessionStorage.getItem('userClanId')
+            const response = await axios.request({
+                url: `http://localhost:8080/api/shop/clan/item/${userClanId}`,
+                method: `get`,
+                headers: {
+                    Authorization: `${accessToken}`,
+                }
+            })
+            
+            console.log(response)
+        }
+
+        getShopItems();
+    })
 
     const [storeList] = useState<IStoreList>({
         children:[
-            {image:"" ,name: "худи"},
-            {image:"" ,name: "брюки"},
-            {image:"" ,name: "очки"},
-
         ]
     })
 
+    const handleClickOpenModal = () => {
+        setModalIsOpen(true);
+    };
+    
+    const handleClickCloseModal = () => {
+        setModalIsOpen(false);
+    };
+
     const [filteredStore, setFilteredStore] = useState<IStoreList>(storeList);
 
-    const SearchStoreItem = (event : React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeSearchStoreItem = (event : React.ChangeEvent<HTMLInputElement>) => {
         const searchTerm = event.target.value;
         const filteredData = storeList.children.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
         setFilteredStore({ children: filteredData });
@@ -60,22 +60,22 @@ export const Store = () => {
                         <IoSearchOutline />
                     </div>
                     <div>{">"}</div>
-                    <input type="text" onChange={SearchStoreItem}/>   
+                    <input type="text" onChange={handleChangeSearchStoreItem}/>   
                 </div>
-                <button onClick={openModal}>Add store item</button>
+                <button onClick={handleClickOpenModal}>Add store item</button>
                 <div id="storeContainer">
                     {filteredStore.children.map((item, index) =>
-                        <StoreItem key={index} name={item.name} image={item.image}/>
+                        <StoreItem key={index} id={item.id} name={item.name} description={item.description} cost={item.cost} amount={item.amount}/>
                     )}
                 </div>
             </div>
         </div>
             <Modal
             isOpen={modalIsOpen}
-            onRequestClose={closeModal}
+            onRequestClose={handleClickCloseModal}
             style={customStyles}
             >
-                <MyModal inputValue="Enter name of product"/>
+                <MyModal type="store" closeModal={handleClickCloseModal}/>
             </Modal>
         </>
     );

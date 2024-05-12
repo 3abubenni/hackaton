@@ -12,6 +12,7 @@ var _axios = _interopRequireDefault(require("axios"));
 var _User = require("../../../../entities/User.interface");
 var _Clan = require("../../ClanList/Clan/app/Clan");
 var _Items = require("../../../../entities/Items.interface");
+var _checkWrongDate = require("../../../../helpers/checkWrongDate/checkWrongDate");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
@@ -41,16 +42,7 @@ var Profile = exports.Profile = function Profile() {
     userBday = _useState6[0],
     setUserBday = _useState6[1];
   var _useState7 = (0, _react.useState)({
-      children: [{
-        id: 0,
-        name: 'Красивые'
-      }, {
-        id: 1,
-        name: 'Cool Boys'
-      }, {
-        id: 2,
-        name: 'Фанаты Полуяна'
-      }]
+      children: []
     }),
     _useState8 = _slicedToArray(_useState7, 2),
     clans = _useState8[0],
@@ -60,7 +52,9 @@ var Profile = exports.Profile = function Profile() {
       lname: "",
       bday: new Date(),
       email: "",
-      password: ""
+      password: "",
+      money: -1,
+      exp: -1
     }),
     _useState10 = _slicedToArray(_useState9, 2),
     userData = _useState10[0],
@@ -83,13 +77,16 @@ var Profile = exports.Profile = function Profile() {
               });
             case 3:
               response = _context.sent;
-              userData.bday = response.data.bday;
-              userData.email = response.data.email;
-              userData.fname = response.data.fname;
-              userData.lname = response.data.lname;
-              setUserBday(userData.bday.toString().split('T')[0]);
-              console.log(response);
-            case 10:
+              // userData.bday = response.data.bday
+              setUserData({
+                fname: response.data.fname,
+                lname: response.data.lname,
+                email: response.data.email,
+                password: response.data.password,
+                bday: new Date()
+              });
+              // setUserBday(userData.bday.toString().split('T')[0])
+            case 5:
             case "end":
               return _context.stop();
           }
@@ -99,19 +96,85 @@ var Profile = exports.Profile = function Profile() {
         return _ref.apply(this, arguments);
       };
     }();
+    var getMemberClanInf = /*#__PURE__*/function () {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var accessToken, response;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              accessToken = localStorage.getItem('accessToken');
+              _context2.next = 3;
+              return _axios.default.request({
+                url: "http://localhost:8080/api/member/user",
+                method: 'get',
+                headers: {
+                  Authorization: "".concat(accessToken)
+                }
+              });
+            case 3:
+              response = _context2.sent;
+              setUserData(function (prevUserData) {
+                return _objectSpread(_objectSpread({}, prevUserData), {}, {
+                  money: response.data[0].money,
+                  exp: response.data[0].exp
+                });
+              });
+            case 5:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2);
+      }));
+      return function getMemberClanInf() {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+    var getUsersClans = /*#__PURE__*/function () {
+      var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        var accessToken, response;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              accessToken = localStorage.getItem('accessToken');
+              _context3.next = 3;
+              return _axios.default.request({
+                url: "http://localhost:8080/api/clan/user",
+                method: 'get',
+                headers: {
+                  Authorization: "".concat(accessToken)
+                }
+              });
+            case 3:
+              response = _context3.sent;
+              sessionStorage.setItem('userClanId', response.data[0].id);
+              setClans({
+                children: response.data
+              });
+            case 6:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3);
+      }));
+      return function getUsersClans() {
+        return _ref3.apply(this, arguments);
+      };
+    }();
     getUserInf();
+    getMemberClanInf();
+    getUsersClans();
   }, []);
-  var StartEdit = function StartEdit() {
+  var handleClickStartEdit = function handleClickStartEdit() {
     setEditInputs(!editInputs);
   };
   var UpdateUserData = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
       var accessToken, response;
-      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-        while (1) switch (_context2.prev = _context2.next) {
+      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+        while (1) switch (_context4.prev = _context4.next) {
           case 0:
             accessToken = localStorage.getItem('accessToken');
-            _context2.next = 3;
+            _context4.next = 3;
             return _axios.default.request({
               url: 'http://localhost:8080/api/user',
               method: 'put',
@@ -125,27 +188,22 @@ var Profile = exports.Profile = function Profile() {
               }
             });
           case 3:
-            response = _context2.sent;
+            response = _context4.sent;
             console.log(response);
           case 5:
           case "end":
-            return _context2.stop();
+            return _context4.stop();
         }
-      }, _callee2);
+      }, _callee4);
     }));
     return function UpdateUserData() {
-      return _ref2.apply(this, arguments);
+      return _ref4.apply(this, arguments);
     };
   }();
-  var CheckWrongDate = function CheckWrongDate(userDate) {
-    var today = new Date();
-    if (userDate.getFullYear() >= today.getFullYear() - 10) return true;
-    return false;
-  };
-  var SaveEdit = function SaveEdit() {
+  var handleClickSaveEdit = function handleClickSaveEdit() {
     try {
       var newUserBday = new Date(userBday);
-      if (userBday.toString().split('-').length !== 3 || userBday.toString().split('-')[2] === '' || userBday.toString().split('-')[1] === '' || userBday.toString().split('-')[0] === '' || CheckWrongDate(newUserBday) || userData.fname.length < 2 || userData.lname.length < 2) {
+      if (userBday.toString().split('-').length !== 3 || userBday.toString().split('-')[2] === '' || userBday.toString().split('-')[1] === '' || userBday.toString().split('-')[0] === '' || (0, _checkWrongDate.CheckWrongDate)(newUserBday) || userData.fname.length < 2 || userData.lname.length < 2) {
         alert('Fill fields correctly');
       } else {
         setUserData(_objectSpread(_objectSpread({}, userData), {}, {
@@ -165,7 +223,7 @@ var Profile = exports.Profile = function Profile() {
       alert("Can not without Edit Mode");
     }
   };
-  var handleClickChangeLogo = function handleClickChangeLogo() {
+  var handleChangeLogo = function handleChangeLogo() {
     alert('You cant change image');
   };
   var handleChangeFName = function handleChangeFName(event) {
@@ -181,6 +239,7 @@ var Profile = exports.Profile = function Profile() {
   var handleChangeBday = function handleChangeBday(event) {
     setUserBday(event.target.value);
   };
+  console.log(userData);
   return /*#__PURE__*/React.createElement("div", {
     className: "mainView"
   }, /*#__PURE__*/React.createElement("div", {
@@ -197,7 +256,7 @@ var Profile = exports.Profile = function Profile() {
   }, /*#__PURE__*/React.createElement(_fa.FaRegUserCircle, null))), /*#__PURE__*/React.createElement("input", {
     type: "file",
     ref: inputRef,
-    onChange: handleClickChangeLogo,
+    onChange: handleChangeLogo,
     className: "hiddenInput"
   }), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("div", {
     className: "item"
@@ -234,20 +293,39 @@ var Profile = exports.Profile = function Profile() {
     readOnly: !editInputs,
     value: userData.lname,
     onChange: handleChangeLName
-  }), " ", editInputs ? /*#__PURE__*/React.createElement(_fa.FaPen, null) : ""))), /*#__PURE__*/React.createElement("div", {
+  }), " ", editInputs ? /*#__PURE__*/React.createElement(_fa.FaPen, null) : "")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("div", {
+    className: "item"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: ""
+  }, "Your money ", ">", " "), /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    readOnly: true,
+    value: userData.money,
+    onChange: handleChangeLName
+  }))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("div", {
+    className: "item"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: ""
+  }, "Your experience ", ">", " "), /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    readOnly: true,
+    value: userData.exp,
+    onChange: handleChangeLName
+  })))), /*#__PURE__*/React.createElement("div", {
     className: "buttons"
   }, /*#__PURE__*/React.createElement("button", {
     disabled: !editInputs,
-    onClick: SaveEdit
+    onClick: handleClickSaveEdit
   }, "Save edit"), /*#__PURE__*/React.createElement("button", {
-    onClick: StartEdit
+    onClick: handleClickStartEdit
   }, "Edit")), /*#__PURE__*/React.createElement("div", {
     id: "clansContainer"
   }, clans.children.map(function (item, index) {
     return /*#__PURE__*/React.createElement(_Clan.Clan, {
       id: index,
       key: index,
-      name: item.name
+      name: item.name,
+      type: "show"
     });
   }))));
 };

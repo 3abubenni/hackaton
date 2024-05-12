@@ -9,13 +9,11 @@ export const SignIn = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    const ToRegistration = () =>{
+    const handleClickToRegistration = () =>{
         navigate(`/reg`);
     }
 
-    const AuthorizationUser_PostRequest = async() => {
-        const accessToken = localStorage.getItem("accessToken");
-        console.log(accessToken);
+    const AuthorizationUser = async() => {
         const response = await axios.request({
             url: "http://localhost:8080/api/user/login",
             method: "post",
@@ -29,12 +27,16 @@ export const SignIn = () => {
         return response.status;
     }
 
-    const Authorization = () =>{
+    const handleClickAuthorization = () =>{
         if(email && password){
-            AuthorizationUser_PostRequest().then(() => {
-                navigate(`/workzone/tasks`)
-            }).catch(() => {
-                navigate(`/error`)
+            AuthorizationUser().then(() => {
+                navigate(`/workzone/profile`)
+            }).catch((error) => {
+                if(error.response.status == 401){
+                    alert('Wrong email or password')
+                }else{
+                    navigate(`/error`)
+                }
             });
         }else{
             alert("Fill field");
@@ -58,8 +60,8 @@ export const SignIn = () => {
                 <a href="">Forgot password?</a>
             </div>
             <div id='buttons'>
-                <button onClick={() => Authorization()}>Sign in</button>
-                <button onClick={() => ToRegistration()}>Registration</button>
+                <button onClick={() => handleClickAuthorization()}>Sign in</button>
+                <button onClick={() => handleClickToRegistration()}>Registration</button>
             </div>
         </div>
     );

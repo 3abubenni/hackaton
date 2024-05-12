@@ -3,8 +3,14 @@ import { Routes, Route } from 'react-router-dom';
 import { Reg } from '../Reg/Parent/app/Reg';
 import { Workzone } from '../Workzone/Parent/app/Workzone';
 import ErrorPage from '../ErrorPage/ErrorPage';
+import { useEffect } from 'react';
+import Modal from 'react-modal';
 
 function App() {
+
+  useEffect(() => {
+    Modal.setAppElement('body');
+  }, []);
 
   return (
       <>
@@ -18,7 +24,8 @@ function App() {
               <Route path='store'/>
               <Route path='profile'/>
               <Route path='inventory'/>
-              <Route path='usersTasks'/>
+              <Route path='usersTasks'>
+              </Route>
               <Route path='notifications'/>
               <Route path='userClan'/>
             </Route>

@@ -8,10 +8,14 @@
     background-color: orange;
 }
 
-@mixin hovers($fontsize){
+@mixin hovers{
     color: rgb(40, 250, 191);
-    font-size: $fontsize;
     transition: color 0.3s, font-size 0.3s;
+}
+
+@mixin button_hover{
+    background-color: rgba(0, 255, 0, 0.2);
+    transition: 0.5s;
 }
 
 @mixin myButton{
@@ -25,4 +29,8 @@
     color: $mainTextColor;
     cursor: pointer;
     transition: border-color 0.25s;
+
+    &:hover{
+        @include button_hover
+    }
 }

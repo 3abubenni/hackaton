@@ -1,12 +1,13 @@
-import { Children, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import NotificationItem from "../../NotificationItem/app/NotificationItem";
 import "../styles/Notificationstyles.css"
 import axios from "axios";
+import { INotifList } from "../../../../../entities/Items.interface";
 
 export const Notifications = () => {
 
 
-    const [notifications, setNotifications] = useState({
+    const [notifications, setNotifications] = useState<INotifList>({
         children:[]
     })
 
@@ -36,7 +37,7 @@ export const Notifications = () => {
         <div className="mainView">
             <div className="notificationsList">
                 {notifications.children.map((invite) =>
-                        <NotificationItem id={invite.idClan} title="Вас пригласили" description="Вас пригласил клан - " type="invite"/>
+                        <NotificationItem id={invite.id} idClan={invite.idClan} title="Вас пригласили" description="Вас пригласил клан - " type="invite"/>
                     )}
             </div>
         </div>

@@ -1,11 +1,7 @@
+import { IStoreItem } from "../../../../../entities/Items.interface";
 import "../styles/StoreItemstyles.css"
 
-interface StoreItem{
-    name: string
-    image: string
-}
-
-export const StoreItem : React.FC<StoreItem> = ({name, image}) => {
+export const StoreItem : React.FC<IStoreItem> = ({name, image}) => {
     return (
         <div className="storeItem">
             <div id="storeItemContent">

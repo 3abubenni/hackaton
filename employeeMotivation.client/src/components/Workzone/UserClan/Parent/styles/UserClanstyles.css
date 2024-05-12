@@ -69,6 +69,11 @@
   transition: border-color 0.25s;
   margin-bottom: 100px;
 }
+.membersListMainView button:hover {
+  background-color: rgba(0, 255, 0, 0.2);
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
 .membersListMainView #membersContainer {
   display: -webkit-box;
   display: -ms-flexbox;

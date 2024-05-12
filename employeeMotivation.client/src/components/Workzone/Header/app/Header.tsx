@@ -10,18 +10,18 @@ export const Header = () => {
     const navigate = useNavigate();
     const [showWindow, setShowWindow] = useState(false);
 
-    const GoToSelections = () =>{
+    const handleClickGoToSelections = () =>{
         setShowWindow(!showWindow);
     }
-    const GoToTasks = () =>{
+    const handleClickGoToTasks = () =>{
         navigate(`tasks`);
         setShowWindow(false);
     }
-    const GoToClan = () =>{
+    const handleClickGoToClan = () =>{
         navigate(`clans`);
         setShowWindow(false);
     }
-    const GoToStore = () =>{
+    const handleClickGoToStore = () =>{
         navigate(`store`);
         setShowWindow(false);
     }
@@ -36,22 +36,22 @@ export const Header = () => {
                     </li>
                     <li>
                         <span id="notif">2</span>
-                        <a href="#" onClick={() => GoToTasks()}>Tasks</a>
+                        <a href="#" onClick={() => handleClickGoToTasks()}>Tasks</a>
                     </li>
                     <li>
-                        <a href="#" onClick={() => GoToStore()}>Store</a>
+                        <a href="#" onClick={() => handleClickGoToStore()}>Store</a>
                     </li>
                     <li>
-                        <a href="#" onClick={() => GoToClan()}>Clans</a>
+                        <a href="#" onClick={() => handleClickGoToClan()}>Clans</a>
                     </li>
                     <li>
-                        <div id="iconUser" onClick={() => GoToSelections()}>
+                        <div id="iconUser" onClick={() => handleClickGoToSelections()}>
                             <FaUserCircle />
                         </div>
                     </li>
                 </ul>
             </nav>
-           {showWindow ? <DropDownWindow showDropWindow={setShowWindow}/> : ""}
+            {showWindow ? <DropDownWindow showDropWindow={setShowWindow}/> : ""}
         </>
     );
 };

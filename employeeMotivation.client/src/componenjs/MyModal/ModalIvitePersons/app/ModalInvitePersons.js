@@ -4,7 +4,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.MyModalInvitePersonstyles = void 0;
+exports.MyModalInvitePersons = void 0;
 var _react = require("react");
 require("../styles/ModalInvitePersonstyles.css");
 var _Items = require("../../../../entities/Items.interface");
@@ -25,7 +25,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-var MyModalInvitePersonstyles = exports.MyModalInvitePersonstyles = function MyModalInvitePersonstyles() {
+var MyModalInvitePersons = exports.MyModalInvitePersons = function MyModalInvitePersons() {
   var _useState = (0, _react.useState)({
       children: []
     }),
@@ -42,8 +42,9 @@ var MyModalInvitePersonstyles = exports.MyModalInvitePersonstyles = function MyM
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
+            console.log('search', serachedUser);
             accessToken = localStorage.getItem('accessToken');
-            _context.next = 3;
+            _context.next = 4;
             return _axios.default.request({
               url: "http://localhost:8080/api/user/search?query=".concat(serachedUser),
               method: 'get',
@@ -51,12 +52,12 @@ var MyModalInvitePersonstyles = exports.MyModalInvitePersonstyles = function MyM
                 Authorization: "".concat(accessToken)
               }
             });
-          case 3:
+          case 4:
             response = _context.sent;
             setFilteredMembers({
               children: response.data
             });
-          case 5:
+          case 6:
           case "end":
             return _context.stop();
         }
@@ -66,14 +67,14 @@ var MyModalInvitePersonstyles = exports.MyModalInvitePersonstyles = function MyM
       return _ref.apply(this, arguments);
     };
   }();
-  var FindUsers = function FindUsers() {
+  var handleClickFindUsers = function handleClickFindUsers() {
     GetUsersByEmailOrName();
   };
   var _useState5 = (0, _react.useState)(members),
     _useState6 = _slicedToArray(_useState5, 2),
     filteredMembers = _useState6[0],
     setFilteredMembers = _useState6[1];
-  var SearchMember = function SearchMember(event) {
+  var handleChangeSearchMember = function handleChangeSearchMember(event) {
     var searchTerm = event.target.value;
     setSearchedUser(searchTerm);
     var filteredData = members.children.filter(function (item) {
@@ -91,15 +92,17 @@ var MyModalInvitePersonstyles = exports.MyModalInvitePersonstyles = function MyM
           case 0:
             accessToken = localStorage.getItem('accessToken');
             clanId = sessionStorage.getItem('userClanId');
-            response = _axios.default.request({
+            _context2.next = 4;
+            return _axios.default.request({
               url: "http://localhost:8080/api/invite/clan/".concat(clanId, "/user/").concat(userId),
               method: 'post',
               headers: {
                 Authorization: "".concat(accessToken)
               }
             });
-            console.log(response);
           case 4:
+            response = _context2.sent;
+          case 5:
           case "end":
             return _context2.stop();
         }
@@ -110,7 +113,13 @@ var MyModalInvitePersonstyles = exports.MyModalInvitePersonstyles = function MyM
     };
   }();
   var handleClickInviteUser = function handleClickInviteUser(userId) {
-    InviteUser(userId), RemoveFromUserList(userId);
+    InviteUser(userId).then(function () {
+      return RemoveFromUserList(userId);
+    }).catch(function (error) {
+      if (error.response && error.response.status === 406) {
+        alert('You cant do it');
+      }
+    });
   };
   var RemoveFromUserList = function RemoveFromUserList(index) {
     console.log(filteredMembers);
@@ -137,7 +146,7 @@ var MyModalInvitePersonstyles = exports.MyModalInvitePersonstyles = function MyM
     className: "searchIcon"
   }, /*#__PURE__*/React.createElement(_io.IoSearchOutline, null)), /*#__PURE__*/React.createElement("div", null, ">"), /*#__PURE__*/React.createElement("input", {
     type: "text",
-    onChange: SearchMember
+    onChange: handleChangeSearchMember
   })), /*#__PURE__*/React.createElement("div", {
     className: "membersContainer"
   }, filteredMembers.children.map(function (item) {
@@ -149,6 +158,6 @@ var MyModalInvitePersonstyles = exports.MyModalInvitePersonstyles = function MyM
       }
     }, "Invite"));
   })), /*#__PURE__*/React.createElement("button", {
-    onClick: FindUsers
+    onClick: handleClickFindUsers
   }, "Find persons"));
 };

@@ -2,72 +2,64 @@ import { IoSearchOutline } from "react-icons/io5";
 import "../styles/Tasks.css"
 import { MyModal } from "../../../../MyModal/Modal/app/MyModal";
 import Modal from 'react-modal';
-import { useState } from "react";
-import { ITask, ITasksList } from "../../../../../entities/Items.interface";
+import { useEffect, useState } from "react";
+import { ITaskItem, ITasksList } from "../../../../../entities/Items.interface";
 import TaskItem from "../../TaskItem/app/TaskItem";
+import { customStyles } from "../../../../../helpers/styles/customStyleModal";
+import { FilterTextForTasks } from "../../../../../functions/filterText/FilterText";
+import axios from "axios";
+
 export const Tasks = () => {
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
     const [tasksList, setTasksList] = useState<ITasksList>({
         children:[
-            {id: 0, title: "Do rtpoop poefwpoewkfffhfffqwfq", description:'You must do RTPO', exp: 10, money: 100},
-            {id: 1, title: "Do CHMfffff", description:'You must do CHM', exp: 10, money: 100},
-            {id: 2, title: "Do TPR", description:'You must do TPR', exp: 10, money: 100},
         ]
     })
-
-    const FilterText = (filteredData : ITask[]) =>{
-        return filteredData.map((item) => {
-            if (item.title.length > 24) {
-                return { title: item.title.slice(0, 22) + "...", description: item.description, exp: item.exp, money: item.money };
-            } else {
-                return item;
-            }
-        });
-    }
-
     const [filteredTasks, setFilteredTasks] = useState<ITasksList>(tasksList);
 
-    const openModal = () => {
+    useEffect(() =>{
+
+        const getAllClansTasks = async() =>{
+            const accessToken = localStorage.getItem('accessToken');
+            const userClanId = sessionStorage.getItem('userClanId')
+            const response = await axios.request({
+                url: `http://localhost:8080/api/task/clan/${userClanId}`,
+                method: 'get',
+                headers: {
+                    Authorization: `${accessToken}`,
+                },
+            })
+
+            let transformedTask: ITaskItem[] = response.data.map(task => { return{id: task.id, title: task.name, name:task.name, description: task.description, exp: task.exp, money: task.money, status: task.status} });
+            transformedTask = transformedTask.filter(item => item.status === 0);
+            setTasksList({children: transformedTask})
+            setFilteredTasks({children: transformedTask})
+        }
+
+        getAllClansTasks();
+    }, [modalIsOpen])
+
+    const handleClickOpenModal = () => {
         setModalIsOpen(true);
     };
-    const closeModal = () => {
+
+    const handleClickCloseModal = () => {
         setModalIsOpen(false);
     };
 
-    const SearchTaskItem = (event : React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeSearchTaskItem = (event : React.ChangeEvent<HTMLInputElement>) => {
         const searchTerm = event.target.value;
         const filteredData = tasksList.children.filter((item) => item.title.toLowerCase().includes(searchTerm.toLowerCase()));
         setFilteredTasks({ children: filteredData });
     }
 
-    const RemoveTaskItem = (task : ITask) => {
+    const handleClickRemoveTaskItem= (task : ITaskItem) => {
         const afterRemoveData = filteredTasks.children.filter(task_inList => task_inList.id !== task.id);
-        const updatedAfterRemoveData = afterRemoveData.map((task, index) => ({
-            ...task,
-            id: index,
-        }));
-        setTasksList({ children: updatedAfterRemoveData });
-        setFilteredTasks({ children: updatedAfterRemoveData });
-    };
-
-
-    const customStyles = {
-        content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'rgb(22, 62, 73)',
-            borderRadius: '20px',
-        },
-        overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            transition: 'background-color 0.5s ease'
-        }
+        console.log('afterremove',afterRemoveData)
+        setTasksList({ children: afterRemoveData });
+        setFilteredTasks({ children: afterRemoveData });
     };
     
     return (
@@ -79,22 +71,22 @@ export const Tasks = () => {
                         <IoSearchOutline />
                     </div>
                     <div>{">"}</div>
-                    <input type="text" onChange={SearchTaskItem}/>   
+                    <input type="text" onChange={handleChangeSearchTaskItem}/>   
                 </div>
-                <button onClick={openModal}>Add store item</button>
+                <button onClick={handleClickOpenModal}>Add task</button>
                 <div id="tasksContainer">
-                    {FilterText(filteredTasks.children).map((item, index) =>
-                            <TaskItem key={index} id={index} title={item.title} description={item.description} exp={item.exp} money={item.money} remove={RemoveTaskItem}/>
+                    {FilterTextForTasks(filteredTasks.children).map((item, index) =>
+                            <TaskItem key={index} type={'task'} name={item.name} id={item.id} title={item.title} description={item.description} exp={item.exp} money={item.money} remove={handleClickRemoveTaskItem} status={item.status}/>
                         )}
                 </div>
             </div>
         </div>
             <Modal
             isOpen={modalIsOpen}
-            onRequestClose={closeModal}
+            onRequestClose={handleClickCloseModal}
             style={customStyles}
             >
-                <MyModal inputValue="Enter name of product"/>
+                <MyModal type="addTask" closeModal={handleClickCloseModal}/>
             </Modal>
         </>
     );

@@ -4,7 +4,7 @@ import { IMemberList } from "../../../../entities/Items.interface";
 import { IoSearchOutline } from "react-icons/io5";
 import axios from "axios";
 
-export const MyModalInvitePersonstyles = () => {
+export const MyModalInvitePersons = () => {
 
     const [members, setMembers] = useState<IMemberList>({
         children:[
@@ -14,6 +14,7 @@ export const MyModalInvitePersonstyles = () => {
     const [serachedUser, setSearchedUser] = useState(''); 
 
     const GetUsersByEmailOrName = async() =>{
+        console.log('search', serachedUser)
         const accessToken = localStorage.getItem('accessToken')
         const response = await axios.request({
             url: `http://localhost:8080/api/user/search?query=${serachedUser}`,
@@ -25,13 +26,13 @@ export const MyModalInvitePersonstyles = () => {
         setFilteredMembers({ children: response.data})
     }
 
-    const FindUsers = () => {
+    const handleClickFindUsers = () => {
         GetUsersByEmailOrName()
     }
 
     const [filteredMembers, setFilteredMembers] = useState(members)
 
-    const SearchMember = (event : React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeSearchMember = (event : React.ChangeEvent<HTMLInputElement>) => {
         const searchTerm = event.target.value;
         setSearchedUser(searchTerm);
         const filteredData = members.children.filter((item) => item.fname.toLowerCase().includes(searchTerm.toLowerCase()) || item.lname.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -42,21 +43,22 @@ export const MyModalInvitePersonstyles = () => {
     const InviteUser = async(userId: number) =>{
         const accessToken = localStorage.getItem('accessToken')
         const clanId = sessionStorage.getItem('userClanId')
-        const response = axios.request({
+        await axios.request({
             url: `http://localhost:8080/api/invite/clan/${clanId}/user/${userId}`,
             method: 'post',
             headers: {
                 Authorization: `${accessToken}`
             }
         })
-
-        console.log(response)
     }
 
 
     const handleClickInviteUser = (userId: number) =>{
-        InviteUser(userId),
-        RemoveFromUserList(userId)
+        InviteUser(userId).then(() => RemoveFromUserList(userId)).catch((error) =>{
+            if (error.response && error.response.status === 406) {
+                alert('You cant do it');
+            }
+        })
     }
 
     const RemoveFromUserList = (index : number) => {
@@ -78,7 +80,7 @@ export const MyModalInvitePersonstyles = () => {
                         <IoSearchOutline />
                     </div>
                     <div>{">"}</div>
-                    <input type="text" onChange={SearchMember}/>
+                    <input type="text" onChange={handleChangeSearchMember}/>
                 </div>
             <div className="membersContainer">
                 {filteredMembers.children.map((item) =>
@@ -90,7 +92,7 @@ export const MyModalInvitePersonstyles = () => {
                             </div>
                     )}
             </div>
-            <button onClick={FindUsers}>Find persons</button>
+            <button onClick={handleClickFindUsers}>Find persons</button>
         </div>
     );
 };

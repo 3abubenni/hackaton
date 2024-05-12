@@ -27,15 +27,15 @@ var MyModalClanMember = exports.MyModalClanMember = function MyModalClanMember(_
     }),
     _useState2 = _slicedToArray(_useState, 1),
     member = _useState2[0];
-  var RemoveMember = function RemoveMember() {
+  var handleClickRemoveMember = function handleClickRemoveMember() {
     remove(member);
     closeModal();
   };
   return /*#__PURE__*/React.createElement("div", {
-    className: "myModalItemsView"
+    className: "myModalItemsView_clan"
   }, /*#__PURE__*/React.createElement("div", {
     className: "elements"
   }, /*#__PURE__*/React.createElement("p", null, fname), /*#__PURE__*/React.createElement("p", null, lname)), /*#__PURE__*/React.createElement("button", {
-    onClick: RemoveMember
+    onClick: handleClickRemoveMember
   }, "Kick"));
 };

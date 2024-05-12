@@ -7,21 +7,26 @@ export interface IClanList{
     children: IClan[],
 }
 
-export interface ITask{
+export interface ITaskItem{
     id: number,
     title: string,
+    name: string,
     description: string,
     exp: number,
-    money: number;
+    money: number,
+    status: number,
 }
 
 export interface ITasksList{
-    children: ITask[],
+    children: ITaskItem[],
 }
 
 export interface IStoreItem {
-    image: string,
+    id: number,
     name: string,
+    description: string,
+    cost: number,
+    amount: number
 }
 
 export interface IStoreList {
@@ -33,19 +38,30 @@ export interface INotifItem {
     title: string,
     description: string,
     type: string,
+    idClan: string,
 }
 
 export interface INotifList {
-    children: IStoreItem[],
+    children: INotifItem[],
 }
 
 export interface IMember {
     id: number,
     fname: string,
     lname: string,
-    email: string,
+    email?: string,
 }
 
 export interface IMemberList{
     children: IMember[]
+}
+
+export interface IInventoryItem {
+    id: number,
+    name: string,
+    description: string,
+}
+
+export interface IInventoryList {
+    children: IInventoryItem[];
 }

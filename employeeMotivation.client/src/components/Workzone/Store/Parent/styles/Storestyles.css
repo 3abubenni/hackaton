@@ -68,6 +68,11 @@
   margin-right: auto;
   margin-bottom: 100px;
 }
+.storeListMainView button:hover {
+  background-color: rgba(0, 255, 0, 0.2);
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
 .storeListMainView #storeContainer {
   display: -webkit-box;
   display: -ms-flexbox;

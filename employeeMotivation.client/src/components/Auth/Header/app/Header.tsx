@@ -6,12 +6,12 @@ export const Header = () => {
 
     const navigate = useNavigate();
 
-    const GoToLogIn = () =>{
+    const handleClickGoToLogIn = () =>{
         navigate(`/auth`)
     }
     return (
         <div id='headerContainer'>
-            <div id='iconCloud' onClick={GoToLogIn}>
+            <div id='iconCloud' onClick={handleClickGoToLogIn}>
                 <AiFillCloud />
             </div>
         </div>

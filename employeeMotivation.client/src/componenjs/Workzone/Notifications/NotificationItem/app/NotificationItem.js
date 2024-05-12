@@ -20,7 +20,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var NotificationItem = function NotificationItem(_ref) {
-  var id = _ref.id,
+  var idClan = _ref.idClan,
     title = _ref.title,
     description = _ref.description,
     type = _ref.type;
@@ -39,7 +39,7 @@ var NotificationItem = function NotificationItem(_ref) {
               accessToken = localStorage.getItem('accessToken');
               _context.next = 4;
               return _axios.default.request({
-                url: "http://localhost:8080/api/clan/".concat(id),
+                url: "http://localhost:8080/api/clan/".concat(idClan),
                 method: 'get',
                 headers: {
                   Authorization: "".concat(accessToken)

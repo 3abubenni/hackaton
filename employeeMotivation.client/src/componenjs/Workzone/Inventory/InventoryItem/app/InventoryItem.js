@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.InventoryItem = void 0;
 require("../styles/InventoryItemstyles.css");
+var _Items = require("../../../../../entities/Items.interface");
 var InventoryItem = exports.InventoryItem = function InventoryItem(_ref) {
   var name = _ref.name,
     image = _ref.image;

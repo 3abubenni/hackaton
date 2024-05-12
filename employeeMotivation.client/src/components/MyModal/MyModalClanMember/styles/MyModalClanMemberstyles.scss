@@ -1,7 +1,7 @@
 @import "../../../../helpers/variables/colors.scss";
 @import "../../../../helpers/mixins/mixins.scss";
 
-.myModalItemsView{
+.myModalItemsView_clan{
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -26,7 +26,7 @@
         }
         #answer_description{
             width: 550px;
-            height: 200px;
+            height: 100px;
         }
 
         .answer_description{

@@ -5,7 +5,6 @@
     flex: 1;
     width: 100%;
     height: 100%;
-    margin-left: 20px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -41,11 +40,17 @@
         @include myButton;
         margin-right: auto;
         margin-bottom: 100px;
+        margin-left: 20px;
+
+        &:hover{
+            @include hovers;
+        }
     }
 
     #tasksContainer{
         display: flex;
         overflow: auto;
+        margin-left: 40px;
         flex-direction: row;
         margin-top: -70px;
         font-size: 20px;
@@ -55,5 +60,32 @@
         gap: 20px;
         align-content: flex-start;
         padding-right: 35px;
+    }
+
+    #checkOption{
+        width: 100%;
+        display: flex;
+        margin-left: 0;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        height: 150px;
+
+        .option{
+            background: none;
+            width: 100%;
+            margin-bottom: auto;
+            text-align: center;
+            border: 2px solid $notActive;
+            color: $notActive;
+            border-top: none;
+            border-left: none;
+            cursor: pointer;
+        }
+        #active{
+            color: $mainTextColor;
+            border-color: $mainTextColor;
+            transition: 0.5s;
+        }
     }
 }

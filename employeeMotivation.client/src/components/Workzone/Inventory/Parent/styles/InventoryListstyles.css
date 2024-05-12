@@ -68,6 +68,11 @@
   margin-right: auto;
   margin-bottom: 100px;
 }
+.inventoryListMainView button:hover {
+  background-color: rgba(0, 255, 0, 0.2);
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
 .inventoryListMainView #inventoryContainer {
   display: -webkit-box;
   display: -ms-flexbox;

@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.StoreItem = void 0;
+var _Items = require("../../../../../entities/Items.interface");
 require("../styles/StoreItemstyles.css");
 var StoreItem = exports.StoreItem = function StoreItem(_ref) {
   var name = _ref.name,

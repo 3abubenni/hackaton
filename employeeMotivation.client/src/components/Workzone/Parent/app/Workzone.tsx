@@ -1,4 +1,4 @@
-import { Route, Routes, useParams } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { Header } from "../../Header/app/Header"
 import ErrorPage from "../../../ErrorPage/ErrorPage";
 import { Tasks } from "../../Tasks/Parent/app/Tasks";
@@ -22,7 +22,8 @@ export const Workzone = () => {
                 <Route path='store' element={<Store/>}/>
                 <Route path='profile' element={<Profile/>}/>
                 <Route path='inventory' element={<Inventory/>}/>
-                <Route path='usersTasks' element={<UsersTasks/>}/>
+                <Route path='usersTasks' element={<UsersTasks/>}>
+                </Route>
                 <Route path='userClan' element={<UserClan/>}/>
                 <Route path='notifications' element={<Notifications/>}/>
                 <Route path='/*' element={<ErrorPage/>} />

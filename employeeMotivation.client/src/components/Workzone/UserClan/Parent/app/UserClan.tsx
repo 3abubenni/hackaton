@@ -4,8 +4,9 @@ import Modal from 'react-modal';
 import "../styles/UserClanstyles.css"
 import { Member } from "../../Members/app/Member";
 import { IMember, IMemberList } from "../../../../../entities/Items.interface";
-import { MyModalInvitePersonstyles } from "../../../../MyModal/ModalIvitePersons/app/ModalInvitePersons";
+import { MyModalInvitePersons } from "../../../../MyModal/ModalIvitePersons/app/ModalInvitePersons";
 import axios from "axios";
+import { customStyles } from "../../../../../helpers/styles/customStyleModal";
 
 export const UserClan = () => {
 
@@ -13,10 +14,7 @@ export const UserClan = () => {
 
     const [members, setMembers] = useState<IMemberList>({
         children:[
-            {id: 0, fname: 'Arseniy', lname: 'Korolev', email:'korol@mail.ru'},
-            {id: 1, fname: 'Ivan', lname: 'Kuznetsov', email:'kuz@mail.ru'},
-            {id: 2, fname: 'Arthur', lname: 'Shayahmetov', email:'shaya@mail.ru'},
-            {id: 3, fname: 'Vladislav', lname: 'Couch', email:'couch@mail.ru'},
+
         ]
     })
 
@@ -58,41 +56,25 @@ export const UserClan = () => {
                 getClanInfo(clanid);
             }
         });
-    })
-
-    const customStyles = {
-        content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'rgb(22, 62, 73)',
-            borderRadius: '20px',
-        },
-        overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            transition: 'background-color 0.5s ease'
-        }
-    };
+    }, [])
 
     const [filteredMembers, setFilteredMembers] = useState(members)
 
-    const SearchMember = (event : React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeSearchMember = (event : React.ChangeEvent<HTMLInputElement>) => {
         const searchTerm = event.target.value;
         const filteredData = members.children.filter((item) => item.fname.toLowerCase().includes(searchTerm.toLowerCase()) || item.lname.toLowerCase().includes(searchTerm.toLowerCase()));
         setFilteredMembers({ children: filteredData });
     }
 
-    const openModal = () => {
+    const handleClickOpenModal = () => {
         setModalIsOpen(true);
     };
-    const closeModal = () => {
+
+    const handleClickCloseModal = () => {
         setModalIsOpen(false);
     };
 
-    const RemoveMember = (member : IMember) => {
+    const handleClickRemoveMember = (member : IMember) => {
         const afterRemoveData = filteredMembers.children.filter(member_inList => member.id !== member_inList.id);
         const updatedAfterRemoveData = afterRemoveData.map((member, index) => ({
             ...member,
@@ -110,21 +92,21 @@ export const UserClan = () => {
                         <IoSearchOutline />
                     </div>
                     <div>{">"}</div>
-                    <input type="text" onChange={SearchMember}/>   
+                    <input type="text" onChange={handleChangeSearchMember}/>   
                 </div>
-                <button onClick={openModal}>Invite new member</button>
+                <button onClick={handleClickOpenModal}>Invite new member</button>
                 <div id="membersContainer">
                     {filteredMembers.children.map((item, index) =>
-                            <Member id={index} fname={item.fname} lname={item.lname} email={item.email} remove={RemoveMember}/>
+                            <Member id={index} fname={item.fname} lname={item.lname} remove={handleClickRemoveMember}/>
                         )}
                 </div>
             </div>
             <Modal
             isOpen={modalIsOpen}
-            onRequestClose={closeModal}
+            onRequestClose={handleClickCloseModal}
             style={customStyles}
             >
-                <MyModalInvitePersonstyles/>
+                <MyModalInvitePersons/>
             </Modal>
         </div>
     );

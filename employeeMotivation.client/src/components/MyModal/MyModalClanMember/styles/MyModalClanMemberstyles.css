@@ -1,4 +1,4 @@
-.myModalItemsView {
+.myModalItemsView_clan {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -17,7 +17,7 @@
       -ms-flex-align: start;
           align-items: flex-start;
 }
-.myModalItemsView .elements {
+.myModalItemsView_clan .elements {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -28,18 +28,18 @@
   gap: 30px;
   color: rgb(43, 194, 164);
 }
-.myModalItemsView .elements textarea {
+.myModalItemsView_clan .elements textarea {
   background: none;
   border: none;
   color: rgb(43, 194, 164);
   resize: none;
   font-size: 22px;
 }
-.myModalItemsView .elements #answer_description {
+.myModalItemsView_clan .elements #answer_description {
   width: 550px;
-  height: 200px;
+  height: 100px;
 }
-.myModalItemsView .elements .answer_description {
+.myModalItemsView_clan .elements .answer_description {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -49,10 +49,10 @@
           flex-direction: row;
   gap: 7px;
 }
-.myModalItemsView .elements textarea:focus {
+.myModalItemsView_clan .elements textarea:focus {
   outline: none;
 }
-.myModalItemsView button {
+.myModalItemsView_clan button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
@@ -67,6 +67,11 @@
   margin-left: auto;
   margin-top: auto;
 }
-.myModalItemsView button:hover {
+.myModalItemsView_clan button:hover {
+  background-color: rgba(0, 255, 0, 0.2);
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+.myModalItemsView_clan button:hover {
   background-color: rgba(0, 255, 0, 0.2);
 }

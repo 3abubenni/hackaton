@@ -10,6 +10,7 @@ interface TextAnimationProps {
 export const TextAnimation: React.FC<TextAnimationProps> = ({ text, setInputValue ,showButtons }) => {
     const [displayedText, setDisplayedText] = useState('');
     const [showInput, setShowInput] = useState(false);
+    
     useEffect(() => {
         let index = 0;
         const interval = setInterval(() => {

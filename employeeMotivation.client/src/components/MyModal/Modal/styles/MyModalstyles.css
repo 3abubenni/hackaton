@@ -15,7 +15,7 @@
 .myModalView input {
   margin-top: 20px;
 }
-.myModalView .inputClanName {
+.myModalView .input {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -23,10 +23,13 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  width: 60%;
-  gap: 10px;
+  width: 100%;
+  height: 100%;
 }
-.myModalView .inputClanName .inputValue {
+.myModalView .input #description {
+  height: 165px;
+}
+.myModalView .input .inputValue {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -34,21 +37,24 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
+  width: 100%;
+  margin-bottom: 20px;
 }
-.myModalView .inputClanName .inputValue #cursor {
+.myModalView .input .inputValue #cursor {
   margin-top: 22px;
 }
-.myModalView .inputClanName .inputValue input {
+.myModalView .input .inputValue input {
   margin-left: 5px;
   color: rgb(43, 194, 164);
   width: 200px;
   height: 30px;
   font-size: 25px;
   background: none;
+  width: 100%;
   border: none;
   margin-bottom: -200px;
 }
-.myModalView .inputClanName .inputValue input:focus {
+.myModalView .input .inputValue input:focus {
   outline: none;
 }
 .myModalView .inputImage {
@@ -75,4 +81,21 @@
   width: 200px;
   margin-left: auto;
   margin-top: auto;
+}
+.myModalView button:hover {
+  background-color: rgba(0, 255, 0, 0.2);
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+.myModalView #task_description {
+  font-size: 25px;
+  color: rgb(43, 194, 164);
+  margin-top: 20px;
+  border: none;
+  resize: none;
+  background: none;
+  width: 100%;
+}
+.myModalView #task_description:focus {
+  outline: none;
 }

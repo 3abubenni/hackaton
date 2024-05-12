@@ -1,7 +1,3 @@
-export interface IMyModalInputp{
-    inputValue : string,
-}
-
 export interface IMyModalItems{
     id: number,
     name: string,
@@ -9,7 +5,8 @@ export interface IMyModalItems{
     type: string,
     img?: string,
     money?: number,
-    exp?: number
+    exp?: number,
+    status: number,
 }
 
 export interface IMyModalClanMember{

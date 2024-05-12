@@ -1,6 +1,6 @@
 .profileContent {
   width: 100%;
-  margin-top: 100px;
+  margin-top: 20px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -94,6 +94,11 @@
   cursor: pointer;
   -webkit-transition: border-color 0.25s;
   transition: border-color 0.25s;
+}
+.profileContent .buttons button:hover {
+  background-color: rgba(0, 255, 0, 0.2);
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
 }
 .profileContent .buttons button:disabled {
   text-decoration: line-through;

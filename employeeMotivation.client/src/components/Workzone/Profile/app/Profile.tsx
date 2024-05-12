@@ -1,30 +1,29 @@
-import { useRef, useState, useEffect } from "react";
+import {useState, useEffect } from "react";
 import "../styles/Profilestyles.css"
 import { FaPen, FaRegUserCircle } from "react-icons/fa";
 import axios from "axios";
 import { IUser } from "../../../../entities/User.interface";
 import { Clan } from "../../ClanList/Clan/app/Clan";
 import { IClanList } from "../../../../entities/Items.interface";
+import { CheckWrongDate } from "../../../../helpers/checkWrongDate/checkWrongDate";
 
 export const Profile = () => {
 
     const [editInputs, setEditInputs] = useState(false);
-    const [image] = useState<File | undefined>(undefined)
-    const inputRef = useRef<HTMLInputElement>(null);
     const [userBday, setUserBday] = useState("");
     const [clans, setClans] = useState<IClanList>({
         children: [
-            {id:0, name:'Красивые'},
-            {id:1, name: 'Cool Boys'},
-            {id:2, name: 'Фанаты Полуяна'},
         ]
     })
+
     const [userData, setUserData] = useState<IUser>({
         fname: "",
         lname: "",
         bday: new Date(),
         email: "",
         password: "",
+        money: -1,
+        exp: -1,
     })
 
     useEffect(() => {
@@ -37,14 +36,54 @@ export const Profile = () => {
                     Authorization: `${accessToken}`
                 }
             })
-            userData.bday = response.data.bday
-            userData.email = response.data.email
-            userData.fname = response.data.fname
-            userData.lname = response.data.lname
-            setUserBday(userData.bday.toString().split('T')[0])
+            // userData.bday = response.data.bday
+            setUserData({
+                fname:  response.data.fname,
+                lname: response.data.lname,
+                email: response.data.email,
+                password: response.data.password,
+                bday: new Date(),
+            })
+            // setUserBday(userData.bday.toString().split('T')[0])
+        }
+
+        const getMemberClanInf = async() =>{
+            const accessToken = localStorage.getItem('accessToken')
+            const response = await axios.request({
+                url: `http://localhost:8080/api/member/user`,
+                method: 'get',
+                headers:{
+                    Authorization: `${accessToken}`
+                }
+            })
+
+            setUserData(prevUserData => ({
+                ...prevUserData,
+                money: response.data[0].money,
+                exp: response.data[0].exp
+            }));
+        }
+
+        const getUsersClans = async() =>{
+            const accessToken = localStorage.getItem('accessToken')
+            const response = await axios.request({
+                url: "http://localhost:8080/api/clan/user",
+                method: 'get',
+                headers: {
+                    Authorization: `${accessToken}`
+                }
+            })
+            sessionStorage.setItem('userClanId', response.data[0].id)
+            setClans({children : response.data})
         }
 
         getUserInf();
+
+        getMemberClanInf();
+
+        getUsersClans();
+
+
     }, [])
 
     const handleClickStartEdit = () =>{
@@ -69,17 +108,13 @@ export const Profile = () => {
         console.log(response)
     }
 
-    const CheckWrongDate = (userDate : Date) =>{
-        const today = new Date()
-        if(userDate.getFullYear() >= today.getFullYear()-10) return true
-        return false
-    }
-
     
     const handleClickSaveEdit = () =>{
         try{
             const newUserBday = new Date(userBday)
-            if(userBday.toString().split('-').length !== 3 || userBday.toString().split('-')[2] === '' || userBday.toString().split('-')[1] === '' || userBday.toString().split('-')[0] === '' || CheckWrongDate(newUserBday) || userData.fname.length < 2 || userData.lname.length < 2){
+            if(userBday.toString().split('-').length !== 3 || userBday.toString().split('-')[2] === '' || userBday.toString().split('-')[1] === '' 
+            || userBday.toString().split('-')[0] === '' || CheckWrongDate(newUserBday) || userData.fname.length < 2 
+            || userData.lname.length < 2){
                 alert('Fill fields correctly')
             }else{
                 setUserData({...userData, bday: newUserBday})
@@ -91,18 +126,6 @@ export const Profile = () => {
         }
     }
 
-    const handleClickImage = () =>{
-        if (inputRef.current && editInputs) {
-            inputRef.current.click();
-        } else {
-            alert("Can not without Edit Mode")
-        }
-    };
-
-    const handleClickChangeLogo = () => {
-        alert('You cant change image')
-    };
-
     const handleChangeFName = (event : React.ChangeEvent<HTMLInputElement>) =>{
         setUserData({ ...userData, fname: event.target.value });
     }
@@ -113,14 +136,15 @@ export const Profile = () => {
         setUserBday(event.target.value)
     }
 
+    console.log(userData)
+
     return (
         <div className="mainView">
             <div className="profileContent">
                 <h1>Your profile</h1>
                 <div className="image">
-                    {image ? <img src={URL.createObjectURL(image)} alt="" onClick={handleClickImage}/> : <div id="iconUser" onClick={handleClickImage}><FaRegUserCircle /></div>}
+                    <div id="iconUser"><FaRegUserCircle /></div>
                 </div>
-                <input type="file" ref={inputRef} onChange={handleClickChangeLogo} className="hiddenInput"/>
                 <ul>
                     <li>
                         <div className="item">
@@ -146,6 +170,18 @@ export const Profile = () => {
                             <input type="text" readOnly={!editInputs} value={userData.lname} onChange={handleChangeLName}/> {editInputs ? <FaPen /> : ""}
                         </div>
                     </li>
+                    <li>
+                        <div className="item">
+                            <label htmlFor="">Your money {">"} </label>
+                            <input type="text" readOnly={true} value={userData.money} onChange={handleChangeLName}/>
+                        </div>
+                    </li>
+                    <li>
+                        <div className="item">
+                            <label htmlFor="">Your experience {">"} </label>
+                            <input type="text" readOnly={true} value={userData.exp} onChange={handleChangeLName}/>
+                        </div>
+                    </li>
                 </ul>
                 <div className="buttons">
                     <button disabled={!editInputs} onClick={handleClickSaveEdit}>Save edit</button>
@@ -153,7 +189,7 @@ export const Profile = () => {
                 </div>
                 <div id="clansContainer">
                         {clans.children.map((item, index) =>
-                            <Clan id={index} key={index} name={item.name}/>
+                            <Clan id={index} key={index} name={item.name} type="show"/>
                         )}
                 </div>
             </div>

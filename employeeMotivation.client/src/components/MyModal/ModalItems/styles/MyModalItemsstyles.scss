@@ -6,7 +6,6 @@
     flex-direction: column;
     gap: 20px;
     width: 650px;
-    height: 750px;
     font-size: 25px;
     justify-content: center;
     align-items: flex-start;
@@ -16,33 +15,58 @@
         flex-direction: column;
         gap: 30px;
         color: $mainTextColor;
+        width: 100%;
 
-        textarea{
-            background: none;
-            border: none;
+        #task_description{
+            font-size: 25px;
             color: $mainTextColor;
+            border: none;
             resize: none;
-            font-size: 22px;
+            background: none;
+            width: 100%;
+    
+            &:focus{
+                outline: none;
+            }
         }
+
         #answer_description{
             width: 550px;
             height: 200px;
+            font-size: 25px;
+            color: $mainTextColor;
+            border: none;
+            resize: none;
+            background: none;
+            width: 100%;
+            &:focus{
+                outline: none;
+            }
         }
 
         .answer_description{
             display: flex;
             flex-direction: row;
+            width: 100%;
             gap: 7px;
         }
+    }
 
-        textarea:focus{
-            outline: none;
+    .buttonsOnCheck{
+        width: 100%;
+        margin-top: auto;
+        justify-content: space-between;
+        display: flex;
+        flex-direction: row;
+        button{
+            margin-left: 0;
+            @include myButton;
         }
     }
 
     button{
-        @include myButton;
         margin-left: auto;
         margin-top: auto;
+        @include myButton;
     }
 }

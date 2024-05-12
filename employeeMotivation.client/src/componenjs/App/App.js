@@ -9,8 +9,13 @@ var _reactRouterDom = require("react-router-dom");
 var _Reg = require("../Reg/Parent/app/Reg");
 var _Workzone = require("../Workzone/Parent/app/Workzone");
 var _ErrorPage = _interopRequireDefault(require("../ErrorPage/ErrorPage"));
+var _react = require("react");
+var _reactModal = _interopRequireDefault(require("react-modal"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function App() {
+  (0, _react.useEffect)(function () {
+    _reactModal.default.setAppElement('body');
+  }, []);
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_reactRouterDom.Routes, null, /*#__PURE__*/React.createElement(_reactRouterDom.Route, {
     index: true,
     element: /*#__PURE__*/React.createElement(_Auth.Auth, null)

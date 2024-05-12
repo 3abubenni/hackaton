@@ -7,7 +7,6 @@
           flex: 1;
   width: 100%;
   height: 100%;
-  margin-left: 20px;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -69,12 +68,24 @@
   transition: border-color 0.25s;
   margin-right: auto;
   margin-bottom: 100px;
+  margin-left: 20px;
+}
+.tasksListMainView button:hover {
+  background-color: rgba(0, 255, 0, 0.2);
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+.tasksListMainView button:hover {
+  color: rgb(40, 250, 191);
+  -webkit-transition: color 0.3s, font-size 0.3s;
+  transition: color 0.3s, font-size 0.3s;
 }
 .tasksListMainView #tasksContainer {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   overflow: auto;
+  margin-left: 40px;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
@@ -89,4 +100,39 @@
   -ms-flex-line-pack: start;
       align-content: flex-start;
   padding-right: 35px;
+}
+.tasksListMainView #checkOption {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: 0;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 150px;
+}
+.tasksListMainView #checkOption .option {
+  background: none;
+  width: 100%;
+  margin-bottom: auto;
+  text-align: center;
+  border: 2px solid rgb(28, 136, 114);
+  color: rgb(28, 136, 114);
+  border-top: none;
+  border-left: none;
+  cursor: pointer;
+}
+.tasksListMainView #checkOption #active {
+  color: rgb(43, 194, 164);
+  border-color: rgb(43, 194, 164);
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
 }

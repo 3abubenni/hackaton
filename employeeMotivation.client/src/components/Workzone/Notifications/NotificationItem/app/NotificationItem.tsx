@@ -3,16 +3,17 @@ import { INotifItem } from "../../../../../entities/Items.interface";
 import "../styles/NotificationItemstyles.css"
 import axios from "axios";
 
-const NotificationItem : FC<INotifItem> = ({id, title, description, type}) => {
+const NotificationItem : FC<INotifItem> = ({idClan, title, description, type}) => {
 
 
     const [clanName, setClanName] = useState('')
+
     useEffect(() =>{
         const getClanInfo = async() =>{
             console.log('ClanInfo')
             const accessToken = localStorage.getItem('accessToken')
             const response = await axios.request({
-                url: `http://localhost:8080/api/clan/${id}`,
+                url: `http://localhost:8080/api/clan/${idClan}`,
                 method: 'get',
                 headers: {
                     Authorization: `${accessToken}`,
@@ -25,6 +26,7 @@ const NotificationItem : FC<INotifItem> = ({id, title, description, type}) => {
 
         getClanInfo();
     }, [])
+    
     return (
         <div>
             <div id="notifItem">

@@ -9,37 +9,37 @@ require("../styles/DropDownWindowstyles.css");
 var DropDownWindow = exports.DropDownWindow = function DropDownWindow(_ref) {
   var showDropWindow = _ref.showDropWindow;
   var navigate = (0, _reactRouterDom.useNavigate)();
-  var GoToProfile = function GoToProfile() {
+  var handleClickGoToProfile = function handleClickGoToProfile() {
     navigate("profile");
     showDropWindow(false);
   };
-  var GoToInventory = function GoToInventory() {
+  var handleClickGoToInventory = function handleClickGoToInventory() {
     navigate("inventory");
     showDropWindow(false);
   };
-  var GoToUserClan = function GoToUserClan() {
+  var handleClickGoToUserClan = function handleClickGoToUserClan() {
     navigate("userClan");
     showDropWindow(false);
   };
-  var GoToUsersTasks = function GoToUsersTasks() {
+  var handleClickGoToUsersTasks = function handleClickGoToUsersTasks() {
     navigate("usersTasks");
     showDropWindow(false);
   };
-  var GoToUsersNotif = function GoToUsersNotif() {
+  var handleClickGoToUsersNotif = function handleClickGoToUsersNotif() {
     navigate("notifications");
     showDropWindow(false);
   };
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("ul", {
     id: "dropDownSelection"
   }, /*#__PURE__*/React.createElement("li", {
-    onClick: GoToProfile
+    onClick: handleClickGoToProfile
   }, "Profile"), /*#__PURE__*/React.createElement("li", {
-    onClick: GoToInventory
+    onClick: handleClickGoToInventory
   }, "Inventory"), /*#__PURE__*/React.createElement("li", {
-    onClick: GoToUserClan
+    onClick: handleClickGoToUserClan
   }, "Your clan"), /*#__PURE__*/React.createElement("li", {
-    onClick: GoToUsersTasks
+    onClick: handleClickGoToUsersTasks
   }, "Your tasks"), /*#__PURE__*/React.createElement("li", {
-    onClick: GoToUsersNotif
+    onClick: handleClickGoToUsersNotif
   }, "Notifications")));
 };

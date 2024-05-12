@@ -1,50 +1,18 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import "../styles/MyModalstyles.css"
-import { IMyModalInputp } from "../../../../entities/Modal.interface";
-import axios from "axios";
+import ModalBodyTask from "../../../ModalBody/ModalBodyTask";
+import ModalBodyClan from "../../../ModalBody/ModalBodyClan";
+import ModalBodyStore from "../../../ModalBody/ModalBodyStroe";
 
-export const MyModal:FC<IMyModalInputp> = ({inputValue}) => {
-
-    const [clanName, setClanName] = useState('')
-
-    const CreateClan = async() =>{
-        const accessToken = localStorage.getItem('accessToken')
-        const response = await axios.request({
-            url: "http://localhost:8080/api/clan",
-            method: "post",
-            data: {
-                name: clanName,
-            },
-            headers: {
-                Authorization: `${accessToken}`
-            }
-        })
-
-        console.log(response)
-    }
-
-    const handleClickCreateClan = () =>{
-        if(clanName.length > 3 && clanName.length < 40){
-            CreateClan()
-        }else{
-            alert('Clan name length must be between 3 and 40')
-        }
-    }
-
-    const handleChangeClanName = (event : React.ChangeEvent<HTMLInputElement>) =>{
-        setClanName(event.target.value)
-    }
-
+export const MyModal:FC<{type : string} & {closeModal : () => void}> = ({ type, closeModal}) => {
     return (
-        <div className="myModalView">
-            <div className="inputClanName">
-                <label htmlFor="">{inputValue}</label>
-                <div className="inputValue">
-                    <div id='cursor'>{">"}</div>
-                    <input type="text" onChange={handleChangeClanName}/>
-                </div>
+        <div className="myModalView" style={type === 'addTask' ? {height:'600px', width:'600px'} : type === 'store' ? {height:'850px', width:'700px'} : {}} >
+            <div className="input">
+                {type == 'addTask' ? <ModalBodyTask closeModal={closeModal}/>
+                : type == 'createClan' ? <ModalBodyClan closeModal={closeModal}/>
+                : <ModalBodyStore closeModal={closeModal}/>
+                }
             </div>
-            <button onClick={handleClickCreateClan}>Create Clan</button>
         </div>
     );
 };

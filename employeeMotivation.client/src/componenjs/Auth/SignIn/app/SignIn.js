@@ -29,18 +29,16 @@ var SignIn = exports.SignIn = function SignIn() {
     _useState4 = _slicedToArray(_useState3, 2),
     password = _useState4[0],
     setPassword = _useState4[1];
-  var ToRegistration = function ToRegistration() {
+  var handleClickToRegistration = function handleClickToRegistration() {
     navigate("/reg");
   };
-  var AuthorizationUser_PostRequest = /*#__PURE__*/function () {
+  var AuthorizationUser = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var accessToken, response;
+      var response;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
-            accessToken = localStorage.getItem("accessToken");
-            console.log(accessToken);
-            _context.next = 4;
+            _context.next = 2;
             return _axios.default.request({
               url: "http://localhost:8080/api/user/login",
               method: "post",
@@ -49,27 +47,31 @@ var SignIn = exports.SignIn = function SignIn() {
                 password: password
               }
             });
-          case 4:
+          case 2:
             response = _context.sent;
             localStorage.setItem('accessToken', response.data);
             sessionStorage.setItem('userEmail', email);
             return _context.abrupt("return", response.status);
-          case 8:
+          case 6:
           case "end":
             return _context.stop();
         }
       }, _callee);
     }));
-    return function AuthorizationUser_PostRequest() {
+    return function AuthorizationUser() {
       return _ref.apply(this, arguments);
     };
   }();
-  var Authorization = function Authorization() {
+  var handleClickAuthorization = function handleClickAuthorization() {
     if (email && password) {
-      AuthorizationUser_PostRequest().then(function () {
+      AuthorizationUser().then(function () {
         navigate("/workzone/tasks");
-      }).catch(function () {
-        navigate("/error");
+      }).catch(function (error) {
+        if (error.response.status == 401) {
+          alert('Wrong email or password');
+        } else {
+          navigate("/error");
+        }
       });
     } else {
       alert("Fill field");
@@ -99,11 +101,11 @@ var SignIn = exports.SignIn = function SignIn() {
     id: "buttons"
   }, /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
-      return Authorization();
+      return handleClickAuthorization();
     }
   }, "Sign in"), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
-      return ToRegistration();
+      return handleClickToRegistration();
     }
   }, "Registration")));
 };

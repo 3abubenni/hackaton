@@ -67,6 +67,11 @@
   margin-right: auto;
   margin-left: 50px;
 }
+.clanListMainView button:hover {
+  background-color: rgba(0, 255, 0, 0.2);
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
 .clanListMainView #clansContainer {
   display: -webkit-box;
   display: -ms-flexbox;

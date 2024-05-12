@@ -13,6 +13,7 @@ var _Member = require("../../Members/app/Member");
 var _Items = require("../../../../../entities/Items.interface");
 var _ModalInvitePersons = require("../../../../MyModal/ModalIvitePersons/app/ModalInvitePersons");
 var _axios = _interopRequireDefault(require("axios"));
+var _customStyleModal = require("../../../../../helpers/styles/customStyleModal");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
@@ -34,27 +35,7 @@ var UserClan = exports.UserClan = function UserClan() {
     modalIsOpen = _useState2[0],
     setModalIsOpen = _useState2[1];
   var _useState3 = (0, _react.useState)({
-      children: [{
-        id: 0,
-        fname: 'Arseniy',
-        lname: 'Korolev',
-        email: 'korol@mail.ru'
-      }, {
-        id: 1,
-        fname: 'Ivan',
-        lname: 'Kuznetsov',
-        email: 'kuz@mail.ru'
-      }, {
-        id: 2,
-        fname: 'Arthur',
-        lname: 'Shayahmetov',
-        email: 'shaya@mail.ru'
-      }, {
-        id: 3,
-        fname: 'Vladislav',
-        lname: 'Couch',
-        email: 'couch@mail.ru'
-      }]
+      children: []
     }),
     _useState4 = _slicedToArray(_useState3, 2),
     members = _useState4[0],
@@ -129,28 +110,12 @@ var UserClan = exports.UserClan = function UserClan() {
         getClanInfo(clanid);
       }
     });
-  });
-  var customStyles = {
-    content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-      backgroundColor: 'rgb(22, 62, 73)',
-      borderRadius: '20px'
-    },
-    overlay: {
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      transition: 'background-color 0.5s ease'
-    }
-  };
+  }, []);
   var _useState5 = (0, _react.useState)(members),
     _useState6 = _slicedToArray(_useState5, 2),
     filteredMembers = _useState6[0],
     setFilteredMembers = _useState6[1];
-  var SearchMember = function SearchMember(event) {
+  var handleChangeSearchMember = function handleChangeSearchMember(event) {
     var searchTerm = event.target.value;
     var filteredData = members.children.filter(function (item) {
       return item.fname.toLowerCase().includes(searchTerm.toLowerCase()) || item.lname.toLowerCase().includes(searchTerm.toLowerCase());
@@ -159,13 +124,13 @@ var UserClan = exports.UserClan = function UserClan() {
       children: filteredData
     });
   };
-  var openModal = function openModal() {
+  var handleClickOpenModal = function handleClickOpenModal() {
     setModalIsOpen(true);
   };
-  var closeModal = function closeModal() {
+  var handleClickCloseModal = function handleClickCloseModal() {
     setModalIsOpen(false);
   };
-  var RemoveMember = function RemoveMember(member) {
+  var handleClickRemoveMember = function handleClickRemoveMember(member) {
     var afterRemoveData = filteredMembers.children.filter(function (member_inList) {
       return member.id !== member_inList.id;
     });
@@ -191,9 +156,9 @@ var UserClan = exports.UserClan = function UserClan() {
     className: "searchIcon"
   }, /*#__PURE__*/React.createElement(_io.IoSearchOutline, null)), /*#__PURE__*/React.createElement("div", null, ">"), /*#__PURE__*/React.createElement("input", {
     type: "text",
-    onChange: SearchMember
+    onChange: handleChangeSearchMember
   })), /*#__PURE__*/React.createElement("button", {
-    onClick: openModal
+    onClick: handleClickOpenModal
   }, "Invite new member"), /*#__PURE__*/React.createElement("div", {
     id: "membersContainer"
   }, filteredMembers.children.map(function (item, index) {
@@ -201,12 +166,11 @@ var UserClan = exports.UserClan = function UserClan() {
       id: index,
       fname: item.fname,
       lname: item.lname,
-      email: item.email,
-      remove: RemoveMember
+      remove: handleClickRemoveMember
     });
   }))), /*#__PURE__*/React.createElement(_reactModal.default, {
     isOpen: modalIsOpen,
-    onRequestClose: closeModal,
-    style: customStyles
-  }, /*#__PURE__*/React.createElement(_ModalInvitePersons.MyModalInvitePersonstyles, null)));
+    onRequestClose: handleClickCloseModal,
+    style: _customStyleModal.customStyles
+  }, /*#__PURE__*/React.createElement(_ModalInvitePersons.MyModalInvitePersons, null)));
 };

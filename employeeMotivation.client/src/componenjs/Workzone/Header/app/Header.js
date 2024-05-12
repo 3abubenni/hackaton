@@ -22,18 +22,18 @@ var Header = exports.Header = function Header() {
     _useState2 = _slicedToArray(_useState, 2),
     showWindow = _useState2[0],
     setShowWindow = _useState2[1];
-  var GoToSelections = function GoToSelections() {
+  var handleClickGoToSelections = function handleClickGoToSelections() {
     setShowWindow(!showWindow);
   };
-  var GoToTasks = function GoToTasks() {
+  var handleClickGoToTasks = function handleClickGoToTasks() {
     navigate("tasks");
     setShowWindow(false);
   };
-  var GoToClan = function GoToClan() {
+  var handleClickGoToClan = function handleClickGoToClan() {
     navigate("clans");
     setShowWindow(false);
   };
-  var GoToStore = function GoToStore() {
+  var handleClickGoToStore = function handleClickGoToStore() {
     navigate("store");
     setShowWindow(false);
   };
@@ -44,22 +44,22 @@ var Header = exports.Header = function Header() {
   }, "2"), /*#__PURE__*/React.createElement("a", {
     href: "#",
     onClick: function onClick() {
-      return GoToTasks();
+      return handleClickGoToTasks();
     }
   }, "Tasks")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "#",
     onClick: function onClick() {
-      return GoToStore();
+      return handleClickGoToStore();
     }
   }, "Store")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "#",
     onClick: function onClick() {
-      return GoToClan();
+      return handleClickGoToClan();
     }
   }, "Clans")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("div", {
     id: "iconUser",
     onClick: function onClick() {
-      return GoToSelections();
+      return handleClickGoToSelections();
     }
   }, /*#__PURE__*/React.createElement(_fa.FaUserCircle, null))))), showWindow ? /*#__PURE__*/React.createElement(_DropDownWindow.DropDownWindow, {
     showDropWindow: setShowWindow
