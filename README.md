@@ -12,7 +12,9 @@
 
 Для запуска jar файла и создания базовых настроек БД необходимо ввести следующую команду:
 
-> ```java -jar {путь до файла}/hackaton1.0.0SNAPSHOT --spring.datasource.password={пароль} --spring.datasource.username={user} --spring.datasource.url=jdbc:postgresql://{ссылка на базу}```
+```
+java -jar {путь до файла}/hackaton1.0.0SNAPSHOT --spring.datasource.password={пароль} --spring.datasource.username={user} --spring.datasource.url=jdbc:postgresql://{ссылка на базу}
+```
 
 #### Замечания
 
@@ -25,7 +27,9 @@
 
 Для включения preview режима с пред заполнеными пользователями и уже созданным кланом с задачами и предметами исполнить необходимо следующкую команду:
 
-> ```java -jar {путь до файла}/hackaton1.0.0SNAPSHOT --spring.datasource.password={пароль} --spring.datasource.username={user} --spring.datasource.url=jdbc:postgresql://{ссылка на базу} -preview```
+```
+java -jar {путь до файла}/hackaton1.0.0SNAPSHOT --spring.datasource.password={пароль} --spring.datasource.username={user} --spring.datasource.url=jdbc:postgresql://{ссылка на базу} -preview
+```
 
 #### Пояснение
 
@@ -42,7 +46,10 @@
 
 #### Замечание
 
-Пароль от всех аккаунтов один: ```12345678```
+Пароль от всех аккаунтов один: 
+```
+12345678
+```
 
 #### Дополнительная информация
 
@@ -67,13 +74,17 @@ jar file находится в zip файле hackaton1.0.1SNAPSHOT.zip
 
 Открываем терминал и пишем команду, которая подгрузит все необходимые пакеты для работы с клиентской частью:
 
-> ```npm install```
+```
+npm install
+```
 
 ### Шаг 3
 
 Прописываем команду:
 
-> ```npm install```
+```
+npm install
+```
 
 После чего в терминале должен открыть локальный хостинг вида:
 
@@ -122,7 +133,7 @@ npm update
 ## Структурная часть
 
 Проект написан на React + TypeScript + Java Spring Boot.
-В разработке приложения, Frontend разработчик использовал:
+#### В разработке приложения, Frontend разработчик использовал:
 
 <ul>
 <li> Scss
@@ -131,13 +142,17 @@ npm update
 <li> Vite
 <li> React
 <li> Typescript
+</ul>
 
-В свою очередь, Backend разработчик использовал:
+#### В свою очередь, Backend разработчик использовал:
 
+
+<ul>
 <li> Java 21
 <li> Postgres
 <li> Spring
 <li> Hibernate
 <li> Gradle
+</ul>
 
 Также участником команды является QA инженер, который тестировал веб-сервис и пытался найти ошибки в нём, которые в скоро времени начинали факситься.
