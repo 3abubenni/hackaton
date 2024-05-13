@@ -3,7 +3,7 @@ export interface IUser{
     lname: string,
     email: string,
     password: string,
-    bday: Date,
+    bday: string,
     money?: number,
     exp?: number,
 }

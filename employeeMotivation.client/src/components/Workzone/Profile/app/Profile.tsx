@@ -5,7 +5,6 @@ import axios from "axios";
 import { IUser } from "../../../../entities/User.interface";
 import { Clan } from "../../ClanList/Clan/app/Clan";
 import { IClanList } from "../../../../entities/Items.interface";
-import { CheckWrongDate } from "../../../../helpers/checkWrongDate/checkWrongDate";
 
 export const Profile = () => {
 
@@ -19,7 +18,7 @@ export const Profile = () => {
     const [userData, setUserData] = useState<IUser>({
         fname: "",
         lname: "",
-        bday: new Date(),
+        bday: "",
         email: "",
         password: "",
         money: -1,
@@ -36,15 +35,29 @@ export const Profile = () => {
                     Authorization: `${accessToken}`
                 }
             })
-            // userData.bday = response.data.bday
+
+            console.log(response)
+
+            if(response.data.bday !== null){
+                const bday = response.data.bday.split('T')[0]
+                const [year, month, day] = bday.split('-')
+                setUserData({
+                fname:  response.data.fname,
+                lname: response.data.lname,
+                email: response.data.email,
+                password: response.data.password,
+                bday: `${day}-${month}-${year}`,
+            })
+
+            setUserBday(`${day}-${month}-${year}`)
+            }
             setUserData({
                 fname:  response.data.fname,
                 lname: response.data.lname,
                 email: response.data.email,
                 password: response.data.password,
-                bday: new Date(),
+                bday: "",
             })
-            // setUserBday(userData.bday.toString().split('T')[0])
         }
 
         const getMemberClanInf = async() =>{
@@ -92,7 +105,7 @@ export const Profile = () => {
         setEditInputs(!editInputs)
     }
 
-    const UpdateUserData = async() =>{
+    const UpdateUserData = async(bday : string) =>{
         const accessToken = localStorage.getItem('accessToken')
         await axios.request({
             url: 'http://localhost:8080/api/user',
@@ -100,7 +113,7 @@ export const Profile = () => {
             data: {
                 fname: userData.fname,
                 lname: userData.lname,
-                bday: userData.bday,
+                bday: bday,
             },
             headers: {
                 Authorization: `${accessToken}`
@@ -111,15 +124,15 @@ export const Profile = () => {
     
     const handleClickSaveEdit = () =>{
         try{
-            const newUserBday = new Date(userBday)
-            if(userBday.toString().split('-').length !== 3 || userBday.toString().split('-')[2] === '' || userBday.toString().split('-')[1] === '' 
-            || userBday.toString().split('-')[0] === '' || CheckWrongDate(newUserBday) || userData.fname.length < 2 
-            || userData.lname.length < 2){
-                alert('Fill fields correctly')
-            }else{
-                setUserData({...userData, bday: newUserBday})
-                UpdateUserData()
-                setEditInputs(!editInputs)
+            console.log('Birthday', userBday);
+            const [day, month, year] = userBday.split('-')
+            const newBday = `${year}-${month}-${day}`
+            if(userData.fname.length > 2 && userData.lname.length > 2){
+                setUserData({...userData, bday: newBday});
+                UpdateUserData(newBday);
+                setEditInputs(!editInputs);
+            } else {
+                alert('Fill fields correctly');
             }
         }catch{
             alert('Fill fields correctly')

@@ -1,30 +1,49 @@
+[Реализовано](#реализовано)
+
+[Доделать](#доделать-в-будущем)
+
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Реализовано
 
-Currently, two official plugins are available:
+### Веб страницы
+<ul>
+<li> Страница авторизации
+<li> Страница регистрации
+<li> Страница профиля
+<li> Страницы с задачами
+<li> Страница магазина
+<li> Страница инвентаря
+</ul>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Архитектура
 
-## Expanding the ESLint configuration
+Так как пркатики в создании качественной архитектуры у меня не было, я сделал так:
+<ul>
+<li> Папка <i>entites</i> отвечает за сущности (<i>User</i>, <i>StoreItem</i>, <i>TaskItem</i> и тп.) и включает в себя интерфейсы этих сущностей
+<li> Папка <i>functions</i> и <i>helpers</i> используются для отделения часто встречающихся функций и css стилей
+<li> Папка <i>components</i> содержит в себе папки компонентов разбитые на блоки как на веб-сайте (<i>Reg</i>, <i>Auth</i>, <i>Workzone</i> и т.п.), а также содержит компоненты можальных оконо, используемых в проектк
+<li> Папка <i>images</i> отвечате за картинки, используемые в приложении
+</ul>
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Взаимодействие с backend
+<ul>
+<li> Сохранение <i>accessToken'а</i> в <i>localStorage</i>
+<li> Сохранение некоторых данных пользователя, таких как клан пользователя(<i>userClanId</i>), почта(<i>userEmail</i>) и т.п., в <i>sessionStorage</i>
+<li> Отображение данных на сайте
+<li> Покупка предметов в магазине
+<li> Просмотр инвентаря
+<li> Возможность взять задачу
+<li> Возможность отправить задачу на провекру
+<li> Возможность проверить на правильность задачу
+<li> Редактирование профиля
+</ul>
 
-- Configure the top-level `parserOptions` property like this:
+## Доделать в будущем
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+Из-за малого количетсва времени не удалось реальзивовать все задумки и поэтому в будущем планируется доделать части сайта связанные с кланами и уведомлениями, а также подредактировать архитектуру проекта.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Контакты:
+<ul>
+<li>https://t.me/NoWaYNoFear
+<li>https://vk.com/9arsysha
