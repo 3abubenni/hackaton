@@ -25,8 +25,9 @@ export interface IStoreItem {
     id: number,
     name: string,
     description: string,
-    count: number,
-    amount: number,
+    cost: number,
+    count?: number,
+    amount?: number,
 }
 
 export interface IStoreList {

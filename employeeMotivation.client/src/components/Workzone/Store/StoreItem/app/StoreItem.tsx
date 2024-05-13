@@ -5,7 +5,7 @@ import "../styles/StoreItemstyles.css"
 import Modal from 'react-modal';
 import { MyModalStoreItem } from "../../../../MyModal/ModalItems/StoreItem/app/MyModalStoreItem"
 
-export const StoreItem : FC<IStoreItem & { remove: (item : IStoreItem) => void } & {type : string}> = ({id, name, description, remove, type, count, amount}) => {
+export const StoreItem : FC<IStoreItem & { remove: (item : IStoreItem) => void } & {type : string} & {wasChange : (value : boolean) => void}> = ({id, name, description, remove, type, cost, count ,amount, wasChange}) => {
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
     
@@ -14,6 +14,7 @@ export const StoreItem : FC<IStoreItem & { remove: (item : IStoreItem) => void }
     };
     const handleClickCloseModal = () => {
         setModalIsOpen(false);
+        wasChange(true)
     };
 
     return (
@@ -28,7 +29,7 @@ export const StoreItem : FC<IStoreItem & { remove: (item : IStoreItem) => void }
             onRequestClose={handleClickCloseModal}
             style={customStyles}
             >
-                <MyModalStoreItem id={id} name={name} description={description} closeModal={handleClickCloseModal} type={type} remove={remove} count={count} amount={amount}/>
+                <MyModalStoreItem id={id} name={name} description={description} closeModal={handleClickCloseModal} type={type} remove={remove} cost={cost} amount={amount} count={count}/>
             </Modal>
         </>
     );

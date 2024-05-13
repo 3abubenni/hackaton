@@ -34,6 +34,10 @@ const ModalBodyTask : FC<{closeModal : () => void}> = ({closeModal}) => {
         }else{
             CreateTask().then(() => {
                 closeModal();
+            }).catch((error) =>{
+                if(error.response.status === 406){
+                    alert(`You can't add task`)
+                }
             });
         }
     }

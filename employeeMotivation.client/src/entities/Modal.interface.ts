@@ -7,6 +7,7 @@ export interface IMyModalItems{
     money?: number,
     exp?: number,
     status?: number,
+    cost?: number,
     count?: number,
     amount?: number,
 }

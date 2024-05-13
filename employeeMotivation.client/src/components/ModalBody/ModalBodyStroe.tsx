@@ -17,7 +17,7 @@ const ModalBodyStore : FC<{closeModal: () => void}> = ({closeModal}) => {
         setDescription(event.target.value)
     }
 
-    const handleChangeCountOfItems = (event : React.ChangeEvent<HTMLInputElement>) =>{
+    const handleChangeCostItems = (event : React.ChangeEvent<HTMLInputElement>) =>{
         setCost(Number(event.target.value))
     }
 
@@ -67,10 +67,10 @@ const ModalBodyStore : FC<{closeModal: () => void}> = ({closeModal}) => {
                 <div id='cursor'>{">"}</div>
                 <textarea name="" id="task_description" onChange={handleChangeDescription}></textarea>
             </div>
-            <label htmlFor="">Enter count of items in stock</label>
+            <label htmlFor="">Enter cost</label>
             <div className="inputValue">
                 <div id='cursor'>{">"}</div>
-                <input type="text" onChange={handleChangeCountOfItems}/>
+                <input type="text" onChange={handleChangeCostItems}/>
             </div>
             <label htmlFor="">Enter amount</label>
             <div className="inputValue">

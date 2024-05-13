@@ -8,7 +8,7 @@ const ModalBodyViewStore: FC<{item : IStoreItem} & {type: string} & {remove :(it
 
     const BuyProduct = async() =>{
         const accessToken = localStorage.getItem('accessToken')
-        const response = await axios.request({
+        await axios.request({
             url: `http://localhost:8080/api/shop/buy/item/${item.id}?amount=${amount}`,
             method: 'post',
             headers:{
@@ -16,7 +16,6 @@ const ModalBodyViewStore: FC<{item : IStoreItem} & {type: string} & {remove :(it
             }
         })
 
-        console.log(response)
     }
 
     const handleClickBuyProduct = () =>{
@@ -51,6 +50,11 @@ const ModalBodyViewStore: FC<{item : IStoreItem} & {type: string} & {remove :(it
         <div className="inputValue" id="description">
             <div id='cursor'>{">"}</div>
             <textarea name="" id="task_description" readOnly={true} value={item.description}></textarea>
+        </div>
+        <label htmlFor="">Cost</label>
+        <div className="inputValue">
+            <div id='cursor'>{">"}</div>
+            <input type="text" readOnly={true} value={item.cost}/>
         </div>
         <label htmlFor="">Count of items in stock</label>
         <div className="inputValue">

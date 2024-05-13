@@ -14,7 +14,7 @@ export const MyModalItems : FC<IMyModalItems  & { remove: (task : ITaskItem) => 
         exp: exp!,
         money: money!,
         title: "",
-        status: status,
+        status: status!,
     })
 
     const TakeTask = async() =>{

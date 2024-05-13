@@ -11,6 +11,7 @@ import axios from "axios";
 export const Store = () => {
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [needChange, setNeedChange] = useState(false)
 
     const [storeList, setStoreList] = useState<IStoreList>({
         children:[
@@ -34,13 +35,14 @@ export const Store = () => {
                     Authorization: `${accessToken}`,
                 }
             })
-            
+
             setStoreList({children: response.data})
             setFilteredStore({children: response.data})
+            setNeedChange(false)
         }
 
         getShopItems();
-    }, [modalIsOpen])
+    }, [modalIsOpen, needChange])
 
     const handleClickOpenModal = () => {
         setModalIsOpen(true);
@@ -72,7 +74,7 @@ export const Store = () => {
                 <button onClick={handleClickOpenModal}>Add store item</button>
                 <div id="storeContainer">
                     {filteredStore.children.map((item, index) =>
-                        <StoreItem key={index} id={item.id} name={item.name} description={item.description} count={item.count} amount={item.amount} remove={handleClickRemoveStoreItem} type="buy"/>
+                        <StoreItem key={index} id={item.id} name={item.name} description={item.description} cost={item.cost} amount={item.amount} count={item.count} remove={handleClickRemoveStoreItem} type="buy" wasChange={setNeedChange}/>
                     )}
                 </div>
             </div>

@@ -3,14 +3,15 @@ import {IStoreItem } from "../../../../../entities/Items.interface";
 import { IMyModalItems } from "../../../../../entities/Modal.interface";
 import ModalBodyViewStore from "../../../../ModalBodyView/ModalBodyViewStore";
 
-export const MyModalStoreItem : FC<IMyModalItems  & { remove: (task: IStoreItem) => void} & { closeModal: () => void}> = ({id, name, description, count, amount, type, closeModal, remove}) => {
+export const MyModalStoreItem : FC<IMyModalItems  & { remove: (task: IStoreItem) => void} & { closeModal: () => void}> = ({id, count, name, description, cost, amount, type, closeModal, remove}) => {
 
     const [item] = useState<IStoreItem>({
         id: id,
         name: name,
         description: description,
-        count: count!,
+        cost: cost!,
         amount: amount!,
+        count: count!,
     })
     
     return (

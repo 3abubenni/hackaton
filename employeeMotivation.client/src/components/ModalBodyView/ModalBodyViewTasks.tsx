@@ -80,8 +80,8 @@ const ModalBodyViewTasks : FC<{task: ITaskItem} & {type : string} & { remove: (t
                 <label htmlFor=""><p>Name:</p>{">"}{task.name}</label>
                 <p>Description:</p>
                 <div className="answer_description">{"> "}<textarea name="" id="task_description" readOnly={true}>{task.description}</textarea></div>
-                <label htmlFor=""><p>Money:</p>{">"}  {task.money}</label> : ""
-                <label htmlFor=""><p>Experience: </p>{">"} {task.exp}</label> : ""
+                <label htmlFor=""><p>Money:</p>{">"}  {task.money}</label>
+                <label htmlFor=""><p>Experience: </p>{">"} {task.exp}</label>
             </div>
             {type == 'task' ? <button onClick={handleClickTakeTask}>Take task</button> : type == 'answer' ? <button onClick={handleClickSendAnswer}>Send answer</button> 
             : <div className="buttonsOnCheck"><button onClick={() => handelClickCheck(false)}>Incorrectly</button> <button onClick={() => handelClickCheck(true)}>Correctly!</button></div>}
