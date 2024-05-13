@@ -28,4 +28,12 @@
 }
 .inventoryItem #inventoryItemContent p {
   color: rgb(43, 194, 164);
+  margin-top: 5px;
+  margin-left: 5px;
+}
+.inventoryItem #inventoryItemContent #count {
+  margin-top: auto;
+  margin-right: auto;
+  margin-left: 5px;
+  margin-bottom: 5px;
 }

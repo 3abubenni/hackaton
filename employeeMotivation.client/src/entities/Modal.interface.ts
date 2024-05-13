@@ -6,7 +6,9 @@ export interface IMyModalItems{
     img?: string,
     money?: number,
     exp?: number,
-    status: number,
+    status?: number,
+    count?: number,
+    amount?: number,
 }
 
 export interface IMyModalClanMember{

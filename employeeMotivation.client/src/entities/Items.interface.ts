@@ -25,8 +25,8 @@ export interface IStoreItem {
     id: number,
     name: string,
     description: string,
-    cost: number,
-    amount: number
+    count: number,
+    amount: number,
 }
 
 export interface IStoreList {
@@ -60,6 +60,9 @@ export interface IInventoryItem {
     id: number,
     name: string,
     description: string,
+    cost: number,
+    count: number,
+    img?: string,
 }
 
 export interface IInventoryList {

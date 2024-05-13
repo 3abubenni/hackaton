@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { ITaskItem } from "../../../../../entities/Items.interface";
 import "../styles/TaskItemstyles.css"
 import Modal from 'react-modal';
-import { MyModalItems } from "../../../../MyModal/ModalItems/app/MyModalItems";
+import { MyModalTaskItem } from "../../../../MyModal/ModalItems/TaskItem/app/MyModalTaskItem";
 import { customStyles } from "../../../../../helpers/styles/customStyleModal";
 
 const TaskItem: FC<ITaskItem & { remove: (task : ITaskItem) => void } & {type : string}> = ({id, title, description, exp, money, remove, name, status, type}) => {
@@ -29,7 +29,7 @@ const TaskItem: FC<ITaskItem & { remove: (task : ITaskItem) => void } & {type : 
             onRequestClose={handleClickCloseModal}
             style={customStyles}
             >
-                <MyModalItems id={id} name={name} description={description} status={status} type={type} exp={exp} money={money} remove={remove} closeModal={handleClickCloseModal}/>
+                <MyModalTaskItem id={id} name={name} description={description} status={status} type={type} exp={exp} money={money} remove={remove} closeModal={handleClickCloseModal}/>
             </Modal>
         </>
         

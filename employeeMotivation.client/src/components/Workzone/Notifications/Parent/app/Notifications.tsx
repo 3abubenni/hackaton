@@ -13,7 +13,6 @@ export const Notifications = () => {
 
     useEffect(() =>{
         const getUserInvites = async() =>{
-            console.log('Request')
             const accessToken = localStorage.getItem('accessToken')
             const response = await axios.request({
                 url: `http://localhost:8080/api/invite/user`,
@@ -23,9 +22,7 @@ export const Notifications = () => {
                 },
             })
 
-            console.log(response)
             setNotifications({children: response.data})
-            console.log(notifications)
         }
 
         getUserInvites();

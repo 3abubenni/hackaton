@@ -33,21 +33,17 @@ var Profile = exports.Profile = function Profile() {
     _useState2 = _slicedToArray(_useState, 2),
     editInputs = _useState2[0],
     setEditInputs = _useState2[1];
-  var _useState3 = (0, _react.useState)(undefined),
-    _useState4 = _slicedToArray(_useState3, 1),
-    image = _useState4[0];
-  var inputRef = (0, _react.useRef)(null);
-  var _useState5 = (0, _react.useState)(""),
-    _useState6 = _slicedToArray(_useState5, 2),
-    userBday = _useState6[0],
-    setUserBday = _useState6[1];
-  var _useState7 = (0, _react.useState)({
+  var _useState3 = (0, _react.useState)(""),
+    _useState4 = _slicedToArray(_useState3, 2),
+    userBday = _useState4[0],
+    setUserBday = _useState4[1];
+  var _useState5 = (0, _react.useState)({
       children: []
     }),
-    _useState8 = _slicedToArray(_useState7, 2),
-    clans = _useState8[0],
-    setClans = _useState8[1];
-  var _useState9 = (0, _react.useState)({
+    _useState6 = _slicedToArray(_useState5, 2),
+    clans = _useState6[0],
+    setClans = _useState6[1];
+  var _useState7 = (0, _react.useState)({
       fname: "",
       lname: "",
       bday: new Date(),
@@ -56,9 +52,9 @@ var Profile = exports.Profile = function Profile() {
       money: -1,
       exp: -1
     }),
-    _useState10 = _slicedToArray(_useState9, 2),
-    userData = _useState10[0],
-    setUserData = _useState10[1];
+    _useState8 = _slicedToArray(_useState7, 2),
+    userData = _useState8[0],
+    setUserData = _useState8[1];
   (0, _react.useEffect)(function () {
     var getUserInf = /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -119,7 +115,8 @@ var Profile = exports.Profile = function Profile() {
                   exp: response.data[0].exp
                 });
               });
-            case 5:
+              sessionStorage.setItem('userIdInClan', response.data[0].id);
+            case 6:
             case "end":
               return _context2.stop();
           }
@@ -169,7 +166,7 @@ var Profile = exports.Profile = function Profile() {
   };
   var UpdateUserData = /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-      var accessToken, response;
+      var accessToken;
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
@@ -188,9 +185,6 @@ var Profile = exports.Profile = function Profile() {
               }
             });
           case 3:
-            response = _context4.sent;
-            console.log(response);
-          case 5:
           case "end":
             return _context4.stop();
         }
@@ -216,16 +210,6 @@ var Profile = exports.Profile = function Profile() {
       alert('Fill fields correctly');
     }
   };
-  var handleClickImage = function handleClickImage() {
-    if (inputRef.current && editInputs) {
-      inputRef.current.click();
-    } else {
-      alert("Can not without Edit Mode");
-    }
-  };
-  var handleChangeLogo = function handleChangeLogo() {
-    alert('You cant change image');
-  };
   var handleChangeFName = function handleChangeFName(event) {
     setUserData(_objectSpread(_objectSpread({}, userData), {}, {
       fname: event.target.value
@@ -239,26 +223,15 @@ var Profile = exports.Profile = function Profile() {
   var handleChangeBday = function handleChangeBday(event) {
     setUserBday(event.target.value);
   };
-  console.log(userData);
   return /*#__PURE__*/React.createElement("div", {
     className: "mainView"
   }, /*#__PURE__*/React.createElement("div", {
     className: "profileContent"
   }, /*#__PURE__*/React.createElement("h1", null, "Your profile"), /*#__PURE__*/React.createElement("div", {
     className: "image"
-  }, image ? /*#__PURE__*/React.createElement("img", {
-    src: URL.createObjectURL(image),
-    alt: "",
-    onClick: handleClickImage
-  }) : /*#__PURE__*/React.createElement("div", {
-    id: "iconUser",
-    onClick: handleClickImage
-  }, /*#__PURE__*/React.createElement(_fa.FaRegUserCircle, null))), /*#__PURE__*/React.createElement("input", {
-    type: "file",
-    ref: inputRef,
-    onChange: handleChangeLogo,
-    className: "hiddenInput"
-  }), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
+    id: "iconUser"
+  }, /*#__PURE__*/React.createElement(_fa.FaRegUserCircle, null))), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("div", {
     className: "item"
   }, /*#__PURE__*/React.createElement("label", {
     htmlFor: ""
@@ -270,7 +243,7 @@ var Profile = exports.Profile = function Profile() {
     className: "item"
   }, /*#__PURE__*/React.createElement("label", {
     htmlFor: ""
-  }, "Your birthday ", ">", " "), /*#__PURE__*/React.createElement("input", {
+  }, "Your birthday", '(dd-mm-yyyy)', " ", ">", " "), /*#__PURE__*/React.createElement("input", {
     type: "text",
     readOnly: !editInputs,
     value: userBday,

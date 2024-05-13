@@ -5,8 +5,7 @@ const ModalBodyStore : FC<{closeModal: () => void}> = ({closeModal}) => {
 
     const [name, setName] = useState('')
     const [amount, setAmount] = useState(0)
-    const [countItems, setCountItems] = useState(0)
-    const [image, setImage] = useState('')
+    const [cost, setCost] = useState(0)
     const [description, setDescription] = useState('')
 
 
@@ -19,20 +18,19 @@ const ModalBodyStore : FC<{closeModal: () => void}> = ({closeModal}) => {
     }
 
     const handleChangeCountOfItems = (event : React.ChangeEvent<HTMLInputElement>) =>{
-        setCountItems(Number(event.target.value))
+        setCost(Number(event.target.value))
     }
 
     const handleChangeAmount = (event : React.ChangeEvent<HTMLInputElement>) =>{
         setAmount(Number(event.target.value))
     }
-
-    const handleChangeImage = (event : React.ChangeEvent<HTMLInputElement>) =>{
-        setImage(event.target.value)
-    }
-
     const handleClickAddProduct = () =>{
-        if(name.length > 3 && description.length > 10 && amount > 0 && countItems > 0){
-            AddProductToStore().then(() => closeModal());
+        if(name.length > 3 && description.length > 10 && amount > 0 && cost > 0){
+            AddProductToStore().then(() => closeModal()).catch((error) =>{
+                if(error.response.status === 403){
+                    alert(`You cant add product`)
+                }
+            });
         }else{
             alert('Fill fields correctly')
         }
@@ -42,8 +40,19 @@ const ModalBodyStore : FC<{closeModal: () => void}> = ({closeModal}) => {
         const accessToken = localStorage.getItem('accessToken')
         const userClanId = sessionStorage.getItem('userClanId')
         const response = await axios.request({
-            url: `http://localhost:8080/api/shop/add/item/${userClanId}?amount=${amount}`
+            url: `http://localhost:8080/api/item/clan/${userClanId}`,
+            method: 'post',
+            data: {
+                name: name,
+                description: description,
+                cost: cost,
+                amount: amount,
+            },
+            headers: {
+                Authorization: `${accessToken}`
+            }
         })
+        console.log(response)
     }
 
     return (
@@ -67,11 +76,6 @@ const ModalBodyStore : FC<{closeModal: () => void}> = ({closeModal}) => {
             <div className="inputValue">
                 <div id='cursor'>{">"}</div>
                 <input type="text" onChange={handleChangeAmount}/>
-            </div>
-            <label htmlFor="">Choose image</label>
-            <div className="inputValue">
-                <div id='cursor'>{">"}</div>
-                <input type="file" onChange={handleChangeImage}/>
             </div>
 
             <button onClick={handleClickAddProduct}>Add product</button>

@@ -7,7 +7,7 @@ import axios from "axios";
 
 export const Inventory = () => {
 
-    const [inventoryList] = useState<IInventoryList>({
+    const [inventoryList, setInventoryList] = useState<IInventoryList>({
         children:[
         ]
     })
@@ -15,16 +15,17 @@ export const Inventory = () => {
     useEffect(() =>{
         const getUsersInventoryItem = async() =>{
             const accessToken = localStorage.getItem('accessToken')
-            const userClanId = sessionStorage.getItem('userClanId')
+            const userId = sessionStorage.getItem('userIdInClan')
             const response = await axios.request({
-                url: `http://localhost:8080/api/item/member/${userClanId}`,
+                url: `http://localhost:8080/api/item/member/${userId}`,
                 method: 'get',
                 headers: {
                     Authorization: `${accessToken}`,
                 }
             })
             
-            console.log(response)
+            setInventoryList({children: response.data})
+            setFilteredInventory({children: response.data})
         }
 
         getUsersInventoryItem();
@@ -34,8 +35,8 @@ export const Inventory = () => {
 
     const handleChangeSearchStoreItem = (event : React.ChangeEvent<HTMLInputElement>) => {
         const searchTerm = event.target.value;
-        const filteredData = storeList.children.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
-        setFilteredStore({ children: filteredData });
+        const filteredData = inventoryList.children.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
+        setFilteredInventory({ children: filteredData });
     }
 
     return (
@@ -50,7 +51,7 @@ export const Inventory = () => {
                 </div>
                 <div id="inventoryContainer">
                     {filteredInventory.children.map((item, index) =>
-                        <InventoryItem key={index} id={item.id} name={item.name} description={item.description}/>
+                        <InventoryItem key={index} id={item.id} name={item.name} description={item.description} count={item.count} cost={item.cost}/>
                     )}
                 </div>
             </div>

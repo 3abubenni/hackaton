@@ -8,13 +8,12 @@ require("../styles/InventoryItemstyles.css");
 var _Items = require("../../../../../entities/Items.interface");
 var InventoryItem = exports.InventoryItem = function InventoryItem(_ref) {
   var name = _ref.name,
-    image = _ref.image;
+    count = _ref.count;
   return /*#__PURE__*/React.createElement("div", {
     className: "inventoryItem"
   }, /*#__PURE__*/React.createElement("div", {
     id: "inventoryItemContent"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: image,
-    alt: "123"
-  }), /*#__PURE__*/React.createElement("p", null, name)));
+  }, /*#__PURE__*/React.createElement("p", null, name), /*#__PURE__*/React.createElement("p", {
+    id: "count"
+  }, "Count: ", count)));
 };

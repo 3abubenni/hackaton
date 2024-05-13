@@ -30,15 +30,15 @@ var Inventory = exports.Inventory = function Inventory() {
   (0, _react.useEffect)(function () {
     var getUsersInventoryItem = /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var accessToken, userClanId, response;
+        var accessToken, userId, response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               accessToken = localStorage.getItem('accessToken');
-              userClanId = sessionStorage.getItem('userClanId');
+              userId = sessionStorage.getItem('userIdInClan');
               _context.next = 4;
               return _axios.default.request({
-                url: "http://localhost:8080/api/item/member/".concat(userClanId),
+                url: "http://localhost:8080/api/item/member/".concat(userId),
                 method: 'get',
                 headers: {
                   Authorization: "".concat(accessToken)
@@ -65,10 +65,10 @@ var Inventory = exports.Inventory = function Inventory() {
     setFilteredInventory = _useState4[1];
   var handleChangeSearchStoreItem = function handleChangeSearchStoreItem(event) {
     var searchTerm = event.target.value;
-    var filteredData = storeList.children.filter(function (item) {
+    var filteredData = inventoryList.children.filter(function (item) {
       return item.name.toLowerCase().includes(searchTerm.toLowerCase());
     });
-    setFilteredStore({
+    setFilteredInventory({
       children: filteredData
     });
   };

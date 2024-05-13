@@ -62,6 +62,8 @@ export const Profile = () => {
                 money: response.data[0].money,
                 exp: response.data[0].exp
             }));
+
+            sessionStorage.setItem('userIdInClan', response.data[0].id)
         }
 
         const getUsersClans = async() =>{
@@ -92,7 +94,7 @@ export const Profile = () => {
 
     const UpdateUserData = async() =>{
         const accessToken = localStorage.getItem('accessToken')
-        const response = await axios.request({
+        await axios.request({
             url: 'http://localhost:8080/api/user',
             method: 'put',
             data: {
@@ -104,8 +106,6 @@ export const Profile = () => {
                 Authorization: `${accessToken}`
             }
         })
-
-        console.log(response)
     }
 
     
@@ -136,8 +136,6 @@ export const Profile = () => {
         setUserBday(event.target.value)
     }
 
-    console.log(userData)
-
     return (
         <div className="mainView">
             <div className="profileContent">
@@ -154,7 +152,7 @@ export const Profile = () => {
                     </li>
                     <li>
                         <div className="item">
-                            <label htmlFor="">Your birthday {">"} </label>
+                            <label htmlFor="">Your birthday{'(dd-mm-yyyy)'} {">"} </label>
                             <input type="text"  readOnly={!editInputs} value={userBday} onChange={handleChangeBday}/> {editInputs ? <FaPen /> : ""}
                         </div>
                     </li>

@@ -1,12 +1,12 @@
 import "../styles/InventoryItemstyles.css"
 import { IInventoryItem } from "../../../../../entities/Items.interface"
 
-export const InventoryItem : React.FC<IInventoryItem> = ({name, image}) => {
+export const InventoryItem : React.FC<IInventoryItem> = ({name, count}) => {
     return (
         <div className="inventoryItem">
             <div id="inventoryItemContent">
-                <img src={image} alt="123" />
                 <p>{name}</p>
+                <p id="count">Count: {count}</p>
             </div>
         </div>
     );

@@ -10,7 +10,6 @@ const NotificationItem : FC<INotifItem> = ({idClan, title, description, type}) =
 
     useEffect(() =>{
         const getClanInfo = async() =>{
-            console.log('ClanInfo')
             const accessToken = localStorage.getItem('accessToken')
             const response = await axios.request({
                 url: `http://localhost:8080/api/clan/${idClan}`,
@@ -19,8 +18,6 @@ const NotificationItem : FC<INotifItem> = ({idClan, title, description, type}) =
                     Authorization: `${accessToken}`,
                 },
             })
-
-            console.log(response)
             setClanName(response.data.name)
         }
 
@@ -33,7 +30,7 @@ const NotificationItem : FC<INotifItem> = ({idClan, title, description, type}) =
                 <div className="notifItemElements">
                     <p>{title}</p>
                     <p id="description">{description}<div>{clanName}</div></p>
-                    {type == 'invite' ? <div className="buttons"><button id="decline">Decline</button><button id="accept">Accept</button></div> : ""}
+                    {type == 'invite' ? <div className="buttons"><button id="decline" disabled={true}>Decline</button><button id="accept" disabled={true}>Accept</button></div> : ""}
                 </div>
             </div>
         </div>

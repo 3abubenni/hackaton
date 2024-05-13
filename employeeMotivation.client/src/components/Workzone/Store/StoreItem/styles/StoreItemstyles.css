@@ -1,11 +1,11 @@
 .storeItem {
-  width: 150px;
+  width: 220px;
   height: 200px;
   padding: 3px;
   background: rgb(50, 173, 118);
 }
 .storeItem #storeItemContent {
-  width: 150px;
+  width: 220px;
   height: 200px;
   background-color: rgb(22, 62, 73);
   display: -webkit-box;
@@ -21,11 +21,15 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  cursor: pointer;
 }
 .storeItem #storeItemContent img {
   width: 75px;
   height: 125px;
 }
 .storeItem #storeItemContent p {
+  margin-top: auto;
+  margin-bottom: 20px;
+  margin-left: 10px;
   color: rgb(43, 194, 164);
 }

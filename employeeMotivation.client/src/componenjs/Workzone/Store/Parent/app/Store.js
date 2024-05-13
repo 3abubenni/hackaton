@@ -29,6 +29,23 @@ var Store = exports.Store = function Store() {
     _useState2 = _slicedToArray(_useState, 2),
     modalIsOpen = _useState2[0],
     setModalIsOpen = _useState2[1];
+  var _useState3 = (0, _react.useState)({
+      children: []
+    }),
+    _useState4 = _slicedToArray(_useState3, 2),
+    storeList = _useState4[0],
+    setStoreList = _useState4[1];
+  var handleClickRemoveStoreItem = function handleClickRemoveStoreItem(item) {
+    var afterRemoveData = filteredStore.children.filter(function (item_inList) {
+      return item_inList.id !== item.id;
+    });
+    setStoreList({
+      children: afterRemoveData
+    });
+    setFilteredStore({
+      children: afterRemoveData
+    });
+  };
   (0, _react.useEffect)(function () {
     var getShopItems = /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -48,8 +65,13 @@ var Store = exports.Store = function Store() {
               });
             case 4:
               response = _context.sent;
-              console.log(response);
-            case 6:
+              setStoreList({
+                children: response.data
+              });
+              setFilteredStore({
+                children: response.data
+              });
+            case 7:
             case "end":
               return _context.stop();
           }
@@ -60,12 +82,7 @@ var Store = exports.Store = function Store() {
       };
     }();
     getShopItems();
-  });
-  var _useState3 = (0, _react.useState)({
-      children: []
-    }),
-    _useState4 = _slicedToArray(_useState3, 1),
-    storeList = _useState4[0];
+  }, [modalIsOpen]);
   var handleClickOpenModal = function handleClickOpenModal() {
     setModalIsOpen(true);
   };
@@ -106,8 +123,10 @@ var Store = exports.Store = function Store() {
       id: item.id,
       name: item.name,
       description: item.description,
-      cost: item.cost,
-      amount: item.amount
+      count: item.count,
+      amount: item.amount,
+      remove: handleClickRemoveStoreItem,
+      type: "buy"
     });
   })))), /*#__PURE__*/React.createElement(_reactModal.default, {
     isOpen: modalIsOpen,

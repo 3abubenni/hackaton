@@ -1,24 +1,28 @@
 @import "../../../../../helpers/variables/colors.scss";
 
 .storeItem{
-    width: 150px;
+    width: 220px;
     height: 200px;
     padding: 3px;
     background: rgba(50,173,118,1);
     #storeItemContent{
-        width: 150px;
+        width: 220px;
         height: 200px;
         background-color: rgb(22,62,73);
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
         
         img{
             width: 75px;
             height: 125px;
         }
         p{
+            margin-top: auto;
+            margin-bottom: 20px;
+            margin-left: 10px;
             color: $mainTextColor;
         }
     }

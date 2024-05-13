@@ -65,8 +65,6 @@ var UserClan = exports.UserClan = function UserClan() {
               sessionStorage.setItem('userClanId', response.data[0].id);
               return _context.abrupt("return", response.data[0].id);
             case 7:
-              console.log(response);
-            case 8:
             case "end":
               return _context.stop();
           }
@@ -78,7 +76,7 @@ var UserClan = exports.UserClan = function UserClan() {
     }();
     var getClanInfo = /*#__PURE__*/function () {
       var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(userClanId) {
-        var accessToken, clanId, response;
+        var accessToken, clanId;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
@@ -93,9 +91,6 @@ var UserClan = exports.UserClan = function UserClan() {
                 }
               });
             case 4:
-              response = _context2.sent;
-              console.log(response);
-            case 6:
             case "end":
               return _context2.stop();
           }

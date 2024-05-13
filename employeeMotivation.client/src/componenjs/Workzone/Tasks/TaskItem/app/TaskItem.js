@@ -8,7 +8,7 @@ var _react = require("react");
 var _Items = require("../../../../../entities/Items.interface");
 require("../styles/TaskItemstyles.css");
 var _reactModal = _interopRequireDefault(require("react-modal"));
-var _MyModalItems = require("../../../../MyModal/ModalItems/app/MyModalItems");
+var _MyModalTaskItem = require("../../../../MyModal/ModalItems/TaskItem/app/MyModalTaskItem");
 var _customStyleModal = require("../../../../../helpers/styles/customStyleModal");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
@@ -46,7 +46,7 @@ var TaskItem = function TaskItem(_ref) {
     isOpen: modalIsOpen,
     onRequestClose: handleClickCloseModal,
     style: _customStyleModal.customStyles
-  }, /*#__PURE__*/React.createElement(_MyModalItems.MyModalItems, {
+  }, /*#__PURE__*/React.createElement(_MyModalTaskItem.MyModalTaskItem, {
     id: id,
     name: name,
     description: description,

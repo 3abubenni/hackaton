@@ -37,7 +37,13 @@
     button{
         @include myButton;
         margin-right: auto;
-        margin-left: 50px
+        margin-left: 50px;
+
+        &:disabled{
+            background-color: rgba(255,255,255, 0.3);
+            color: red;
+            text-decoration: line-through;
+        }
     }
 
     #clansContainer{

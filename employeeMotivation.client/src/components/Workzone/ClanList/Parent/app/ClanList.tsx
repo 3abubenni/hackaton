@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Clan } from "../../Clan/app/Clan";
 import "../styles/ClanListstyles.css"
 import { IoSearchOutline } from "react-icons/io5";
@@ -7,7 +7,6 @@ import { MyModal } from "../../../../MyModal/Modal/app/MyModal";
 import { IClanList } from "../../../../../entities/Items.interface"
 import { customStyles } from "../../../../../helpers/styles/customStyleModal";
 import { FilterTextForClan } from "../../../../../functions/filterText/FilterText";
-import axios from "axios";
 
 export const ClanList = () => {
     
@@ -16,23 +15,23 @@ export const ClanList = () => {
         ]
     });
 
-    useEffect(() =>{
-        const getAllClans = async() =>{
-            const accessToken = localStorage.getItem('accessToken')
-            const query = ""
-            const response = await axios.request({
-                url: `http://localhost:8080/api/clan/search/?query=${query}`,
-                method: 'get',
-                headers: {
-                    Authorization: `${accessToken}`,
-                }
-            })
+    // useEffect(() =>{
+    //     const getAllClans = async() =>{
+    //         const accessToken = localStorage.getItem('accessToken')
+    //         const query = ""
+    //         const response = await axios.request({
+    //             url: `http://localhost:8080/api/clan/search/?query=${query}`,
+    //             method: 'get',
+    //             headers: {
+    //                 Authorization: `${accessToken}`,
+    //             }
+    //         })
 
-            console.log(response)
-        }
+    //         console.log(response)
+    //     }
 
-        getAllClans();
-    })
+    //     getAllClans();
+    // })
 
     const [filteredClans, setFilteredClans] = useState<IClanList>(clans);
     
@@ -55,15 +54,16 @@ export const ClanList = () => {
     return (
         <>
             <div className="mainView">
+            <h1>still in work...</h1>
                 <div className="clanListMainView">
                     <div className="searchConatiner">
                         <div className="searchIcon">
                             <IoSearchOutline />
                         </div>
                         <div>{">"}</div>
-                        <input type="text" onChange={handleChangeSearchClan}/>   
+                        <input type="text" onChange={handleChangeSearchClan} readOnly={true}/>   
                     </div>
-                    <button onClick={handleClickOpenModal}>Add clan</button>
+                    <button onClick={handleClickOpenModal} disabled={true}>Add clan</button>
                     <div id="clansContainer">
                         {FilterTextForClan(filteredClans.children).map((item, index) =>
                             <Clan id={index} key={index} name={item.name} type="show_join"/>

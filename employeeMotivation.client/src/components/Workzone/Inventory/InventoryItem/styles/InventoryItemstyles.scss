@@ -20,6 +20,15 @@
         }
         p{
             color: $mainTextColor;
+            margin-top: 5px;
+            margin-left: 5px;
+        }
+
+        #count{
+            margin-top: auto;
+            margin-right: auto;
+            margin-left: 5px;
+            margin-bottom: 5px;
         }
     }
 }

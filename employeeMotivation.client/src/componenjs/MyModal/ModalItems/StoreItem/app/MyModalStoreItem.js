@@ -3,13 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.StoreItem = void 0;
+exports.MyModalStoreItem = void 0;
 var _react = require("react");
 var _Items = require("../../../../../entities/Items.interface");
-var _customStyleModal = require("../../../../../helpers/styles/customStyleModal");
-require("../styles/StoreItemstyles.css");
-var _reactModal = _interopRequireDefault(require("react-modal"));
-var _MyModalStoreItem = require("../../../../MyModal/ModalItems/StoreItem/app/MyModalStoreItem");
+var _Modal = require("../../../../../entities/Modal.interface");
+var _ModalBodyViewStore = _interopRequireDefault(require("../../../../ModalBodyView/ModalBodyViewStore"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -17,41 +15,34 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-var StoreItem = exports.StoreItem = function StoreItem(_ref) {
+var MyModalStoreItem = exports.MyModalStoreItem = function MyModalStoreItem(_ref) {
   var id = _ref.id,
     name = _ref.name,
     description = _ref.description,
-    remove = _ref.remove,
-    type = _ref.type,
     count = _ref.count,
-    amount = _ref.amount;
-  var _useState = (0, _react.useState)(false),
-    _useState2 = _slicedToArray(_useState, 2),
-    modalIsOpen = _useState2[0],
-    setModalIsOpen = _useState2[1];
-  var handleClickOpenModal = function handleClickOpenModal() {
-    setModalIsOpen(true);
-  };
-  var handleClickCloseModal = function handleClickCloseModal() {
-    setModalIsOpen(false);
-  };
-  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "storeItem",
-    onClick: handleClickOpenModal
-  }, /*#__PURE__*/React.createElement("div", {
-    id: "storeItemContent"
-  }, /*#__PURE__*/React.createElement("p", null, name))), /*#__PURE__*/React.createElement(_reactModal.default, {
-    isOpen: modalIsOpen,
-    onRequestClose: handleClickCloseModal,
-    style: _customStyleModal.customStyles
-  }, /*#__PURE__*/React.createElement(_MyModalStoreItem.MyModalStoreItem, {
-    id: id,
-    name: name,
-    description: description,
-    closeModal: handleClickCloseModal,
+    amount = _ref.amount,
+    type = _ref.type,
+    closeModal = _ref.closeModal,
+    remove = _ref.remove;
+  var _useState = (0, _react.useState)({
+      id: id,
+      name: name,
+      description: description,
+      count: count,
+      amount: amount
+    }),
+    _useState2 = _slicedToArray(_useState, 1),
+    item = _useState2[0];
+  return /*#__PURE__*/React.createElement("div", {
+    className: "myModalView",
+    style: {
+      height: '600px',
+      width: '700px'
+    }
+  }, /*#__PURE__*/React.createElement(_ModalBodyViewStore.default, {
+    item: item,
     type: type,
     remove: remove,
-    count: count,
-    amount: amount
-  })));
+    closeModal: closeModal
+  }));
 };

@@ -33,22 +33,18 @@ export const UserClan = () => {
                 sessionStorage.setItem('userClanId', response.data[0].id)
                 return response.data[0].id;
             }
-
-            console.log(response)
         }
 
         const getClanInfo = async(userClanId : number) =>{
             const accessToken = localStorage.getItem('accessToken')
             const clanId = userClanId
-            const response = await axios.request({
+            await axios.request({
                 url: `http://localhost:8080/api/clan/${clanId}`,
                 method: 'get',
                 headers:{
                     Authorization: `${accessToken}`
                 }
             })
-
-            console.log(response)
         }
 
         getUserClans().then((clanid) => {

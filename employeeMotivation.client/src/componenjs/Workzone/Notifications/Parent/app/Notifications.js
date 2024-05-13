@@ -34,9 +34,8 @@ var Notifications = exports.Notifications = function Notifications() {
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              console.log('Request');
               accessToken = localStorage.getItem('accessToken');
-              _context.next = 4;
+              _context.next = 3;
               return _axios.default.request({
                 url: "http://localhost:8080/api/invite/user",
                 method: 'get',
@@ -44,14 +43,12 @@ var Notifications = exports.Notifications = function Notifications() {
                   Authorization: "".concat(accessToken)
                 }
               });
-            case 4:
+            case 3:
               response = _context.sent;
-              console.log(response);
               setNotifications({
                 children: response.data
               });
-              console.log(notifications);
-            case 8:
+            case 5:
             case "end":
               return _context.stop();
           }
