@@ -36,8 +36,6 @@ export const Profile = () => {
                 }
             })
 
-            console.log(response)
-
             if(response.data.bday !== null){
                 const bday = response.data.bday.split('T')[0]
                 const [year, month, day] = bday.split('-')
@@ -124,7 +122,6 @@ export const Profile = () => {
     
     const handleClickSaveEdit = () =>{
         try{
-            console.log('Birthday', userBday);
             const [day, month, year] = userBday.split('-')
             const newBday = `${year}-${month}-${day}`
             if(userData.fname.length > 2 && userData.lname.length > 2){
