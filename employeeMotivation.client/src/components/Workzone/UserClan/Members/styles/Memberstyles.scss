@@ -1,6 +1,6 @@
 @import "../../../../../helpers/variables/colors.scss";
 
-$mywidth: 400px;
+$mywidth: 500px;
 $myheight: 60px;
 
 #memberItem{
@@ -39,7 +39,10 @@ $myheight: 60px;
             flex-grow: 1;
         }
         #place{
-            width: 2px;
+            width: 1%;
+        }
+        #solbedTasks{
+            width: 25%;
         }
     }
 }

@@ -6,7 +6,7 @@ import { MyModalClanMember } from '../../../../MyModal/MyModalClanMember/app/MyM
 import { customStyles } from '../../../../../helpers/styles/customStyleModal';
 import axios from 'axios';
 
-export const Member : FC<IMember & {remove: (member : IMember) => void}> = ({id, userId, remove, placeInRating}) => {
+export const Member : FC<IMember & {remove: (member : IMember) => void}> = ({id, userId, remove, placeInRating, solvedTasks}) => {
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [fname, setFName] = useState("");
@@ -46,6 +46,7 @@ export const Member : FC<IMember & {remove: (member : IMember) => void}> = ({id,
                     <p id='place'>{placeInRating}</p>
                     <p>{fname}</p>
                     <p>{lname}</p>
+                    <p id='solbedTasks'>Soleved tasks: {solvedTasks}</p>
                 </div>
             </div>
             <Modal

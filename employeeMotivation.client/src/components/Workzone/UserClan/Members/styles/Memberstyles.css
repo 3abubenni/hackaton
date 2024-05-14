@@ -5,7 +5,7 @@
   display: flex;
   margin-top: 30px;
   height: 60px;
-  width: 400px;
+  width: 500px;
   border-radius: 20px;
   padding: 3px;
   margin-left: 10px;
@@ -49,5 +49,8 @@
           flex-grow: 1;
 }
 #memberItem .memberItemElements #place {
-  width: 2px;
+  width: 1%;
+}
+#memberItem .memberItemElements #solbedTasks {
+  width: 25%;
 }
