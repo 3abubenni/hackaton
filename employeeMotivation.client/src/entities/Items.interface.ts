@@ -51,6 +51,9 @@ export interface IMember {
     fname: string,
     lname: string,
     email?: string,
+    solvedTasks: string,
+    userId: number,
+    placeInRating: number,
 }
 
 export interface IMemberList{

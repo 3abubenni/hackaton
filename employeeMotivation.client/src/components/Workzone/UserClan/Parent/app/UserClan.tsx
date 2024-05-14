@@ -12,7 +12,7 @@ export const UserClan = () => {
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
-    const [members, setMembers] = useState<IMemberList>({
+    const [membersOfRating, setMembersOfRatind] = useState<IMemberList>({
         children:[
 
         ]
@@ -47,18 +47,35 @@ export const UserClan = () => {
             })
         }
 
+        const getUsersFromClan = async(userClanId : number) => {
+            const accessToken = localStorage.getItem('accessToken')
+            const clanId = userClanId
+            const response = await axios.request({
+                url: `http://localhost:8080/api/member/clan/${clanId}`,
+                method: 'get',
+                headers:{
+                    Authorization: `${accessToken}`
+                }
+            })
+
+            console.log(response.data)
+            setMembersOfRatind({children: response.data})
+            setFilteredMembers({children: response.data})
+        }
+
         getUserClans().then((clanid) => {
             if(clanid){
                 getClanInfo(clanid);
+                getUsersFromClan(clanid);
             }
         });
     }, [])
 
-    const [filteredMembers, setFilteredMembers] = useState(members)
+    const [filteredMembers, setFilteredMembers] = useState(membersOfRating)
 
     const handleChangeSearchMember = (event : React.ChangeEvent<HTMLInputElement>) => {
         const searchTerm = event.target.value;
-        const filteredData = members.children.filter((item) => item.fname.toLowerCase().includes(searchTerm.toLowerCase()) || item.lname.toLowerCase().includes(searchTerm.toLowerCase()));
+        const filteredData = membersOfRating.children.filter((item) => item.fname.toLowerCase().includes(searchTerm.toLowerCase()) || item.lname.toLowerCase().includes(searchTerm.toLowerCase()));
         setFilteredMembers({ children: filteredData });
     }
 
@@ -76,9 +93,19 @@ export const UserClan = () => {
             ...member,
             id: index,
         }));
-        setMembers({ children: updatedAfterRemoveData });
+        setMembersOfRatind({ children: updatedAfterRemoveData });
         setFilteredMembers({ children: updatedAfterRemoveData });
     };
+
+    const DoRating = (members : IMember[]) =>{
+        members.sort((person1, person2) => (person1.solvedTasks > person2.solvedTasks) ? -1 : ((person2.solvedTasks> person1.solvedTasks) ? 1 : 0));
+        for (let i = 0; i < members.length; i++) {
+            members[i].placeInRating = i + 1;
+        }
+        return members
+    }
+
+    console.log(filteredMembers)
 
     return (
         <div className="mainView">
@@ -92,8 +119,8 @@ export const UserClan = () => {
                 </div>
                 <button onClick={handleClickOpenModal}>Invite new member</button>
                 <div id="membersContainer">
-                    {filteredMembers.children.map((item, index) =>
-                            <Member id={index} fname={item.fname} lname={item.lname} remove={handleClickRemoveMember}/>
+                    {DoRating(filteredMembers.children).map((item, index) =>
+                            <Member key={index} id={item.id} userId={item.userId} fname={item.fname} lname={item.lname} remove={handleClickRemoveMember} solvedTasks={item.solvedTasks} placeInRating={item.placeInRating}/>
                         )}
                 </div>
             </div>
